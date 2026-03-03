@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -53,6 +54,48 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // Splash Screen (native API)
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    // Navigation Component
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+
+    // Retrofit + Gson
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // ViewModel + LiveData
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+
+    // Room
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+
+    // OSMDroid (Free Map)
+    implementation("org.osmdroid:osmdroid-android:6.1.17")
+
+    // WorkManager (Notifications)
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
+    // DataStore (Settings)
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // Coil (Images/Icons)
+    implementation("io.coil-kt:coil:2.6.0")
+
+    // Location Services
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+
+    // Lottie (animations for custom splash)
+    implementation("com.airbnb.android:lottie:6.4.0")
 
 
 }
