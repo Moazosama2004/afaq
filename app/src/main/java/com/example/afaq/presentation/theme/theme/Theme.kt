@@ -51,7 +51,6 @@ fun AfaqTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
         content = content
     )
 }
