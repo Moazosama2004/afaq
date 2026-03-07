@@ -1,4 +1,4 @@
-package com.example.afaq.ui.theme
+package com.example.afaq.presentation.theme.theme
 
 import androidx.compose.ui.graphics.Color
 
