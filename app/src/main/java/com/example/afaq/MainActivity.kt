@@ -22,12 +22,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController : NavHostController = rememberNavController()
             AfaqTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+
                     AppNavigation(
-                        modifier = Modifier.padding(innerPadding),
+
                         navController = navController
                     )
-                }
             }
         }
     }

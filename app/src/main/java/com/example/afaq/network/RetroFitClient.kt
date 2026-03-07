@@ -1,5 +1,6 @@
 package com.example.afaq.network
 
+import com.example.afaq.data.home.datasource.remote.WeatherApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -10,5 +11,9 @@ object RetroFitClient {
             .addConverterFactory(GsonConverterFactory.create()).build()
     }
 
-    // TODO : ADD Services
+    // Services
+    val webApiService: WeatherApiService by lazy {
+        retrofit.create(WeatherApiService::class.java)
+
+    }
 }
