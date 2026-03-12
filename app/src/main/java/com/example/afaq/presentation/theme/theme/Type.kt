@@ -51,6 +51,12 @@ object AfaqTypography {
         fontSize = 32.sp
     )
 
+    val semiBold28 = TextStyle(
+        fontFamily = SpaceGroteskFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 28.sp
+    )
+
     val semiBold24 = TextStyle(
         fontFamily = SpaceGroteskFamily,
         fontWeight = FontWeight.SemiBold,

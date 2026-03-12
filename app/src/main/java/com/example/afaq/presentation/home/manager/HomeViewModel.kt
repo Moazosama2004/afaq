@@ -1,41 +1,36 @@
 package com.example.afaq.presentation.home.manager
 
+
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.afaq.data.home.HomeRepo
+import com.example.afaq.utils.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
-    private val homeRepo = HomeRepo()
-
-    // states
-//    private val _isLoading = MutableLiveData<Boolean>()
-//    val isLoading : LiveData<Boolean> = _isLoading
+class HomeViewModel(
+    private val homeRepo: HomeRepo
+) : ViewModel() {
 
     private val _weatherState = MutableStateFlow<WeatherUiState>(WeatherUiState.Loading)
     val weatherState: StateFlow<WeatherUiState> = _weatherState
 
-//    private val _error = MutableLiveData<String>()
-//    val error : LiveData<String> = _error
+    private val _forecastState = MutableStateFlow<ForecastUiState>(ForecastUiState.Loading)
+    val forecastState: StateFlow<ForecastUiState> = _forecastState
 
-    init {
-        getCurrentWeather(
-            lat = 30.0444,
-            lon = 31.2357,
-            apiKey = "0dd33dbf9b7141bc610e6c76cabb1974",
-            units = "metric",
-            lang = "ar"
-        )
+    fun loadWeather(lat: Double, lon: Double,lang :String) {
+        getCurrentWeather(lat = lat, lon = lon,lang = lang)
+        getForecast(lat = lat, lon = lon, lang = lang)
     }
 
-    fun getCurrentWeather(
+    private fun getCurrentWeather(
         lat: Double,
         lon: Double,
-        apiKey: String,
-        units: String,
-        lang: String
+        apiKey : String = Constants.API_KEY,
+        units: String = "metric",
+        lang: String = "en"
     ) {
         _weatherState.value = WeatherUiState.Loading
         viewModelScope.launch {
@@ -53,5 +48,43 @@ class HomeViewModel : ViewModel() {
                 )
             }
         }
+    }
+
+    private fun getForecast(
+        lat: Double,
+        lon: Double,
+        apiKey :String = Constants.API_KEY,
+        units: String = "metric",
+        lang: String = "en"
+    ) {
+        _forecastState.value = ForecastUiState.Loading
+        viewModelScope.launch {
+            homeRepo.getForecast(
+                lat = lat,
+                lon = lon,
+                apiKey = apiKey,
+                units = units,
+                lang = lang
+            ).onSuccess { forecast ->
+                _forecastState.value = ForecastUiState.Success(forecast)
+            }.onFailure { error ->
+                _forecastState.value = ForecastUiState.Error(
+                    error.message ?: "Unknown error"
+                )
+            }
+        }
+    }
+}
+
+
+class HomeViewModelFactory(
+    private val homeRepo: HomeRepo
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return HomeViewModel(homeRepo) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
