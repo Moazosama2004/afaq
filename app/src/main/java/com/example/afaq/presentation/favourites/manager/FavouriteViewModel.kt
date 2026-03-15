@@ -11,6 +11,7 @@ import com.example.afaq.utils.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class FavouriteViewModel(
@@ -47,8 +48,25 @@ class FavouriteViewModel(
         }
     }
 
-    fun addFavourite(lat: Double, lon: Double) {
-        Log.d("FavouriteViewModel : ", "addFavourite : $lat , $lon")
+    fun refreshFavouritesWithLanguage(lang: String) {
+        viewModelScope.launch {
+            val currentList = repo.getAllFavourites().first()
+            currentList.forEach { fav ->
+                repo.getCurrentWeather(
+                    lat = fav.lat,
+                    lon = fav.lon,
+                    apiKey = Constants.API_KEY,
+                    units = "metric",
+                    lang = lang
+                ).onSuccess { weather ->
+                    repo.insertFavourite(weather.toFavouriteEntity().copy(id = fav.id))
+                }
+            }
+        }
+    }
+
+    fun addFavourite(lat: Double, lon: Double, lang: String) {
+        Log.d("FavouriteViewModel : ", "addFavourite : $lat , $lon , $lang")
         _addState.value = AddFavouriteState.Loading
         viewModelScope.launch {
             // 1 - fetch weather from API
@@ -57,7 +75,7 @@ class FavouriteViewModel(
                 lon = lon,
                 apiKey = Constants.API_KEY,
                 units = "metric",
-                lang = "en"
+                lang = lang
             )
 
             result.onSuccess { weather ->

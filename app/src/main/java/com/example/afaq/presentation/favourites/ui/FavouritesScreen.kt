@@ -55,6 +55,7 @@ import com.example.afaq.presentation.favourites.manager.FavouriteViewModelFactor
 import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.utils.getAppLocale
 import kotlinx.coroutines.launch
 
 @Composable
@@ -270,7 +271,7 @@ fun FavouritesScreen(
             onClick = {
                 if (showMap) {
                     if (isLocationSelected) {
-                        viewModel.addFavourite(lat, lon)
+                        viewModel.addFavourite(lat, lon, getAppLocale().language)
                     } else {
                         scope.launch {
                             snackbarHostState.showSnackbar(snackbarMessage)
