@@ -40,7 +40,7 @@ fun FancyRadioGroup(
                         color = if (isSelected)
                             AfaqThemeColors.primary.copy(alpha = 0.1f)
                         else
-                            Color(0xFFF5F5F5)
+                            AfaqThemeColors.secondry
                     )
                     .border(
                         width = if (isSelected) 1.5.dp else 0.dp,

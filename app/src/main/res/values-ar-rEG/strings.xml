@@ -67,7 +67,8 @@
     <string name="feels">المحسوس</string>
     <string name="updated_at">تم التحديث في</string>
     <string name="wind_speed_unit">وحدة سرعة الرياح</string>
-
+    <string name="start">البدايه</string>
+    <string name="end">النهايه</string>
 
 
 
@@ -76,4 +77,27 @@
     <!-- Errors -->
     <string name="no_internet">لا يوجد اتصال بالإنترنت</string>
     <string name="showing_cached">عرض البيانات المخزنة</string>
+
+    <string name="no_favourites_yet">لا توجد مفضلات حتى الآن</string>
+    <string name="tap_to_add_a_city">اضغط + لإضافة مدينة</string>
+    <string name="selected_location">الموقع المحدد</string>
+    <string name="you_haven_t_any_alarms">ليس لديك أي منبهات</string>
+    <string name="select_start_time">اختر وقت البدء</string>
+    <string name="start_time_must_be_in_the_future">يجب أن يكون وقت البدء في المستقبل</string>
+    <string name="select_time">اختر الوقت</string>
+    <string name="ok">حسناً</string>
+    <string name="meter_sec">متر/ثانية</string>
+    <string name="mile_hour">ميل/ساعة</string>
+    <string name="fahrenheit_f">فهرنهايت °F</string>
+    <string name="kelvin_k">كلفن °K</string>
+    <string name="celsius_c">سيلسيوس °C</string>
+    <string name="lang_default">افتراضي</string>
+    <string name="gps_off_title">نظام تحديد الموقع غير مفعّل</string>
+    <string name="gps_off_message">يرجى تفعيل GPS للحصول على بيانات طقس دقيقة.</string>
+
+    <string name="permission_required_title">الإذن مطلوب</string>
+    <string name="permission_required_message">تم رفض إذن الموقع. يرجى تفعيله من الإعدادات.</string>
+
+    <string name="location_required_title">الموقع مطلوب</string>
+    <string name="location_required_message">يحتاج تطبيق آفاق إلى موقعك لعرض الطقس بدقة.</string>
 </resources>

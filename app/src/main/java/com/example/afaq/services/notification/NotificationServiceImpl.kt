@@ -63,9 +63,8 @@ class NotificationServiceImpl(
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setSound(soundUri)
             .setFullScreenIntent(dummyIntent, true)
-            .setOngoing(true)        // ← sticky ✅
-            .setAutoCancel(false)    // ← stays until dismissed ✅
-            // NO setFullScreenIntent ← won't wake screen ✅
+            .setOngoing(true)
+            .setAutoCancel(false)
             .addAction(
                 R.drawable.ic_launcher_foreground,
                 "Dismiss",

@@ -21,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -32,17 +33,42 @@ import com.example.afaq.R
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.utils.fetchGpsLocation
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel,
     modifier: Modifier = Modifier
 ) {
-    var selectedLanguage by remember { mutableStateOf(settingsViewModel.language.value) }
-    var selectedTempUnit by remember { mutableStateOf(settingsViewModel.tempUnit.value) }
-    var selectedLocation by remember { mutableStateOf("GPS") }
-    var selectedWindUnit by remember { mutableStateOf("meter/sec") }
+    val selectedLanguage by settingsViewModel.language.collectAsState()
+    val selectedTempUnit by settingsViewModel.tempUnit.collectAsState()
+    val selectedLocation by settingsViewModel.location.collectAsState()
+    val selectedWindUnit by settingsViewModel.windUnit.collectAsState()
+
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    var showMapSheet by remember { mutableStateOf(false) }
+
+    // ─── Map keys to display strings ──────────────────────
+    val languageOptions = mapOf(
+        "Arabic" to stringResource(R.string.arabic),
+        "English" to stringResource(R.string.english),
+        "Default" to stringResource(R.string.lang_default)
+    )
+    val tempOptions = mapOf(
+        "Celsius °C" to stringResource(R.string.celsius_c),
+        "Kelvin °K" to stringResource(R.string.kelvin_k),
+        "Fahrenheit °F" to stringResource(R.string.fahrenheit_f)
+    )
+    val locationOptions = mapOf(
+        "GPS" to stringResource(R.string.gps),
+        "Map" to stringResource(R.string.map)
+    )
+    val windOptions = mapOf(
+        "meter/sec" to stringResource(R.string.meter_sec),
+        "mile/hour" to stringResource(R.string.mile_hour)
+    )
 
     Column(
         modifier = modifier
@@ -50,16 +76,12 @@ fun SettingsScreen(
             .background(AfaqThemeColors.background)
             .verticalScroll(rememberScrollState())
     ) {
-        // Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
                     brush = Brush.horizontalGradient(
-                        colors = listOf(
-                            AfaqThemeColors.primary,
-                            AfaqThemeColors.secondry
-                        )
+                        colors = listOf(AfaqThemeColors.primary, AfaqThemeColors.secondry)
                     )
                 )
                 .padding(24.dp)
@@ -68,17 +90,16 @@ fun SettingsScreen(
                 Text(
                     text = stringResource(R.string.settings),
                     style = AfaqTypography.bold32,
-                    color = Color.White
+                    color = AfaqThemeColors.secondry
                 )
                 Text(
                     text = stringResource(R.string.customize_your_experience),
                     style = AfaqTypography.regular14,
-                    color = Color.White.copy(alpha = 0.8f)
+                    color = AfaqThemeColors.secondry.copy(alpha = 0.8f)
                 )
             }
         }
 
-        // Settings Cards
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -91,17 +112,21 @@ fun SettingsScreen(
                 icon = Icons.Default.Language,
                 iconGradient = listOf(Color(0xFF4CC9F0), Color(0xFF0096C7)),
                 title = stringResource(R.string.language),
-                subtitle = selectedLanguage
+                subtitle = languageOptions[selectedLanguage] ?: selectedLanguage // ← translated ✅
             ) {
                 FancyRadioGroup(
-                    options = listOf("Arabic", "English", "Default"),
-                    selected = selectedLanguage,
-                    onSelect = { selectedLanguage = it
-                        settingsViewModel.setLanguage(it)
-                        // restart activity to apply new locale
-                        val intent = (context as Activity).intent
-                        context.finish()
-                        context.startActivity(intent)
+                    options = languageOptions.values.toList(), // ← translated options ✅
+                    selected = languageOptions[selectedLanguage] ?: selectedLanguage,
+                    onSelect = { displayValue ->
+                        // convert display back to key
+                        val key = languageOptions.entries
+                            .find { it.value == displayValue }?.key ?: displayValue
+                        scope.launch {
+                            settingsViewModel.setLanguage(key) // ← save key ✅
+                            val intent = (context as Activity).intent
+                            (context as Activity).finish()
+                            context.startActivity(intent)
+                        }
                     }
                 )
             }
@@ -111,14 +136,15 @@ fun SettingsScreen(
                 icon = Icons.Default.Thermostat,
                 iconGradient = listOf(Color(0xFFFF6B35), Color(0xFFFF9A3C)),
                 title = stringResource(R.string.temp_unit),
-                subtitle = selectedTempUnit
+                subtitle = tempOptions[selectedTempUnit] ?: selectedTempUnit // ← translated ✅
             ) {
                 FancyRadioGroup(
-                    options = listOf("Celsius °C", "Kelvin °K", "Fahrenheit °F"),
-                    selected = selectedTempUnit,
-                    onSelect = {
-                        selectedTempUnit = it
-                        settingsViewModel.setTempUnit(it)
+                    options = tempOptions.values.toList(), // ← translated ✅
+                    selected = tempOptions[selectedTempUnit] ?: selectedTempUnit,
+                    onSelect = { displayValue ->
+                        val key = tempOptions.entries
+                            .find { it.value == displayValue }?.key ?: displayValue
+                        settingsViewModel.setTempUnit(key) // ← save key ✅
                     }
                 )
             }
@@ -128,12 +154,23 @@ fun SettingsScreen(
                 icon = Icons.Default.LocationOn,
                 iconGradient = listOf(Color(0xFF4CAF50), Color(0xFF2E7D32)),
                 title = stringResource(R.string.location),
-                subtitle = selectedLocation
+                subtitle = locationOptions[selectedLocation] ?: selectedLocation // ← translated ✅
             ) {
                 FancyRadioGroup(
-                    options = listOf("GPS", "Map"),
-                    selected = selectedLocation,
-                    onSelect = { selectedLocation = it }
+                    options = locationOptions.values.toList(), // ← translated ✅
+                    selected = locationOptions[selectedLocation] ?: selectedLocation,
+                    onSelect = { displayValue ->
+                        val key = locationOptions.entries
+                            .find { it.value == displayValue }?.key ?: displayValue
+                        settingsViewModel.setLocation(key)
+                        if (key == "Map") {
+                            showMapSheet = true
+                        } else if (key == "GPS") {
+                            scope.launch {
+                                fetchGpsLocation(context, settingsViewModel)
+                            }
+                        }
+                    }
                 )
             }
 
@@ -142,15 +179,31 @@ fun SettingsScreen(
                 icon = Icons.Default.Air,
                 iconGradient = listOf(Color(0xFFFFD60A), Color(0xFFFFB300)),
                 title = stringResource(R.string.wind_speed_unit),
-                subtitle = selectedWindUnit
+                subtitle = windOptions[selectedWindUnit] ?: selectedWindUnit // ← translated ✅
             ) {
                 FancyRadioGroup(
-                    options = listOf("meter/sec", "mile/hour"),
-                    selected = selectedWindUnit,
-                    onSelect = { selectedWindUnit = it }
+                    options = windOptions.values.toList(), // ← translated ✅
+                    selected = windOptions[selectedWindUnit] ?: selectedWindUnit,
+                    onSelect = { displayValue ->
+                        val key = windOptions.entries
+                            .find { it.value == displayValue }?.key ?: displayValue
+                        settingsViewModel.setWindUnit(key) // ← save key ✅
+                    }
                 )
             }
         }
+    }
+
+    if (showMapSheet) {
+        LocationMapBottomSheet(
+            onDismiss = { showMapSheet = false },
+            onLocationSelected = { lat, lon ->
+                scope.launch {
+                    settingsViewModel.saveUserLocation(lat, lon)
+                    showMapSheet = false
+                }
+            }
+        )
     }
 }
 

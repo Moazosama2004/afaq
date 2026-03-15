@@ -1,17 +1,16 @@
 package com.example.afaq.data.home
 
 import android.content.Context
-import com.example.afaq.data.home.datasource.local.WeatherDataStore
+import android.util.Log
+import com.example.afaq.data.home.datasource.local.HomeLocalDataSource
 import com.example.afaq.data.home.datasource.remote.HomeRemoteDataSource
 import com.example.afaq.data.home.model.Weather
 import com.example.afaq.data.model.Forecast
 import com.example.afaq.utils.NetworkUtils
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 
 class HomeRepo(
     private val remoteDataSource: HomeRemoteDataSource,
-    private val weatherDataStore: WeatherDataStore,
+    private val localDataSource: HomeLocalDataSource,
     private val context: Context
 ) {
 
@@ -22,25 +21,25 @@ class HomeRepo(
         units: String,
         lang: String
     ): Result<Weather> {
-        return (if (NetworkUtils.isOnline(context)) {
-            // online -> fetch from API → save to DataStore
-            val result = remoteDataSource.getCurrentWeather(lat, lon,apiKey, units, lang)
+        Log.d(
+            "HomeRepo",
+            "📡 getCurrentWeather: lat=$lat, lon=$lon online=${NetworkUtils.isOnline(context)}"
+        )
+
+        return if (NetworkUtils.isOnline(context)) {
+            val result = remoteDataSource.getCurrentWeather(lat, lon, apiKey, units, lang)
             result.onSuccess { weather ->
-                weatherDataStore.saveWeather(weather)
+                Log.d("HomeRepo", "✅ API returned city: ${weather.cityName}")
+                localDataSource.saveWeather(lat, lon, weather)
             }
             result
         } else {
-            // offline → load from DataStore
-            val cached = weatherDataStore.cachedWeather
-                .map { it }
-                .first()
-
-            if (cached != null) {
-                Result.success(cached)
-            } else {
-                Result.failure(Exception("No internet and no cached data"))
-            }
-        })
+            Log.d("HomeRepo", "📦 Loading cache for: lat=$lat, lon=$lon")
+            val cached = localDataSource.getCachedWeather(lat, lon)
+            Log.d("HomeRepo", "📦 Cache result: ${cached?.cityName}")
+            if (cached != null) Result.success(cached)
+            else Result.failure(Exception("No internet and no cached data"))
+        }
     }
 
     suspend fun getForecast(
@@ -50,24 +49,21 @@ class HomeRepo(
         units: String,
         lang: String
     ): Result<Forecast> {
+        Log.d(
+            "HomeRepo",
+            "📡 getForecast: lat=$lat, lon=$lon online=${NetworkUtils.isOnline(context)}"
+        )
+
         return if (NetworkUtils.isOnline(context)) {
-            //  online → fetch from API → save to DataStore
-            val result = remoteDataSource.getForecast(lat, lon, apiKey,units, lang)
+            val result = remoteDataSource.getForecast(lat, lon, apiKey, units, lang)
             result.onSuccess { forecast ->
-                weatherDataStore.saveForecast(forecast)
+                localDataSource.saveForecast(lat, lon, forecast)
             }
             result
         } else {
-            //  offline → load from DataStore
-            val cached = weatherDataStore.cachedForecast
-                .map { it }
-                .first()
-
-            if (cached != null) {
-                Result.success(cached)
-            } else {
-                Result.failure(Exception("No internet and no cached data"))
-            }
+            val cached = localDataSource.getCachedForecast(lat, lon)
+            if (cached != null) Result.success(cached)
+            else Result.failure(Exception("No internet and no cached data"))
         }
     }
 }

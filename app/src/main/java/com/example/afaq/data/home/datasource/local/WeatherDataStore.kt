@@ -6,7 +6,7 @@ import com.example.afaq.data.home.model.Weather
 import com.example.afaq.data.model.Forecast
 import com.example.afaq.data.settings.dataStore
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 
@@ -14,31 +14,29 @@ class WeatherDataStore(private val context: Context) {
 
     private val gson = Gson()
 
-
-    suspend fun saveWeather(weather: Weather) {
+    suspend fun saveWeather(lat: Double, lon: Double, weather: Weather) {
         context.dataStore.edit {
-            it[WeatherDataStoreKeys.CURRENT_WEATHER] = gson.toJson(weather)
+            it[WeatherDataStoreKeys.weatherKey(lat, lon)] = gson.toJson(weather)
         }
     }
 
-    suspend fun saveForecast(forecast: Forecast) {
+    suspend fun saveForecast(lat: Double, lon: Double, forecast: Forecast) {
         context.dataStore.edit {
-            it[WeatherDataStoreKeys.FORECAST] = gson.toJson(forecast)
+            it[WeatherDataStoreKeys.forecastKey(lat, lon)] = gson.toJson(forecast)
         }
     }
 
+    suspend fun getCachedWeather(lat: Double, lon: Double): Weather? {
+        return context.dataStore.data
+            .map { it[WeatherDataStoreKeys.weatherKey(lat, lon)] }
+            .first()
+            ?.let { gson.fromJson(it, Weather::class.java) }
+    }
 
-    val cachedWeather: Flow<Weather?> = context.dataStore.data
-        .map { prefs ->
-            prefs[WeatherDataStoreKeys.CURRENT_WEATHER]?.let {
-                gson.fromJson(it, Weather::class.java)
-            }
-        }
-
-    val cachedForecast: Flow<Forecast?> = context.dataStore.data
-        .map { prefs ->
-            prefs[WeatherDataStoreKeys.FORECAST]?.let {
-                gson.fromJson(it, Forecast::class.java)
-            }
-        }
+    suspend fun getCachedForecast(lat: Double, lon: Double): Forecast? {
+        return context.dataStore.data
+            .map { it[WeatherDataStoreKeys.forecastKey(lat, lon)] }
+            .first()
+            ?.let { gson.fromJson(it, Forecast::class.java) }
+    }
 }

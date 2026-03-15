@@ -8,11 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 
 @Composable
@@ -28,14 +28,14 @@ fun DetailItem(
             Text(
                 text = value,
                 style = AfaqTypography.bold16,
-                color = Color(0xFF31507F)
+                color = AfaqThemeColors.primary,
             )
             if (unit.isNotEmpty()) {
                 Text(
                     text = unit,
                     fontSize = unitSize,
                     fontWeight = FontWeight.Normal,
-                    color = Color(0xFF31507F),
+                    color = AfaqThemeColors.primary,
                     modifier = Modifier.padding(bottom = 2.dp)
                 )
             }
@@ -45,7 +45,7 @@ fun DetailItem(
         Text(
             text = label,
             style = AfaqTypography.regular14,
-            color = Color(0xFF31507F)
+            color = AfaqThemeColors.primary,
         )
     }
 }

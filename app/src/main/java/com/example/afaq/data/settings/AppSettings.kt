@@ -14,8 +14,6 @@ object SettingsKeys {
     val TEMP_UNIT = stringPreferencesKey("temp_unit")     // "Celsius" "Kelvin" "Fahrenheit"
     val WIND_UNIT = stringPreferencesKey("wind_unit")     // "meter/sec" "mile/hour"
     val LOCATION = stringPreferencesKey("location")       // "GPS" "Map"
-//    val THEME = stringPreferencesKey("theme")             // "Light" "Dark" "System"
-
     val USER_LAT = stringPreferencesKey("user_lat")
     val USER_LON = stringPreferencesKey("user_lon")
 }

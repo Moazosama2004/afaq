@@ -1,4 +1,4 @@
-package com.example.afaq.presentation.splash.screens
+package com.example.afaq.presentation.splash.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

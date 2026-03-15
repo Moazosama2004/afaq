@@ -8,7 +8,7 @@ import com.example.afaq.data.model.Forecast
 import kotlinx.coroutines.flow.Flow
 
 class FavouriteRepo(
-    private val favouriteRemoteDataSource: FavouriteRemoteDataSource  ,
+    private val favouriteRemoteDataSource: FavouriteRemoteDataSource,
     private val favouriteLocalDataSource: FavouriteLocalDataSource,
 ) {
     suspend fun insertFavourite(favourite: FavouriteEntity) {
@@ -19,11 +19,11 @@ class FavouriteRepo(
         favouriteLocalDataSource.deleteFavourite(favourite)
     }
 
-    fun getAllFavourites() : Flow<List<FavouriteEntity>> {
+    fun getAllFavourites(): Flow<List<FavouriteEntity>> {
         return favouriteLocalDataSource.getAllFavourites()
     }
 
-    suspend fun deleteFavouriteById(id : Int) {
+    suspend fun deleteFavouriteById(id: Int) {
         favouriteLocalDataSource.deleteFavouriteById(id)
     }
 
@@ -34,7 +34,7 @@ class FavouriteRepo(
         apiKey: String,
         units: String,
         lang: String
-    ) : Result<Weather> {
+    ): Result<Weather> {
         return favouriteRemoteDataSource.getCurrentWeather(
             lat,
             lon,
@@ -50,7 +50,7 @@ class FavouriteRepo(
         apiKey: String,
         units: String,
         lang: String
-    ) : Result<Forecast> {
+    ): Result<Forecast> {
         return favouriteRemoteDataSource.getForecast(
             lat,
             lon,

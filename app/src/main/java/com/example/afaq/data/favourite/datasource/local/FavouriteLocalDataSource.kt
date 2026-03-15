@@ -15,11 +15,11 @@ class FavouriteLocalDataSource(
         favouriteDao.deleteFavourite(favourite)
     }
 
-     fun getAllFavourites() : Flow<List<FavouriteEntity>> {
+    fun getAllFavourites(): Flow<List<FavouriteEntity>> {
         return favouriteDao.getAllFavourites()
     }
 
-    suspend fun deleteFavouriteById(id : Int) {
+    suspend fun deleteFavouriteById(id: Int) {
         favouriteDao.deleteFavouriteById(id)
     }
 

@@ -8,9 +8,9 @@ object LocaleHelper {
 
     fun setLocale(context: Context, language: String): Context {
         val locale = when (language) {
-            "Arabic"  -> Locale("ar")
+            "Arabic" -> Locale("ar")
             "English" -> Locale("en")
-            else      -> Locale.getDefault()
+            else -> Locale.getDefault()
         }
 
         Locale.setDefault(locale)

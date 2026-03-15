@@ -4,10 +4,10 @@ object TempConverter {
 
     fun convert(celsius: Double, unit: String): String {
         return when (unit) {
-            "Celsius °C"    -> "${celsius.toInt()}°C"
+            "Celsius °C" -> "${celsius.toInt()}°C"
             "Fahrenheit °F" -> "${celsiusToFahrenheit(celsius).toInt()}°F"
-            "Kelvin °K"     -> "${celsiusToKelvin(celsius).toInt()}K"
-            else            -> "${celsius.toInt()}°C"
+            "Kelvin °K" -> "${celsiusToKelvin(celsius).toInt()}K"
+            else -> "${celsius.toInt()}°C"
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.afaq.data.home.datasource.remote
+package com.example.afaq.data.home.model
 
 import com.example.afaq.data.model.Forecast
 import com.example.afaq.data.model.ForecastItem

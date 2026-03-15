@@ -1,5 +1,6 @@
-package com.example.afaq.presentation.alarms.ui
+package com.example.afaq.presentation.alarm.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,13 +31,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.afaq.R
 import com.example.afaq.data.alarm.model.AlertEntity
-import com.example.afaq.utils.formatAlertTime
+import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.services.alarms.AndroidAlarmManager
 import com.example.afaq.services.workmanager.WorkManagerScheduler
+import com.example.afaq.utils.formatAlertTime
 import java.util.Calendar
 
 // ─── Add Alert Bottom Sheet ───────────────────────────────
@@ -62,7 +66,7 @@ fun AddAlertBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = Color.White,
+        containerColor = AfaqThemeColors.secondry,
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
     ) {
         Column(
@@ -73,13 +77,23 @@ fun AddAlertBottomSheet(
         ) {
 
             // Start Time
-            Text(text = "Start duration", style = AfaqTypography.semiBold14, color = AfaqThemeColors.textSecondary)
+            Text(
+                text = stringResource(R.string.start_duration),
+                style = AfaqTypography.semiBold14,
+                color = AfaqThemeColors.textSecondary
+            )
             OutlinedCard(
                 onClick = { showStartPicker = true },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                border = if (startError) CardDefaults.outlinedCardBorder()
-                else CardDefaults.outlinedCardBorder()
+                colors = CardDefaults.outlinedCardColors(
+                    containerColor = AfaqThemeColors.secondry,
+                    contentColor = AfaqThemeColors.textPrimary
+                ),
+                border = BorderStroke(
+                    width = 1.dp,
+                    color = if (startError) AfaqColors.error else AfaqThemeColors.primary
+                )
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -93,12 +107,12 @@ fun AddAlertBottomSheet(
                     )
                     Column {
                         Text(
-                            text = "Start duration",
+                            text = stringResource(R.string.start_duration),
                             style = AfaqTypography.regular12,
                             color = AfaqThemeColors.primary
                         )
                         Text(
-                            text = if (startTime.isEmpty()) "Select start time" else startTime,
+                            text = if (startTime.isEmpty()) stringResource(R.string.select_start_time) else startTime,
                             style = AfaqTypography.semiBold14,
                             color = AfaqThemeColors.textPrimary
                         )
@@ -107,18 +121,30 @@ fun AddAlertBottomSheet(
             }
             if (startError) {
                 Text(
-                    text = "Start time must be in the future",
+                    text = stringResource(R.string.start_time_must_be_in_the_future),
                     style = AfaqTypography.regular12,
                     color = Color.Red
                 )
             }
 
             // End Time
-            Text(text = "End duration", style = AfaqTypography.semiBold14, color = AfaqThemeColors.textSecondary)
+            Text(
+                text = stringResource(R.string.end_duration),
+                style = AfaqTypography.semiBold14,
+                color = AfaqThemeColors.textSecondary
+            )
             OutlinedCard(
                 onClick = { showEndPicker = true },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.outlinedCardColors(
+                    containerColor = AfaqThemeColors.secondry,
+                    contentColor = AfaqThemeColors.textPrimary
+                ),
+                border = BorderStroke(
+                    width = 1.dp,
+                    color = AfaqThemeColors.primary
+                )
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -131,7 +157,7 @@ fun AddAlertBottomSheet(
                         tint = AfaqThemeColors.textSecondary
                     )
                     Text(
-                        text = if (endTime.isEmpty()) "End duration" else endTime,
+                        text = if (endTime.isEmpty()) stringResource(R.string.end_duration) else endTime,
                         style = AfaqTypography.semiBold14,
                         color = AfaqThemeColors.textPrimary
                     )
@@ -139,9 +165,16 @@ fun AddAlertBottomSheet(
             }
 
             // Notify Type
-            Text(text = "Notify me by", style = AfaqTypography.semiBold14, color = AfaqThemeColors.textSecondary)
+            Text(
+                text = stringResource(R.string.notify_me_by),
+                style = AfaqTypography.semiBold14,
+                color = AfaqThemeColors.textSecondary
+            )
             Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                listOf("ALARM", "NOTIFICATION").forEach { type ->
+                listOf(
+                    stringResource(R.string.alarm),
+                    stringResource(R.string.notification)
+                ).forEach { type ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.weight(1f)
@@ -181,17 +214,16 @@ fun AddAlertBottomSheet(
                                 type = selectedType
                             )
                             // schedule alarm + add alarm
-                            when(alertEntity.type) {
+                            when (alertEntity.type) {
                                 "ALARM" -> {
                                     val alarmManager = AndroidAlarmManager(context)
                                     alarmManager.schedule(alertEntity)
                                 }
+
                                 "NOTIFICATION" -> {
                                     WorkManagerScheduler(context).schedule(alertEntity)
                                 }
                             }
-
-
 
 
                         }
@@ -202,7 +234,11 @@ fun AddAlertBottomSheet(
                     ),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("SAVE", color = Color.White, style = AfaqTypography.semiBold14)
+                    Text(
+                        stringResource(R.string.save),
+                        color = Color.White,
+                        style = AfaqTypography.semiBold14
+                    )
                 }
 
                 Button(
@@ -213,7 +249,11 @@ fun AddAlertBottomSheet(
                     ),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("CANCEL", color = Color.White, style = AfaqTypography.semiBold14)
+                    Text(
+                        stringResource(R.string.cancel),
+                        color = Color.White,
+                        style = AfaqTypography.semiBold14
+                    )
                 }
             }
 

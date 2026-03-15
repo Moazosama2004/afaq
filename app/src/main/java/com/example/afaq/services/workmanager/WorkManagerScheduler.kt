@@ -17,7 +17,7 @@ class WorkManagerScheduler(
     fun schedule(alert: AlertEntity) {
         val delay = alert.startTime - System.currentTimeMillis()
 
-        // don't schedule if startTime already passed
+
         if (delay <= 0) return
 
         val inputData = workDataOf(
@@ -27,22 +27,22 @@ class WorkManagerScheduler(
         )
 
         val workRequest = PeriodicWorkRequestBuilder<WeatherAlertWorker>(
-            24, TimeUnit.HOURS  // ← repeat every 24 hours
+            24, TimeUnit.HOURS
         )
-            .setInitialDelay(delay, TimeUnit.MILLISECONDS) // ← first run at startTime
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
             .setInputData(inputData)
             .addTag("alert_${alert.id}")
             .build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "alert_${alert.id}",           // ← unique name
-            ExistingPeriodicWorkPolicy.REPLACE,    // ← replace if already scheduled
+            "alert_${alert.id}",
+            ExistingPeriodicWorkPolicy.REPLACE,
             workRequest
         )
     }
 
     fun cancel(alertId: Int) {
         WorkManager.getInstance(context)
-            .cancelUniqueWork("alert_${alertId}") // ← cancel by unique name
+            .cancelUniqueWork("alert_${alertId}")
     }
 }

@@ -27,13 +27,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.afaq.R
 import com.example.afaq.data.home.HomeRepo
+import com.example.afaq.data.home.datasource.local.HomeLocalDataSource
 import com.example.afaq.data.home.datasource.local.WeatherDataStore
 import com.example.afaq.data.home.datasource.remote.HomeRemoteDataSource
+import com.example.afaq.data.network.RetroFitClient
 import com.example.afaq.presentation.home.manager.ForecastUiState
 import com.example.afaq.presentation.home.manager.HomeViewModel
 import com.example.afaq.presentation.home.manager.HomeViewModelFactory
@@ -42,24 +43,21 @@ import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.utils.getAppLocale
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    lat: Double,
-    lon: Double,
+
     modifier: Modifier = Modifier,
     settingsViewModel: SettingsViewModel
 ) {
-    val context = LocalContext.current
-
+    val context = LocalContext.current.applicationContext
     val viewModel = viewModel<HomeViewModel>(
-        factory = remember {
+        factory = remember(context) {
             HomeViewModelFactory(
                 HomeRepo(
-                    remoteDataSource = HomeRemoteDataSource,
-                    weatherDataStore = WeatherDataStore(context),
+                    remoteDataSource = HomeRemoteDataSource(RetroFitClient.webApiService),
+                    localDataSource = HomeLocalDataSource(WeatherDataStore(context)),
                     context = context
                 )
             )
@@ -70,14 +68,22 @@ fun HomeScreen(
     val state by viewModel.weatherState.collectAsState()
     val forecastState by viewModel.forecastState.collectAsState()
 
+
+    val savedLat by settingsViewModel.userLat.collectAsState()
+    val savedLon by settingsViewModel.userLon.collectAsState()
+
     // shared data settings
     val tempUnit by settingsViewModel.tempUnit.collectAsState()
+    val windSpeedUnit by settingsViewModel.windUnit.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(savedLat, savedLon) {
+        val lat = savedLat ?: return@LaunchedEffect
+        val lon = savedLon ?: return@LaunchedEffect
         viewModel.loadWeather(
             lat = lat,
             lon = lon,
-            lang = getAppLocale().language
+            lang = getAppLocale().language,
+            units = "metric"
         )
     }
 
@@ -138,7 +144,8 @@ fun HomeScreen(
                         item {
                             DayDetailsGrid(
                                 weather = weather,
-                                tempUnit = tempUnit
+                                tempUnit = tempUnit,
+                                windSpeedUnit = windSpeedUnit
                             )
                         }
 
@@ -161,7 +168,7 @@ fun HomeScreen(
                                 is ForecastUiState.Success -> {
                                     val forecast =
                                         (forecastState as ForecastUiState.Success).forecast
-                                    HourlyForecastRow(forecast = forecast,tempUnit = tempUnit)
+                                    HourlyForecastRow(forecast = forecast, tempUnit = tempUnit)
                                 }
 
                                 is ForecastUiState.Error -> {
@@ -201,7 +208,7 @@ fun HomeScreen(
                                 is ForecastUiState.Success -> {
                                     val forecast =
                                         (forecastState as ForecastUiState.Success).forecast
-                                    ForecastWeekList(forecast = forecast,tempUnit = tempUnit)
+                                    ForecastWeekList(forecast = forecast, tempUnit = tempUnit)
                                 }
 
                                 is ForecastUiState.Error -> {
@@ -227,12 +234,6 @@ fun HomeScreen(
         }
     }
 }
-
-@Preview(showSystemUi = true)
-@Composable
-fun DayDetailsHeaderPreview() {
-}
-
 
 
 

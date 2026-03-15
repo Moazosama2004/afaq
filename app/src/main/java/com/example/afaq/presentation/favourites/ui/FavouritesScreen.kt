@@ -1,31 +1,55 @@
 package com.example.afaq.presentation.favourites.ui
 
 import FavouritesUiState
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.afaq.R
+import com.example.afaq.data.db.AppDatabase
 import com.example.afaq.data.favourite.FavouriteRepo
 import com.example.afaq.data.favourite.datasource.local.FavouriteLocalDataSource
 import com.example.afaq.data.favourite.datasource.remote.FavouriteRemoteDataSource
-import com.example.afaq.db.AppDatabase
+import com.example.afaq.data.network.RetroFitClient
+import com.example.afaq.presentation.favourites.manager.AddFavouriteState
+import com.example.afaq.presentation.favourites.manager.DeleteFavouriteState
 import com.example.afaq.presentation.favourites.manager.FavouriteViewModel
 import com.example.afaq.presentation.favourites.manager.FavouriteViewModelFactory
+import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 
@@ -33,13 +57,13 @@ import com.example.afaq.presentation.theme.theme.AfaqTypography
 fun FavouritesScreen(
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
+    val context = LocalContext.current.applicationContext
 
     val viewModel = viewModel<FavouriteViewModel>(
         factory = remember {
             FavouriteViewModelFactory(
                 FavouriteRepo(
-                    favouriteRemoteDataSource = FavouriteRemoteDataSource, // ← fixed
+                    favouriteRemoteDataSource = FavouriteRemoteDataSource(RetroFitClient.webApiService),
                     favouriteLocalDataSource = FavouriteLocalDataSource(
                         AppDatabase.getInstance(context).favouriteDao()
                     )
@@ -49,12 +73,14 @@ fun FavouritesScreen(
     )
 
     var showMap by remember { mutableStateOf(false) }
-    var lat by remember { mutableStateOf(0.0) }
-    var lon by remember { mutableStateOf(0.0) }
+    var lat by remember { mutableDoubleStateOf(0.0) }
+    var lon by remember { mutableDoubleStateOf(0.0) }
 
     val favouritesState by viewModel.favouritesState.collectAsState()
+    val addState by viewModel.addState.collectAsState()
+    val deleteState by viewModel.deleteState.collectAsState()
 
-    Box( // ← Box instead of Scaffold
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(AfaqThemeColors.background)
@@ -92,12 +118,12 @@ fun FavouritesScreen(
                             modifier = Modifier.size(64.dp)
                         )
                         Text(
-                            text = "No Favourites Yet",
+                            text = stringResource(R.string.no_favourites_yet),
                             style = AfaqTypography.bold20,
                             color = AfaqThemeColors.textPrimary
                         )
                         Text(
-                            text = "Tap + to add a city",
+                            text = stringResource(R.string.tap_to_add_a_city),
                             style = AfaqTypography.regular14,
                             color = AfaqThemeColors.textSecondary,
                             textAlign = TextAlign.Center
@@ -116,7 +142,6 @@ fun FavouritesScreen(
                             FavouriteCityCard(
                                 favourite = entity,
                                 onDeleteClick = {
-                                    Log.d("delete", entity.toString())
                                     viewModel.deleteFavouriteById(entity.id)
                                 }
                             )
@@ -135,18 +160,99 @@ fun FavouritesScreen(
             }
         }
 
-        // FAB - always on top
+
+        when (addState) {
+            is AddFavouriteState.Loading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.4f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = AfaqThemeColors.primary)
+                }
+            }
+
+            is AddFavouriteState.Error -> {
+                LaunchedEffect(addState) {
+                    viewModel.resetAddState()
+                }
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 80.dp)
+                ) {
+                    Text(
+                        text = (addState as AddFavouriteState.Error).message,
+                        color = Color.White,
+                        style = AfaqTypography.regular14,
+                        modifier = Modifier
+                            .background(
+                                color = AfaqColors.error,
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
+            }
+
+            is AddFavouriteState.Success -> {
+                LaunchedEffect(addState) {
+                    showMap = false
+                    viewModel.resetAddState()
+                }
+            }
+
+            else -> {}
+        }
+
+        when (deleteState) {
+            is DeleteFavouriteState.Loading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.3f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = AfaqThemeColors.primary)
+                }
+            }
+
+            is DeleteFavouriteState.Error -> {
+                LaunchedEffect(deleteState) {
+                }
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 80.dp)
+                ) {
+                    Text(
+                        text = (deleteState as DeleteFavouriteState.Error).message,
+                        color = Color.White,
+                        style = AfaqTypography.regular14,
+                        modifier = Modifier
+                            .background(
+                                color = AfaqColors.error,
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
+            }
+
+            else -> {}
+        }
+
         FloatingActionButton(
             onClick = {
                 if (showMap) {
                     showMap = false
                     viewModel.addFavourite(lat, lon)
-                    Log.d("point", "lat: $lat, lon: $lon")
                 } else {
                     showMap = true
                 }
             },
-            containerColor = AfaqThemeColors.primary,
+            containerColor = AfaqThemeColors.surface,
             contentColor = Color.White,
             shape = CircleShape,
             modifier = Modifier

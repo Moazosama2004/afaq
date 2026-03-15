@@ -44,19 +44,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.afaq.R
 import com.example.afaq.data.alarm.AlertRepo
 import com.example.afaq.data.alarm.datasource.local.AlertLocalDataSource
-import com.example.afaq.db.AppDatabase
-import com.example.afaq.presentation.alarms.manager.AlertViewModel
-import com.example.afaq.presentation.alarms.manager.AlertViewModelFactory
-import com.example.afaq.presentation.alarms.manager.AlertsUiState
-import com.example.afaq.presentation.alarms.ui.AddAlertBottomSheet
-import com.example.afaq.presentation.alarms.ui.AlertCard
+import com.example.afaq.data.db.AppDatabase
+import com.example.afaq.presentation.alarm.manager.AlarmsUiState
+import com.example.afaq.presentation.alarm.manager.AlertViewModel
+import com.example.afaq.presentation.alarm.manager.AlertViewModelFactory
+import com.example.afaq.presentation.alarm.ui.AddAlertBottomSheet
+import com.example.afaq.presentation.alarm.ui.AlertCard
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.services.alarms.AndroidAlarmManager
@@ -66,7 +68,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AlertsScreen(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
+    val context = LocalContext.current.applicationContext
 
     val viewModel = viewModel<AlertViewModel>(
         factory = remember {
@@ -79,8 +81,8 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
     )
 
     val alertsState by viewModel.alertsState.collectAsState()
+
     var showBottomSheet by remember { mutableStateOf(false) }
-    var showPermissionDialog by remember { mutableStateOf(false) }
     var showRationale by remember { mutableStateOf(false) }
 
     // Notification permission (Android 13+)
@@ -104,11 +106,11 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (isGranted) {
-                // ✅ User allowed
+                // user allowed
                 hasPermission = true
 
             } else {
-                // ❌ User disallowed — check if permanently denied
+                // user disallowed — check if permanently denied
                 val activity = context as Activity
 
                 val permanentlyDenied = !ActivityCompat.shouldShowRequestPermissionRationale(
@@ -117,13 +119,13 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
                 )
 
                 if (permanentlyDenied) {
-                    // User clicked "Don't ask again" → send to Settings
+                    // user clicked "Don't ask again" → send to Settings
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                         data = Uri.fromParts("package", context.packageName, null)
                     }
                     context.startActivity(intent)
                 } else {
-                    // User just clicked Disallow → show rationale
+                    // user just clicked Disallow → show rationale
                     showRationale = true
                 }
             }
@@ -138,14 +140,14 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
             .background(AfaqThemeColors.background)
     ) {
         when (alertsState) {
-            is AlertsUiState.Loading -> {
+            is AlarmsUiState.Loading -> {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center),
                     color = AfaqThemeColors.primary
                 )
             }
 
-            is AlertsUiState.Empty -> {
+            is AlarmsUiState.Empty -> {
                 Column(
                     modifier = Modifier.align(Alignment.Center),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -158,7 +160,7 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
                         modifier = Modifier.size(80.dp)
                     )
                     Text(
-                        text = "You haven't any alarms",
+                        text = stringResource(R.string.you_haven_t_any_alarms),
                         style = AfaqTypography.semiBold16,
                         color = AfaqThemeColors.textSecondary,
                         textAlign = TextAlign.Center
@@ -166,8 +168,8 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
                 }
             }
 
-            is AlertsUiState.Success -> {
-                val alerts = (alertsState as AlertsUiState.Success).alerts
+            is AlarmsUiState.Success -> {
+                val alerts = (alertsState as AlarmsUiState.Success).alerts
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
@@ -187,9 +189,9 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
                 }
             }
 
-            is AlertsUiState.Error -> {
+            is AlarmsUiState.Error -> {
                 Text(
-                    text = (alertsState as AlertsUiState.Error).message,
+                    text = (alertsState as AlarmsUiState.Error).message,
                     color = Color.Red,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -200,14 +202,14 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
         FloatingActionButton(
             onClick = {
                 // check permission first
-                if(!hasPermission) {
+                if (!hasPermission) {
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                }else {
+                } else {
                     showBottomSheet = true
                 }
 
             },
-            containerColor = AfaqThemeColors.primary,
+            containerColor = AfaqThemeColors.surface,
             contentColor = Color.White,
             shape = CircleShape,
             modifier = Modifier
@@ -241,7 +243,7 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
         AddAlertBottomSheet(
             onDismiss = { showBottomSheet = false },
             onSave = { startTime, endTime, type ->
-                Log.d("AddAlertBottomSheet" , "$startTime, $endTime, $type")
+                Log.d("AddAlertBottomSheet", "$startTime, $endTime, $type")
                 viewModel.addAlert(startTime, endTime, type)
                 showBottomSheet = false
             }

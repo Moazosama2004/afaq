@@ -29,10 +29,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.afaq.R
 import com.example.afaq.data.home.model.Weather
-import com.example.afaq.utils.formatDate
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.utils.TempConverter
+import com.example.afaq.utils.formatDate
 
 
 @Composable
@@ -75,7 +75,7 @@ fun WeatherCard(
                     Icon(
                         imageVector = Icons.Default.Star,
                         contentDescription = "Favorite",
-                        tint = Color(0xFF31507F),
+                        tint = AfaqThemeColors.primary,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -90,14 +90,14 @@ fun WeatherCard(
                         Icon(
                             imageVector = Icons.Default.LocationOn,
                             contentDescription = "Location",
-                            tint = Color(0xFF31507F),
+                            tint = AfaqThemeColors.primary,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "${weather.cityName} , ${weather.country}",
                             style = AfaqTypography.bold16,
-                            color = Color(0xFF31507F)
+                            color = AfaqThemeColors.primary,
                         )
                     }
                 }
@@ -113,7 +113,7 @@ fun WeatherCard(
                     Icon(
                         imageVector = Icons.Default.Share,
                         contentDescription = "Share",
-                        tint = Color(0xFF31507F),
+                        tint = AfaqThemeColors.primary,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -141,7 +141,7 @@ fun WeatherCard(
                 Text(
                     text = TempConverter.convert(weather.temperature.toDouble(), tempUnit),
                     style = AfaqTypography.bold32,
-                    color = Color(0xFF1A1A2E)
+                    color = AfaqThemeColors.primary,
                 )
 
                 Spacer(modifier = Modifier.width(4.dp))
@@ -167,7 +167,7 @@ fun WeatherCard(
             Text(
                 text = weather.description,
                 style = AfaqTypography.bold20,
-                color = Color(0xFF1A1A2E)
+                color = AfaqThemeColors.primary,
             )
         }
     }

@@ -56,7 +56,7 @@ fun FancySettingsCard(
             ),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = AfaqThemeColors.secondry
         )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {

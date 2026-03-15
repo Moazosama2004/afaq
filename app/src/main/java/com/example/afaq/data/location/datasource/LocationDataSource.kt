@@ -22,12 +22,10 @@ class LocationDataSource(private val context: Context) {
     @SuppressLint("MissingPermission")
     fun getLocation(): Flow<Pair<Double, Double>> = callbackFlow {
 
-        // ← check if GPS is enabled first
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 
         if (!isGpsEnabled) {
-            // GPS is off → send fallback immediately
             trySend(Pair(Constants.DEFAULT_LAT, Constants.DEFAULT_LON))
             close()
             return@callbackFlow
@@ -49,7 +47,6 @@ class LocationDataSource(private val context: Context) {
             }
         }
 
-        // ← timeout fallback if GPS takes too long
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 trySend(Pair(location.latitude, location.longitude))

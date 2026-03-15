@@ -1,6 +1,4 @@
-package com.example.afaq.data.home.datasource.remote
-
-import com.example.afaq.data.home.model.Weather
+package com.example.afaq.data.home.model
 
 data class CurrentWeatherDto(
     val coord: Coord,
@@ -28,7 +26,6 @@ data class Wind(val speed: Double, val deg: Int)
 data class Sys(val country: String?, val sunrise: Long, val sunset: Long)
 
 
-// data/remote/dto/CurrentWeatherDto.kt (add at bottom)
 fun CurrentWeatherDto.toWeather(): Weather {
     return Weather(
         cityName = name,

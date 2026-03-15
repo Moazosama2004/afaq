@@ -22,23 +22,23 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.afaq.R
 import com.example.afaq.data.model.ForecastItem
-import com.example.afaq.utils.formatHour
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.utils.TempConverter
+import com.example.afaq.utils.formatHour
 
 @Composable
 fun HourlyCard(
     item: ForecastItem,
-    tempUnit : String ,
-    ) {
+    tempUnit: String,
+) {
     Card(
         modifier = Modifier
             .width(100.dp)
             .wrapContentHeight(),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = AfaqThemeColors.secondry
         ),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
@@ -66,7 +66,7 @@ fun HourlyCard(
 
             // Temperature
             Text(
-                text = TempConverter.convert(item.temp , tempUnit),
+                text = TempConverter.convert(item.temp, tempUnit),
                 style = AfaqTypography.bold16,
                 color = AfaqThemeColors.primary,
                 textAlign = TextAlign.Center
@@ -86,7 +86,7 @@ fun HourlyCard(
                 textAlign = TextAlign.Center
             )
             Text(
-                text = TempConverter.convert(item.feelsLike , tempUnit),
+                text = TempConverter.convert(item.feelsLike, tempUnit),
                 style = AfaqTypography.semiBold14,
                 color = AfaqThemeColors.textSecondary,
                 textAlign = TextAlign.Center

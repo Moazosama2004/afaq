@@ -1,14 +1,14 @@
 package com.example.afaq.data.favourite.datasource.remote
 
 import com.example.afaq.data.home.datasource.remote.WeatherApiService
-import com.example.afaq.data.home.datasource.remote.toForecast
-import com.example.afaq.data.home.datasource.remote.toWeather
 import com.example.afaq.data.home.model.Weather
+import com.example.afaq.data.home.model.toForecast
+import com.example.afaq.data.home.model.toWeather
 import com.example.afaq.data.model.Forecast
-import com.example.afaq.network.RetroFitClient
 
-object FavouriteRemoteDataSource {
-    private val weatherApiService: WeatherApiService = RetroFitClient.webApiService
+class FavouriteRemoteDataSource(
+    private val weatherApiService: WeatherApiService
+) {
     suspend fun getCurrentWeather(
         lat: Double,
         lon: Double,

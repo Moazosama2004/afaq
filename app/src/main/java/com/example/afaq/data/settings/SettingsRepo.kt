@@ -2,7 +2,6 @@ package com.example.afaq.data.settings
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
-import com.example.afaq.utils.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -10,7 +9,6 @@ class SettingsRepo(
     private val context: Context
 ) {
 
-    // ─── Read ──────────────────────────────────────────────
     val language: Flow<String> = context.dataStore.data
         .map { it[SettingsKeys.LANGUAGE] ?: "English" }
 
@@ -23,10 +21,6 @@ class SettingsRepo(
     val location: Flow<String> = context.dataStore.data
         .map { it[SettingsKeys.LOCATION] ?: "GPS" }
 
-//    val theme: Flow<String> = context.dataStore.data
-//        .map { it[SettingsKeys.THEME] ?: "System" }
-
-    // ─── Write ─────────────────────────────────────────────
     suspend fun setLanguage(value: String) {
         context.dataStore.edit { it[SettingsKeys.LANGUAGE] = value }
     }
@@ -52,13 +46,11 @@ class SettingsRepo(
     }
 
     // Read user location
-    val userLat: Flow<Double> = context.dataStore.data
-        .map { it[SettingsKeys.USER_LAT]?.toDoubleOrNull() ?: Constants.DEFAULT_LAT }
+    val userLat: Flow<Double?> = context.dataStore.data
+        .map { it[SettingsKeys.USER_LAT]?.toDoubleOrNull() }
 
-    val userLon: Flow<Double> = context.dataStore.data
-        .map { it[SettingsKeys.USER_LON]?.toDoubleOrNull() ?: Constants.DEFAULT_LON }
+    val userLon: Flow<Double?> = context.dataStore.data
+        .map { it[SettingsKeys.USER_LON]?.toDoubleOrNull() }
 
-//    suspend fun setTheme(value: String) {
-//        context.dataStore.edit { it[SettingsKeys.THEME] = value }
-//    }
+
 }

@@ -1,7 +1,5 @@
 package com.example.afaq.presentation.favourites.ui
 
-import android.content.Context
-import android.location.Geocoder
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,10 +25,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.afaq.R
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.utils.getAddressFromLocation
+import com.example.afaq.utils.getAppLocale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.osmdroid.config.Configuration
@@ -40,7 +43,6 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
-import java.util.Locale
 
 @Composable
 fun MapScreen(
@@ -68,15 +70,12 @@ fun MapScreen(
                     controller.setZoom(6.0)
                     controller.setCenter(GeoPoint(26.8206, 30.8025)) // Egypt center
 
-                    // tap listener
                     val eventsOverlay = MapEventsOverlay(object : MapEventsReceiver {
                         override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
                             selectedPoint = p
 
-                            // clear old markers
                             overlays.removeAll { it is Marker }
 
-                            // add new marker
                             val marker = Marker(this@apply).apply {
                                 position = p
                                 setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
@@ -116,16 +115,16 @@ fun MapScreen(
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Back",
-                tint = AfaqThemeColors.primary,
+                tint = AfaqThemeColors.surface,
                 modifier = Modifier.size(20.dp)
             )
         }
 
         // Selected location info + confirm button
         selectedPoint?.let { point ->
-            // ✅ get address name
+
             var locationName by remember(point) {
-                mutableStateOf("Loading...")
+                mutableStateOf(if (getAppLocale() == Locale("en")) "Loading..." else "الانتظار...")
             }
 
             LaunchedEffect(point) {
@@ -141,21 +140,21 @@ fun MapScreen(
             ) {
                 Card(
                     colors = CardDefaults.cardColors(
-                        containerColor = Color.White
+                        containerColor = AfaqThemeColors.secondry
                     )
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Selected Location",
+                            text = stringResource(R.string.selected_location),
                             style = AfaqTypography.semiBold16,
-                            color = AfaqThemeColors.textPrimary
+                            color = AfaqThemeColors.textBlack
                         )
                         Text(
-                            text = locationName,   // ✅ shows place name
+                            text = locationName,
                             style = AfaqTypography.regular14,
                             color = AfaqThemeColors.textSecondary,
 
-                        )
+                            )
                     }
                 }
             }
@@ -164,12 +163,3 @@ fun MapScreen(
     }
 }
 
-fun getAddressFromLocation(context: Context, latitude: Double, longitude: Double): String {
-    return try {
-        val geocoder = Geocoder(context, Locale.getDefault())
-        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-        addresses?.firstOrNull()?.getAddressLine(0) ?: "Unknown Location"
-    } catch (e: Exception) {
-        "Unknown Location"
-    }
-}

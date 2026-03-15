@@ -21,8 +21,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.afaq.data.model.ForecastItem
-import com.example.afaq.utils.formatForecastDate
+import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.utils.formatForecastDate
 
 @Composable
 fun ForecastDayCard(item: ForecastItem) {
@@ -32,7 +33,7 @@ fun ForecastDayCard(item: ForecastItem) {
             .wrapContentHeight(),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFF0F4FF)
+            containerColor = AfaqThemeColors.secondry
         ),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
@@ -48,7 +49,7 @@ fun ForecastDayCard(item: ForecastItem) {
             Text(
                 text = item.description,
                 style = AfaqTypography.semiBold14,
-                color = Color(0xFF31507F),
+                color = AfaqThemeColors.primary,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

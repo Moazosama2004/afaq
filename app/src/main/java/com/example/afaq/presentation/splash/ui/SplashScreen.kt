@@ -17,9 +17,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.afaq.R
 import com.example.afaq.data.location.LocationRepository
 import com.example.afaq.data.settings.SettingsRepo
-import com.example.afaq.presentation.splash.screens.SplashContent
+import com.example.afaq.presentation.splash.ui.SplashContent
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.utils.Constants
@@ -27,12 +29,13 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun SplashScreen(onLocationReady: (lat: Double, lon: Double) -> Unit) {
+fun SplashScreen(onLocationReady: () -> Unit) {
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -48,174 +51,341 @@ fun SplashScreen(onLocationReady: (lat: Double, lon: Double) -> Unit) {
         permission = Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-    // helper to save + navigate
-    fun saveAndNavigate(lat: Double, lon: Double) {
-        scope.launch {
-            settingsRepo.saveUserLocation(lat, lon)
-        }
-        onLocationReady(lat, lon)
+    fun navigateToHome() {
+        onLocationReady()
     }
 
-    // Step 1 - check GPS
+    suspend fun saveIfGps(lat: Double, lon: Double) {
+        val locationPref = settingsRepo.location.first()
+        if (locationPref == "GPS") {
+            settingsRepo.saveUserLocation(lat, lon)
+        }
+    }
+
     LaunchedEffect(Unit) {
-        val locationManager =
-            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val isGpsEnabled =
-            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+        val savedLat = settingsRepo.userLat.first()
+
+        if (savedLat != null) {
+            navigateToHome()
+            return@LaunchedEffect
+        }
+
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
         if (!isGpsEnabled) {
             showGpsDialog = true
             return@LaunchedEffect
         }
     }
 
-    // Step 2 - handle permission
     LaunchedEffect(locationPermission.status, permissionRequested) {
+
         if (showGpsDialog) return@LaunchedEffect
 
+        val savedLat = settingsRepo.userLat.first()
+
+        if (savedLat != null) {
+            navigateToHome()
+            return@LaunchedEffect
+        }
+
         when {
+
             locationPermission.status.isGranted -> {
+
                 withTimeoutOrNull(10000L) {
+
                     locationRepository.getUserLocation().collect { (lat, lon) ->
-                        saveAndNavigate(lat, lon)
+
+                        scope.launch {
+                            saveIfGps(lat, lon)
+                        }
+
+                        navigateToHome()
                     }
-                } ?: saveAndNavigate(Constants.DEFAULT_LAT, Constants.DEFAULT_LON)
+
+                } ?: run {
+
+                    scope.launch {
+
+                        settingsRepo.saveUserLocation(
+                            Constants.DEFAULT_LAT, Constants.DEFAULT_LON
+                        )
+
+                    }
+
+                    navigateToHome()
+
+                }
             }
 
             locationPermission.status.shouldShowRationale -> {
                 showRationale = true
-                return@LaunchedEffect
             }
 
             else -> {
+
                 if (!permissionRequested) {
+
                     permissionRequested = true
                     locationPermission.launchPermissionRequest()
+
                 } else {
+
                     showSettingsDialog = true
+
                 }
+
             }
+
         }
+
     }
 
-    // ─── GPS Dialog ───────────────────────────────────────
     if (showGpsDialog) {
+
         AlertDialog(
-            onDismissRequest = { },
-            containerColor = AfaqThemeColors.background,
+            onDismissRequest = {}, containerColor = AfaqThemeColors.background,
+
             title = {
                 Text(
-                    text = "GPS is Off",
+                    stringResource(R.string.gps_off_title),
                     style = AfaqTypography.bold16,
                     color = AfaqThemeColors.textPrimary
                 )
             },
+
             text = {
                 Text(
-                    text = "Please enable GPS for accurate weather data.",
+                    stringResource(R.string.gps_off_message),
                     style = AfaqTypography.regular14,
                     color = AfaqThemeColors.textSecondary
                 )
             },
+
             confirmButton = {
+
                 TextButton(onClick = {
+
                     showGpsDialog = false
-                    context.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-                    saveAndNavigate(Constants.DEFAULT_LAT, Constants.DEFAULT_LON)
+
+                    context.startActivity(
+                        Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    )
+
+                    scope.launch {
+
+                        settingsRepo.saveUserLocation(
+                            Constants.DEFAULT_LAT, Constants.DEFAULT_LON
+                        )
+
+                    }
+
+                    navigateToHome()
+
                 }) {
-                    Text("Enable GPS", color = AfaqThemeColors.primary)
+
+                    Text(
+                        stringResource(R.string.enable_gps), color = AfaqThemeColors.primary
+                    )
+
                 }
+
             },
+
             dismissButton = {
+
                 TextButton(onClick = {
+
                     showGpsDialog = false
-                    saveAndNavigate(Constants.DEFAULT_LAT, Constants.DEFAULT_LON)
+
+                    scope.launch {
+
+                        settingsRepo.saveUserLocation(
+                            Constants.DEFAULT_LAT, Constants.DEFAULT_LON
+                        )
+
+                    }
+
+                    navigateToHome()
+
                 }) {
-                    Text("Use Default", color = AfaqThemeColors.textSecondary)
+
+                    Text(
+                        stringResource(R.string.use_default), color = AfaqThemeColors.textSecondary
+                    )
+
                 }
+
             }
+
         )
+
     }
 
-    // ─── Settings Dialog ──────────────────────────────────
     if (showSettingsDialog) {
+
         AlertDialog(
-            onDismissRequest = { },
-            containerColor = AfaqThemeColors.background,
+
+            onDismissRequest = {}, containerColor = AfaqThemeColors.background,
+
             title = {
+
                 Text(
-                    text = "Permission Required",
+                    stringResource(R.string.permission_required_title),
                     style = AfaqTypography.bold16,
                     color = AfaqThemeColors.textPrimary
                 )
+
             },
+
             text = {
+
                 Text(
-                    text = "Location permission was denied. Please enable it from Settings for accurate weather.",
+                    stringResource(R.string.permission_required_message),
                     style = AfaqTypography.regular14,
                     color = AfaqThemeColors.textSecondary
                 )
+
             },
+
             confirmButton = {
+
                 TextButton(onClick = {
+
                     showSettingsDialog = false
+
                     context.startActivity(
                         Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                             data = Uri.fromParts("package", context.packageName, null)
-                        }
+                        })
+
+                    scope.launch {
+
+                        settingsRepo.saveUserLocation(
+                            Constants.DEFAULT_LAT, Constants.DEFAULT_LON
+                        )
+
+                    }
+
+                    navigateToHome()
+
+                }) {
+
+                    Text(
+                        stringResource(R.string.go_to_settings), color = AfaqThemeColors.primary
                     )
-                    saveAndNavigate(Constants.DEFAULT_LAT, Constants.DEFAULT_LON)
-                }) {
-                    Text("Go to Settings", color = AfaqThemeColors.primary)
+
                 }
+
             },
+
             dismissButton = {
+
                 TextButton(onClick = {
+
                     showSettingsDialog = false
-                    saveAndNavigate(Constants.DEFAULT_LAT, Constants.DEFAULT_LON)
+
+                    scope.launch {
+
+                        settingsRepo.saveUserLocation(
+                            Constants.DEFAULT_LAT, Constants.DEFAULT_LON
+                        )
+
+                    }
+
+                    navigateToHome()
+
                 }) {
-                    Text("Use Default", color = AfaqThemeColors.textSecondary)
+
+                    Text(
+                        stringResource(R.string.use_default), color = AfaqThemeColors.textSecondary
+                    )
+
                 }
+
             }
+
         )
+
     }
 
-    // ─── Rationale Dialog ─────────────────────────────────
     if (showRationale) {
+
         AlertDialog(
-            onDismissRequest = { },
-            containerColor = AfaqThemeColors.background,
+
+            onDismissRequest = {}, containerColor = AfaqThemeColors.background,
+
             title = {
+
                 Text(
-                    text = "Location Required",
+                    stringResource(R.string.location_required_title),
                     style = AfaqTypography.bold16,
                     color = AfaqThemeColors.textPrimary
                 )
+
             },
+
             text = {
+
                 Text(
-                    text = "Afaq needs your location to show accurate weather.",
+                    stringResource(R.string.location_required_message),
                     style = AfaqTypography.regular14,
                     color = AfaqThemeColors.textSecondary
                 )
+
             },
+
             confirmButton = {
+
                 TextButton(onClick = {
+
                     showRationale = false
                     locationPermission.launchPermissionRequest()
+
                 }) {
-                    Text("Allow", color = AfaqThemeColors.primary)
+
+                    Text(
+                        stringResource(R.string.allow), color = AfaqThemeColors.primary
+                    )
+
                 }
+
             },
+
             dismissButton = {
+
                 TextButton(onClick = {
+
                     showRationale = false
-                    saveAndNavigate(Constants.DEFAULT_LAT, Constants.DEFAULT_LON)
+
+                    scope.launch {
+
+                        settingsRepo.saveUserLocation(
+                            Constants.DEFAULT_LAT, Constants.DEFAULT_LON
+                        )
+
+                    }
+
+                    navigateToHome()
+
                 }) {
-                    Text("Skip", color = AfaqThemeColors.textSecondary)
+
+                    Text(
+                        stringResource(R.string.skip), color = AfaqThemeColors.textSecondary
+                    )
+
                 }
+
             }
+
         )
+
     }
 
     SplashContent()
+
 }

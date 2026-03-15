@@ -33,10 +33,66 @@
 --- 
 # Tasks for Today [Wednesday]
 1. fix location permission bugs
-2. make notification sticky for alarm
-3. Settings -> location and wind speed
+2. make notification sticky for alarm 
+3. Settings -> location and wind speed [Done] 
 4. test whole app 
 5. refactor & restucture code
+6. redesign dark theme [Done]
 
 # Tasks for Today [Thursday]
 1. apply test cases [unit tests] 
+------
+Today
+1. refactor & restucture code ✅✅
+1. test whole app ✅
+3. study testing mechanism proccess
+4. implement it 
+5. add offline checks "Dialogs" [Done] 
+
+-----
+# Today
+
+1. Refactoring
+```
+1. Home ✅
+2. Favourites ✅
+3. Alarms ✅
+4. Settings ✅
+```
+
+2. Fix 
+```
+1. user can add without select any location 
+2. language changes from settings not listening at first one 
+3. refactor service 
+```
+
+
+
+
+
+
+
+
+----
+
+- **Core Weather Features**:
+    - Implement `HomeLocalDataSource` and `WeatherDataStore` to cache weather and forecast data uniquely by latitude/longitude.
+    - Add `WindConverter` and integrate `TempConverter` and `WindConverter` across UI components.
+    - Introduce `LocationMapBottomSheet` using OpenStreetMap (osmdroid) for manual location selection.
+
+- **Settings & Localization**:
+    - Expand `SettingsViewModel` to manage user-defined coordinates and localized unit settings.
+    - Provide full Arabic and English string translations for all UI labels, units, and dialogs.
+    - Implement `fetchGpsLocation` helper for reactive GPS updates.
+
+- **Alarms & Favorites**:
+    - Refactor Alert/Alarm system: rename "Alert" to "Alarm" for consistency and implement sticky notifications for alarms.
+    - Add `DeleteFavouriteDialog` with Lottie animations for a better user experience when removing items.
+    - Update `FavouriteViewModel` to fetch remote weather data before saving a new favorite location.
+
+- **Refactoring & UI**:
+    - Restructure project packages (data, network, ui) for better separation of concerns.
+    - Update `AfaqThemeColors` to support a more robust Dark Theme.
+    - Clean up `HomeScreen` to reactively load data based on saved coordinates in `AppSettings`.
+    - Improve navigation by removing hardcoded coordinates from `HomeRoute`.

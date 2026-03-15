@@ -1,4 +1,4 @@
-package com.example.afaq.db
+package com.example.afaq.data.db
 
 import android.content.Context
 import androidx.room.Database

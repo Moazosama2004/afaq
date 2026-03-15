@@ -1,4 +1,4 @@
-package com.example.afaq.presentation.alarms.ui
+package com.example.afaq.presentation.alarm.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,14 +15,21 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.afaq.R
 import com.example.afaq.data.alarm.model.AlertEntity
-import com.example.afaq.utils.formatAlertTime
+import com.example.afaq.presentation.favourites.ui.DeleteFavouriteDialog
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.utils.formatAlertTime
 
 
 // ─── Alert Card ───────────────────────────────────────────
@@ -32,10 +39,21 @@ fun AlertCard(
     alert: AlertEntity,
     onDeleteClick: () -> Unit
 ) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+
+    if (showDeleteDialog) {
+        DeleteFavouriteDialog(
+            cityName = alert.startTime.toString(),
+            onConfirm = onDeleteClick,
+            onDismiss = { showDeleteDialog = false }
+        )
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AfaqThemeColors.secondry),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Row(
@@ -47,12 +65,12 @@ fun AlertCard(
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
-                    text = "Start: ${formatAlertTime(alert.startTime)}",
+                    text = "${stringResource(R.string.start)}: ${formatAlertTime(alert.startTime)}",
                     style = AfaqTypography.semiBold14,
                     color = AfaqThemeColors.textPrimary
                 )
                 Text(
-                    text = "End: ${formatAlertTime(alert.endTime)}",
+                    text = "${stringResource(R.string.end)}: ${formatAlertTime(alert.endTime)}",
                     style = AfaqTypography.regular12,
                     color = AfaqThemeColors.textSecondary
                 )
@@ -73,7 +91,7 @@ fun AlertCard(
                 }
             }
 
-            IconButton(onClick = onDeleteClick) {
+            IconButton(onClick = { showDeleteDialog = true }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete",

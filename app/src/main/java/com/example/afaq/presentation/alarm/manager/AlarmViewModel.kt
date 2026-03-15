@@ -1,4 +1,4 @@
-package com.example.afaq.presentation.alarms.manager
+package com.example.afaq.presentation.alarm.manager
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,36 +10,38 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-class AlertViewModel (
+class AlertViewModel(
     private val alertRepo: AlertRepo
-) : ViewModel(){
+) : ViewModel() {
 
-    private val _alertsState = MutableStateFlow<AlertsUiState>(AlertsUiState.Loading)
-    val alertsState: StateFlow<AlertsUiState> = _alertsState
+    private val _alertsState = MutableStateFlow<AlarmsUiState>(AlarmsUiState.Loading)
+    val alertsState: StateFlow<AlarmsUiState> = _alertsState
 
-    private val _addState = MutableStateFlow<AddAlertState>(AddAlertState.Idle)
-    val addState: StateFlow<AddAlertState> = _addState
+    private val _addState = MutableStateFlow<AddAlarmState>(AddAlarmState.Idle)
+    val addState: StateFlow<AddAlarmState> = _addState
 
-    init { loadAlerts() }
+    init {
+        loadAlerts()
+    }
 
     private fun loadAlerts() {
         viewModelScope.launch {
             alertRepo.getAllAlerts()
                 .catch { e ->
-                    _alertsState.value = AlertsUiState.Error(e.message ?: "Unknown error")
+                    _alertsState.value = AlarmsUiState.Error(e.message ?: "Unknown error")
                 }
                 .collect { list ->
                     _alertsState.value = if (list.isEmpty()) {
-                        AlertsUiState.Empty
+                        AlarmsUiState.Empty
                     } else {
-                        AlertsUiState.Success(list)
+                        AlarmsUiState.Success(list)
                     }
                 }
         }
     }
 
     fun addAlert(startTime: Long, endTime: Long, type: String) {
-        _addState.value = AddAlertState.Loading
+        _addState.value = AddAlarmState.Loading
         viewModelScope.launch {
             runCatching {
                 alertRepo.insertAlert(
@@ -50,10 +52,10 @@ class AlertViewModel (
                     )
                 )
             }.onSuccess {
-                _addState.value = AddAlertState.Success
-                _addState.value = AddAlertState.Idle
+                _addState.value = AddAlarmState.Success
+                _addState.value = AddAlarmState.Idle
             }.onFailure { e ->
-                _addState.value = AddAlertState.Error(e.message ?: "Unknown error")
+                _addState.value = AddAlarmState.Error(e.message ?: "Unknown error")
             }
         }
     }

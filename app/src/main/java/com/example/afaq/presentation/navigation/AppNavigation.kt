@@ -16,33 +16,29 @@ import com.example.afaq.presentation.settings.ui.SettingsScreen
 @Composable
 fun AppNavigation(
     settingsViewModel: SettingsViewModel,
-    navController : NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier
-){
+) {
     NavHost(
         navController = navController,
         startDestination = Routes.SplashRoute,
         modifier = modifier
-    ){
+    ) {
         composable<Routes.SplashRoute> {
             SplashScreen(
-                onLocationReady = { lat, lon ->
-                    navController.navigate(Routes.HomeRoute(lat = lat, lon = lon)) {
+                onLocationReady = {
+                    navController.navigate(Routes.HomeRoute) {
                         popUpTo(Routes.SplashRoute) { inclusive = true }
                     }
                 }
             )
         }
 
-        composable<Routes.HomeRoute> { backStackEntry ->
-            val route = backStackEntry.toRoute<Routes.HomeRoute>()
-            HomeScreen(
-                lat = route.lat,
-                lon = route.lon,
+        composable<Routes.HomeRoute> {
+            HomeScreen(                              // ← no lat/lon from route ✅
                 settingsViewModel = settingsViewModel
             )
         }
-
 
         composable<Routes.FavouritesRoute> {
             FavouritesScreen()
@@ -59,4 +55,3 @@ fun AppNavigation(
         }
     }
 }
-

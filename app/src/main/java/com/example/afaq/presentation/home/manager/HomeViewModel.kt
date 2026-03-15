@@ -20,15 +20,15 @@ class HomeViewModel(
     private val _forecastState = MutableStateFlow<ForecastUiState>(ForecastUiState.Loading)
     val forecastState: StateFlow<ForecastUiState> = _forecastState
 
-    fun loadWeather(lat: Double, lon: Double,lang :String) {
-        getCurrentWeather(lat = lat, lon = lon,lang = lang)
-        getForecast(lat = lat, lon = lon, lang = lang)
+    fun loadWeather(lat: Double, lon: Double, lang: String = "en", units: String = "metric") {
+        getCurrentWeather(lat = lat, lon = lon, lang = lang, units = units)
+        getForecast(lat = lat, lon = lon, lang = lang, units = units)
     }
 
     private fun getCurrentWeather(
         lat: Double,
         lon: Double,
-        apiKey : String = Constants.API_KEY,
+        apiKey: String = Constants.API_KEY,
         units: String = "metric",
         lang: String = "en"
     ) {
@@ -53,7 +53,7 @@ class HomeViewModel(
     private fun getForecast(
         lat: Double,
         lon: Double,
-        apiKey :String = Constants.API_KEY,
+        apiKey: String = Constants.API_KEY,
         units: String = "metric",
         lang: String = "en"
     ) {

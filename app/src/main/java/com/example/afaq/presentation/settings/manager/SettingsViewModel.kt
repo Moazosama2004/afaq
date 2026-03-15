@@ -1,5 +1,6 @@
 package com.example.afaq.presentation.settings.manager
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -12,7 +13,6 @@ class SettingsViewModel(
     private val repo: SettingsRepo
 ) : ViewModel() {
 
-    // ─── States - shared across app ───────────────────────
     val language = repo.language.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
@@ -33,18 +33,22 @@ class SettingsViewModel(
         SharingStarted.WhileSubscribed(5000),
         "GPS"
     )
-//    val theme = repo.theme.stateIn(
-//        viewModelScope,
-//        SharingStarted.WhileSubscribed(5000),
-//        "System"
-//    )
 
-    // ─── Update ────────────────────────────────────────────
+    val userLat = repo.userLat.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), null
+    )
+    val userLon = repo.userLon.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), null
+    )
+
     fun setLanguage(value: String) = viewModelScope.launch { repo.setLanguage(value) }
     fun setTempUnit(value: String) = viewModelScope.launch { repo.setTempUnit(value) }
     fun setWindUnit(value: String) = viewModelScope.launch { repo.setWindUnit(value) }
     fun setLocation(value: String) = viewModelScope.launch { repo.setLocation(value) }
-//    fun setTheme(value: String) = viewModelScope.launch { repo.setTheme(value) }
+    suspend fun saveUserLocation(lat: Double, lon: Double) {
+        repo.saveUserLocation(lat, lon)
+        Log.d("Settings", "✅ Location saved: $lat, $lon")
+    }
 }
 
 class SettingsViewModelFactory(

@@ -8,10 +8,7 @@ sealed class Routes {
     object SplashRoute : Routes()
 
     @Serializable
-    data class HomeRoute(
-        val lat: Double = 30.0444,
-        val lon: Double = 31.2357
-    ) : Routes()
+    object HomeRoute : Routes()
 
     @Serializable
     object FavouritesRoute : Routes()

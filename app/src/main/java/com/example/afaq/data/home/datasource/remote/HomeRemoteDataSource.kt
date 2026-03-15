@@ -1,16 +1,18 @@
 package com.example.afaq.data.home.datasource.remote
 
 import com.example.afaq.data.home.model.Weather
+import com.example.afaq.data.home.model.toForecast
+import com.example.afaq.data.home.model.toWeather
 import com.example.afaq.data.model.Forecast
-import com.example.afaq.network.RetroFitClient
 
-object HomeRemoteDataSource {
-    private val weatherApiService: WeatherApiService = RetroFitClient.webApiService
+class HomeRemoteDataSource(
+    private val weatherApiService: WeatherApiService
+) {
 
     suspend fun getCurrentWeather(
         lat: Double,
         lon: Double,
-        apiKey : String,
+        apiKey: String,
         units: String = "metric",
         lang: String = "en"
     ): Result<Weather> {
@@ -18,7 +20,7 @@ object HomeRemoteDataSource {
             val response = weatherApiService.getCurrentWeather(
                 lat,
                 lon,
-                apiKey = apiKey ,
+                apiKey = apiKey,
                 units,
                 lang
             )
@@ -42,7 +44,7 @@ object HomeRemoteDataSource {
     suspend fun getForecast(
         lat: Double,
         lon: Double,
-        apiKey : String,
+        apiKey: String,
         units: String = "metric",
         lang: String = "en"
     ): Result<Forecast> {

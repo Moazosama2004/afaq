@@ -10,18 +10,22 @@ object AfaqColors {
     val primary = Color(0xFF31507F)
     val secondary = Color(0xFFFFFFFF)
     val background = Color(0xFFF4F4F4)
-    val surface = Color(0xFFFFFFFF)
+    val surface = Color(0xFF31507F)
     val textPrimary = Color(0xFF1A1A2E)
     val textSecondary = Color(0xFF6B7280)
     val textWhite = Color(0xFFFFFFFF)
+    val textBlack = Color(0xFF000000)
+    val dialog = Color(0xFFFFFFFF)
 
     // ─── Dark Colors ──────────────────────────────────────
     val darkPrimary = Color(0xFFFFFFFF)
     val darkSecondary = Color(0xFF000000)
     val darkBackground = Color(0xFF1F1F1F)
-    val darkSurface = Color(0xFF16213E)
+    val darkSurface = Color(0xFF31507F)
     val darkTextPrimary = Color(0xFFFFFFFF)
-    val darkTextSecondary = Color(0xFFB0B0B0)
+    val darkTextSecondary = Color(0xFFFFFFFF)
+    val darkDialog = Color(0xFF1F1F1F)
+    val darkTextBlack = Color(0xFFFFFFFF)
 
     // ─── Status ───────────────────────────────────────────
     val success = Color(0xFF4CAF50)
@@ -51,4 +55,10 @@ object AfaqThemeColors {
 
     val textSecondary: Color
         @Composable get() = if (isSystemInDarkTheme()) AfaqColors.darkTextSecondary else AfaqColors.textSecondary
+
+    val dialog: Color
+        @Composable get() = if (isSystemInDarkTheme()) AfaqColors.darkDialog else AfaqColors.dialog
+
+    val textBlack: Color
+        @Composable get() = if (isSystemInDarkTheme()) AfaqColors.darkTextBlack else AfaqColors.textBlack
 }

@@ -12,19 +12,18 @@ import com.example.afaq.utils.isSameDay
 @Composable
 fun HourlyForecastRow(
     forecast: Forecast,
-    tempUnit : String,
-    ) {
+    tempUnit: String,
+) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        // filter today's items only (every 3 hours)
         items(
             forecast.items
                 .filter { isSameDay(it.dt) }
-                .take(8) // max 8 entries = 24 hours
+                .take(8)
         ) { item ->
-            HourlyCard(item = item,tempUnit = tempUnit)
+            HourlyCard(item = item, tempUnit = tempUnit)
         }
     }
 }

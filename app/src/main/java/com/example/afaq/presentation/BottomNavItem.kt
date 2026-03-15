@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import com.example.afaq.R
 import com.example.afaq.presentation.navigation.Routes
-import com.example.afaq.utils.getAppLocale
 
 data class BottomNavItem(
     val label: String,
@@ -19,12 +18,12 @@ data class BottomNavItem(
 )
 
 @Composable
-fun rememberBottomNavItems(lat: Double, lon: Double): List<BottomNavItem> {
+fun rememberBottomNavItems(): List<BottomNavItem> {
     return listOf(
         BottomNavItem(
             label = stringResource(R.string.home),
             icon = Icons.Default.Home,
-            route = Routes.HomeRoute(lat, lon)
+            route = Routes.HomeRoute
         ),
         BottomNavItem(
             label = stringResource(R.string.favourites),

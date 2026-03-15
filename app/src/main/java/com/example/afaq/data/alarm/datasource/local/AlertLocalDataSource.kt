@@ -3,7 +3,9 @@ package com.example.afaq.data.alarm.datasource.local
 import com.example.afaq.data.alarm.model.AlertEntity
 import kotlinx.coroutines.flow.Flow
 
-class AlertLocalDataSource(private val alertDao: AlertDao) {
+class AlertLocalDataSource(
+    private val alertDao: AlertDao
+) {
 
     suspend fun insertAlert(alert: AlertEntity) =
         alertDao.insertAlert(alert)

@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.afaq.data.favourite.FavouriteRepo
-import com.example.afaq.data.local.db.FavouriteEntity
 import com.example.afaq.data.local.db.toFavouriteEntity
 import com.example.afaq.utils.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,11 +17,9 @@ class FavouriteViewModel(
     private val repo: FavouriteRepo
 ) : ViewModel() {
 
-    // All favourites list
     private val _favouritesState = MutableStateFlow<FavouritesUiState>(FavouritesUiState.Loading)
     val favouritesState: StateFlow<FavouritesUiState> = _favouritesState
 
-    // Add favourite state
     private val _addState = MutableStateFlow<AddFavouriteState>(AddFavouriteState.Idle)
     val addState: StateFlow<AddFavouriteState> = _addState
 
@@ -33,9 +30,8 @@ class FavouriteViewModel(
         loadFavourites()
     }
 
-    // Load all from Room
     private fun loadFavourites() {
-        Log.d("FavouriteViewModel : " , "loadFavourites")
+        Log.d("FavouriteViewModel : ", "loadFavourites")
         viewModelScope.launch {
             repo.getAllFavourites()
                 .catch { e ->
@@ -51,9 +47,8 @@ class FavouriteViewModel(
         }
     }
 
-    // Called when user selects location on map
     fun addFavourite(lat: Double, lon: Double) {
-        Log.d("FavouriteViewModel : " , "addFavourite : $lat , $lon")
+        Log.d("FavouriteViewModel : ", "addFavourite : $lat , $lon")
         _addState.value = AddFavouriteState.Loading
         viewModelScope.launch {
             // 1 - fetch weather from API
@@ -75,28 +70,13 @@ class FavouriteViewModel(
         }
     }
 
-    fun deleteFavourite(favourite: FavouriteEntity) {
+    fun deleteFavouriteById(id: Int) {
         _deleteState.value = DeleteFavouriteState.Loading
-        Log.d("FavouriteViewModel : " , "deleteFavourite")
-        viewModelScope.launch {
-            runCatching {
-                repo.deleteFavourite(favourite)
-            }.onSuccess{
-                _deleteState.value = DeleteFavouriteState.Success
-                _deleteState.value = DeleteFavouriteState.Idle
-            }.onFailure { e ->
-                _deleteState.value = DeleteFavouriteState.Error(e.message ?: "Unknown error")
-            }
-        }
-    }
-
-    fun deleteFavouriteById(id : Int) {
-        _deleteState.value = DeleteFavouriteState.Loading
-        Log.d("FavouriteViewModel : " , "deleteFavourite")
+        Log.d("FavouriteViewModel : ", "deleteFavourite")
         viewModelScope.launch {
             runCatching {
                 repo.deleteFavouriteById(id)
-            }.onSuccess{
+            }.onSuccess {
                 _deleteState.value = DeleteFavouriteState.Success
                 _deleteState.value = DeleteFavouriteState.Idle
             }.onFailure { e ->

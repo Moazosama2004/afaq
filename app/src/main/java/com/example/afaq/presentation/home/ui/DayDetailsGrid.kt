@@ -1,6 +1,5 @@
 package com.example.afaq.presentation.home.ui
 
-import android.icu.util.TimeUnit
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,12 +27,14 @@ import com.example.afaq.data.home.model.Weather
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.utils.TempConverter
+import com.example.afaq.utils.WindConverter
 
 @Composable
 fun DayDetailsGrid(
     weather: Weather,
     tempUnit: String,
-    ) {
+    windSpeedUnit: String
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,8 +74,8 @@ fun DayDetailsGrid(
                 label = stringResource(R.string.visibility)
             )
             DetailItem(
-                value = "${weather.windSpeed.toInt()}",
-                unit = "km/h",
+                value = WindConverter.convert(weather.windSpeed, windSpeedUnit),
+                unit = "",
                 unitSize = 10.sp,
                 label = stringResource(R.string.wind)
             )
@@ -97,25 +97,25 @@ fun DayDetailsGrid(
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowUp,
                     contentDescription = "Max",
-                    tint = Color(0xFF31507F),
+                    tint = AfaqThemeColors.primary,
                     modifier = Modifier.size(20.dp)
                 )
                 Text(
                     text = TempConverter.convert(weather.tempMax.toDouble(), tempUnit),
                     style = AfaqTypography.bold16,
-                    color = Color(0xFF31507F)
+                    color = AfaqThemeColors.primary,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowDown,
                     contentDescription = "Min",
-                    tint = Color(0xFF31507F),
+                    tint = AfaqThemeColors.primary,
                     modifier = Modifier.size(20.dp)
                 )
                 Text(
                     text = TempConverter.convert(weather.tempMin.toDouble(), tempUnit),
                     style = AfaqTypography.bold16,
-                    color = Color(0xFF31507F)
+                    color = AfaqThemeColors.primary,
                 )
             }
         }
