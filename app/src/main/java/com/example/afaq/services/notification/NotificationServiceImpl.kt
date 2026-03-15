@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.app.NotificationCompat
+import com.example.afaq.MainActivity
 import com.example.afaq.R
 import com.example.afaq.services.recievers.AlarmReciever
 
@@ -26,15 +27,27 @@ class NotificationServiceImpl(
         val soundUri = Uri.parse(
             "android.resource://${context.packageName}/raw/alert_sound"
         )
+        
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            context, 0, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         val notification = NotificationCompat.Builder(context , CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("Afaq - آفاق")
-            .setContentText("$message")
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle("Weather Update 🌤️")
+            .setContentText(message)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setSound(soundUri)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
             .build()
 
-        manager.notify(1,notification)
+        manager.notify(System.currentTimeMillis().toInt(), notification)
     }
 
     override fun showAlarm(message: String) {
@@ -53,20 +66,27 @@ class NotificationServiceImpl(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val fullScreenPendingIntent = PendingIntent.getActivity(
+            context, 0, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
-        val dummyIntent = PendingIntent.getActivity(context, 0, Intent(), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         val notification = NotificationCompat.Builder(context, "afaq_alarm_channel")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("Afaq - آفاق 🌤️")
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle("Afaq Weather Alarm 🚨")
             .setContentText(message)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+            .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setSound(soundUri)
-            .setFullScreenIntent(dummyIntent, true)
+            .setFullScreenIntent(fullScreenPendingIntent, true)
             .setOngoing(true)
             .setAutoCancel(false)
             .addAction(
-                R.drawable.ic_launcher_foreground,
+                android.R.drawable.ic_menu_close_clear_cancel,
                 "Dismiss",
                 dismissPendingIntent
             )

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface AlertDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAlert(alert: AlertEntity)
+    suspend fun insertAlert(alert: AlertEntity): Long
 
     @Query("SELECT * FROM alerts ORDER BY startTime ASC")
     fun getAllAlerts(): Flow<List<AlertEntity>>

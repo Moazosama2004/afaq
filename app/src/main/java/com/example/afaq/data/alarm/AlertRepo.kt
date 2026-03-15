@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class AlertRepo(
     private val localDataSource: AlertLocalDataSource
 ) {
-    suspend fun insertAlert(alert: AlertEntity) =
+    suspend fun insertAlert(alert: AlertEntity): Long =
         localDataSource.insertAlert(alert)
 
     fun getAllAlerts(): Flow<List<AlertEntity>> =

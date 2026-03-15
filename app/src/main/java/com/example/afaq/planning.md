@@ -28,7 +28,8 @@
 4. fix location permission bugs ✅
 5. change icons to custom one
 6. make favourite card clickable to display ✅
-7. make digits arabic  
+7. make digits arabic  ✅
+8. change alarm and notification badge
 ```
 
 
@@ -72,3 +73,15 @@
 - Configure navigation logic in `AppNavigation` to handle transitions from the favourites list to city details
 - Update `FavouritesScreen` and `FavouriteCityCard` to support click events for navigating to specific city details
 - Mark language setting synchronization as completed in planning documentation
+
+- Add `localizeDigits` helper functions to handle Arabic numeral conversion based on app locale
+- Integrate localization into `TempConverter`, `WindConverter`, and date/time formatting utilities
+- Apply digit localization across Home and Favourite screens, including weather cards and detail grids
+- Ensure consistent locale-aware geocoding in location helpers
+
+- Refactor `WeatherAlertWorker` and `AlarmReciever` to fetch current weather data (temperature, description, city) from `HomeRemoteDataSource` before displaying notifications or alarms.
+- Update `AlertDao`, `AlertLocalDataSource`, and `AlertRepo` to return the row ID upon alert insertion.
+- Enhance `AlertViewModel` to manage the scheduling and cancellation of alarms and work requests directly using `AndroidAlarmManager` and `WorkManagerScheduler`.
+- Improve `NotificationServiceImpl` with better icons, styles, and full-screen intent support for alarms.
+- Update `planning.md` to reflect progress on localized digits and alert system improvements.
+- Refactor `AlarmsScreen` to use the updated `AlertViewModel` for handling alert deletions and permissions.

@@ -1,18 +1,26 @@
 package com.example.afaq.presentation.alarm.manager
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.afaq.data.alarm.AlertRepo
 import com.example.afaq.data.alarm.model.AlertEntity
+import com.example.afaq.services.alarms.AndroidAlarmManager
+import com.example.afaq.services.workmanager.WorkManagerScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class AlertViewModel(
+    application: Application,
     private val alertRepo: AlertRepo
-) : ViewModel() {
+) : AndroidViewModel(application) {
+
+    private val alarmManager = AndroidAlarmManager(application)
+    private val workManagerScheduler = WorkManagerScheduler(application)
 
     private val _alertsState = MutableStateFlow<AlarmsUiState>(AlarmsUiState.Loading)
     val alertsState: StateFlow<AlarmsUiState> = _alertsState
@@ -44,13 +52,21 @@ class AlertViewModel(
         _addState.value = AddAlarmState.Loading
         viewModelScope.launch {
             runCatching {
-                alertRepo.insertAlert(
-                    AlertEntity(
-                        startTime = startTime,
-                        endTime = endTime,
-                        type = type
-                    )
+                val entity = AlertEntity(
+                    startTime = startTime,
+                    endTime = endTime,
+                    type = type
                 )
+                val id = alertRepo.insertAlert(entity).toInt()
+                val savedEntity = entity.copy(id = id)
+                
+                // Trigger Actual Alarm/Notification
+                if (type == "ALARM") {
+                    alarmManager.schedule(savedEntity)
+                } else {
+                    workManagerScheduler.schedule(savedEntity)
+                }
+
             }.onSuccess {
                 _addState.value = AddAlarmState.Success
                 _addState.value = AddAlarmState.Idle
@@ -60,9 +76,16 @@ class AlertViewModel(
         }
     }
 
-    fun deleteAlert(id: Int) {
+    fun deleteAlert(alert: AlertEntity) {
         viewModelScope.launch {
-            runCatching { alertRepo.deleteAlertById(id) }
+            runCatching {
+                alertRepo.deleteAlertById(alert.id)
+                if (alert.type == "ALARM") {
+                    alarmManager.cancel(alert)
+                } else {
+                    workManagerScheduler.cancel(alert.id)
+                }
+            }
         }
     }
 
@@ -70,12 +93,13 @@ class AlertViewModel(
 
 
 class AlertViewModelFactory(
+    private val application: Application,
     private val repo: AlertRepo
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AlertViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return AlertViewModel(repo) as T
+            return AlertViewModel(application, repo) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

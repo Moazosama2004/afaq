@@ -7,7 +7,7 @@ class AlertLocalDataSource(
     private val alertDao: AlertDao
 ) {
 
-    suspend fun insertAlert(alert: AlertEntity) =
+    suspend fun insertAlert(alert: AlertEntity): Long =
         alertDao.insertAlert(alert)
 
     fun getAllAlerts(): Flow<List<AlertEntity>> =

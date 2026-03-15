@@ -2,6 +2,7 @@ package com.example.afaq.presentation.alerts.ui
 
 import android.Manifest
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -61,8 +62,6 @@ import com.example.afaq.presentation.alarm.ui.AddAlertBottomSheet
 import com.example.afaq.presentation.alarm.ui.AlertCard
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.services.alarms.AndroidAlarmManager
-import com.example.afaq.services.workmanager.WorkManagerScheduler
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
@@ -73,6 +72,7 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
     val viewModel = viewModel<AlertViewModel>(
         factory = remember {
             AlertViewModelFactory(
+                context as Application,
                 AlertRepo(
                     AlertLocalDataSource(AppDatabase.getInstance(context).alertDao())
                 )
@@ -111,7 +111,7 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
 
             } else {
                 // user disallowed — check if permanently denied
-                val activity = context as Activity
+                val activity = context as? Activity ?: return@rememberLauncherForActivityResult
 
                 val permanentlyDenied = !ActivityCompat.shouldShowRequestPermissionRationale(
                     activity,
@@ -179,9 +179,7 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
                         AlertCard(
                             alert = alert,
                             onDeleteClick = {
-                                viewModel.deleteAlert(alert.id)
-                                WorkManagerScheduler(context).cancel(alert.id)
-                                AndroidAlarmManager(context).cancel(alert)
+                                viewModel.deleteAlert(alert)
                             }
                         )
                     }
@@ -250,7 +248,3 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
         )
     }
 }
-
-
-
-
