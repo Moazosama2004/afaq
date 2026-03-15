@@ -100,4 +100,6 @@
 
     <string name="location_required_title">الموقع مطلوب</string>
     <string name="location_required_message">يحتاج تطبيق آفاق إلى موقعك لعرض الطقس بدقة.</string>
+    <string name="please_select_location">يرجى تحديد موقع على الخريطة أولاً</string>
+    <string name="offline_city_view_error">تحقق من اتصالك بالإنترنت لعرض بيانات الطقس المباشرة لهذه المدينة.</string>
 </resources>

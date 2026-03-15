@@ -22,6 +22,8 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,12 +55,16 @@ import com.example.afaq.presentation.favourites.manager.FavouriteViewModelFactor
 import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import kotlinx.coroutines.launch
 
 @Composable
 fun FavouritesScreen(
     modifier: Modifier = Modifier,
+    onCityClick: (Double, Double) -> Unit = { _, _ -> }
 ) {
     val context = LocalContext.current.applicationContext
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val viewModel = viewModel<FavouriteViewModel>(
         factory = remember {
@@ -75,10 +82,13 @@ fun FavouritesScreen(
     var showMap by remember { mutableStateOf(false) }
     var lat by remember { mutableDoubleStateOf(0.0) }
     var lon by remember { mutableDoubleStateOf(0.0) }
+    var isLocationSelected by remember { mutableStateOf(false) }
 
     val favouritesState by viewModel.favouritesState.collectAsState()
     val addState by viewModel.addState.collectAsState()
     val deleteState by viewModel.deleteState.collectAsState()
+
+    val snackbarMessage = stringResource(R.string.please_select_location)
 
     Box(
         modifier = modifier
@@ -92,8 +102,12 @@ fun FavouritesScreen(
                 onLocationSelected = { latitude, longitude ->
                     lat = latitude
                     lon = longitude
+                    isLocationSelected = true
                 },
-                onBack = { showMap = false }
+                onBack = { 
+                    showMap = false
+                    isLocationSelected = false
+                }
             )
         } else {
             when (favouritesState) {
@@ -199,6 +213,7 @@ fun FavouritesScreen(
             is AddFavouriteState.Success -> {
                 LaunchedEffect(addState) {
                     showMap = false
+                    isLocationSelected = false
                     viewModel.resetAddState()
                 }
             }
@@ -243,16 +258,27 @@ fun FavouritesScreen(
             else -> {}
         }
 
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 90.dp)
+        )
+
         FloatingActionButton(
             onClick = {
                 if (showMap) {
-                    showMap = false
-                    viewModel.addFavourite(lat, lon)
+                    if (isLocationSelected) {
+                        viewModel.addFavourite(lat, lon)
+                    } else {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(snackbarMessage)
+                        }
+                    }
                 } else {
                     showMap = true
+                    isLocationSelected = false
                 }
             },
-            containerColor = AfaqThemeColors.surface,
+            containerColor = if (showMap && !isLocationSelected) AfaqThemeColors.surface.copy(alpha = 0.6f) else AfaqThemeColors.surface,
             contentColor = Color.White,
             shape = CircleShape,
             modifier = Modifier

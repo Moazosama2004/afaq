@@ -96,5 +96,6 @@
 
     <string name="location_required_title">Location Required</string>
     <string name="location_required_message">Afaq needs your location to show accurate weather.</string>
-
+    <string name="please_select_location">Please select a location on the map first</string>
+    <string name="offline_city_view_error">Please check your internet connection to view live weather for this city.</string>
 </resources>

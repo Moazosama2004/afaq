@@ -1,55 +1,15 @@
 
-## 1. ~Finish Home Screen with my design~
-### 1.1 ~~add bottom navigation bar~~
-### 1.2 ~REQUEST DATA OF FORECAST~
-## 2. ~~Start Fav Screen~~
-
-- ~~edit updated at home screen~~
-- ~~pass real data for day details~~
-
------
-# Tasks for Today [Monday]
-## 1. Display name of point on map [Done]
-## 2. Give user ability to delete from fav [Done]
-## 3. refactor viewmodel of Home Feature to be testable [Done]
 ## 4. fix permission bugs 
-## 5. Display valid data at home "Day Details" [Done]
-## 6. plan for Weather Alerts  [Done]
----- 
-# Weather Alerts [Notification]
-## 1. Create Notification Channel
-## 2. Create Notification Service interface + class
-## 3. Create BroadCast Reciever
 
-# Weather Alerts [Alarm]
-## 3. Create Alarm Item
-## 1. Create Alarm Service interface + class
--> use Notification to display sticky notification with sound 
-
-
-1. create extended worker class
-2. define work request One,Peri
-3. define work manager .getinstance
---- 
-# Tasks for Today [Wednesday]
-1. fix location permission bugs
-2. make notification sticky for alarm 
-3. Settings -> location and wind speed [Done] 
+1. 
 4. test whole app 
-5. refactor & restucture code
-6. redesign dark theme [Done]
+
 
 # Tasks for Today [Thursday]
 1. apply test cases [unit tests] 
-------
-Today
-1. refactor & restucture code ✅✅
-1. test whole app ✅
 3. study testing mechanism proccess
 4. implement it 
-5. add offline checks "Dialogs" [Done] 
-
------
+5. 
 # Today
 
 1. Refactoring
@@ -62,9 +22,12 @@ Today
 
 2. Fix 
 ```
-1. user can add without select any location 
+1. user can add without select any location ✅
 2. language changes from settings not listening at first one 
 3. refactor service 
+4. fix location permission bugs ✅
+5. change icons to custom one
+6. make favourite card clickable to display 
 ```
 
 
@@ -96,3 +59,9 @@ Today
     - Update `AfaqThemeColors` to support a more robust Dark Theme.
     - Clean up `HomeScreen` to reactively load data based on saved coordinates in `AppSettings`.
     - Improve navigation by removing hardcoded coordinates from `HomeRoute`.
+- **Splash Screen**: Refactor location and GPS permission handling using `LifecycleEventObserver` to better manage app resumes.
+  - **Splash Screen**: Remove "Skip" and "Use Default" options from permission/GPS dialogs to ensure mandatory location setup for first-time users.
+  - **Favorites**: Prevent adding a favorite location without selecting a point on the map first.
+  - **Favorites**: Add a `Snackbar` to notify users when attempting to save without a selected location.
+  - **Resources**: Add string resources for location selection prompts and offline error messages in English and Arabic.
+  - **Documentation**: Update `planning.md` to reflect completed tasks and new UI/UX bug fixes.
