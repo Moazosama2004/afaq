@@ -23,7 +23,7 @@
 2. Fix 
 ```
 1. user can add without select any location ✅
-2. language changes from settings not listening at first one 
+2. language changes from settings not listening at first one ✅
 3. refactor service 
 4. fix location permission bugs ✅
 5. change icons to custom one
@@ -65,3 +65,9 @@
   - **Favorites**: Add a `Snackbar` to notify users when attempting to save without a selected location.
   - **Resources**: Add string resources for location selection prompts and offline error messages in English and Arabic.
   - **Documentation**: Update `planning.md` to reflect completed tasks and new UI/UX bug fixes.
+
+- Add `FavouriteDetailsScreen` to display detailed weather, hourly, and 5-day forecasts for saved locations
+- Define `FavouriteDetailsRoute` with latitude and longitude parameters in `Routes`
+- Configure navigation logic in `AppNavigation` to handle transitions from the favourites list to city details
+- Update `FavouritesScreen` and `FavouriteCityCard` to support click events for navigating to specific city details
+- Mark language setting synchronization as completed in planning documentation

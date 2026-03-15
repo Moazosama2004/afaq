@@ -18,4 +18,7 @@ sealed class Routes {
 
     @Serializable
     object SettingsRoute : Routes()
+
+    @Serializable
+    data class FavouriteDetailsRoute(val lat: Double, val lon: Double) : Routes()
 }

@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.example.afaq.presentation.alerts.ui.AlertsScreen
+import com.example.afaq.presentation.favourites.ui.FavouriteDetailsScreen
 import com.example.afaq.presentation.favourites.ui.FavouritesScreen
 import com.example.afaq.presentation.home.ui.HomeScreen
 import com.example.afaq.presentation.screens.splash.SplashScreen
@@ -35,13 +36,17 @@ fun AppNavigation(
         }
 
         composable<Routes.HomeRoute> {
-            HomeScreen(                              // ← no lat/lon from route ✅
+            HomeScreen(
                 settingsViewModel = settingsViewModel
             )
         }
 
         composable<Routes.FavouritesRoute> {
-            FavouritesScreen()
+            FavouritesScreen(
+                onCityClick = { lat, lon ->
+                    navController.navigate(Routes.FavouriteDetailsRoute(lat, lon))
+                }
+            )
         }
 
         composable<Routes.AlertsRoute> {
@@ -51,6 +56,16 @@ fun AppNavigation(
         composable<Routes.SettingsRoute> {
             SettingsScreen(
                 settingsViewModel = settingsViewModel
+            )
+        }
+
+        composable<Routes.FavouriteDetailsRoute> { backStackEntry ->
+            val route: Routes.FavouriteDetailsRoute = backStackEntry.toRoute()
+            FavouriteDetailsScreen(
+                lat = route.lat,
+                lon = route.lon,
+                settingsViewModel = settingsViewModel,
+                onBackClick = { navController.popBackStack() }
             )
         }
     }

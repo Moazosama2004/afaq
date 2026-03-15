@@ -155,6 +155,9 @@ fun FavouritesScreen(
                         items(favourites) { entity ->
                             FavouriteCityCard(
                                 favourite = entity,
+                                onCardClick = {
+                                    onCityClick(entity.lat, entity.lon)
+                                },
                                 onDeleteClick = {
                                     viewModel.deleteFavouriteById(entity.id)
                                 }
