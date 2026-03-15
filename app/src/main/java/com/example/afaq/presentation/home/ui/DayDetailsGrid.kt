@@ -28,6 +28,7 @@ import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.utils.TempConverter
 import com.example.afaq.utils.WindConverter
+import com.example.afaq.utils.localizeDigits
 
 @Composable
 fun DayDetailsGrid(
@@ -56,7 +57,7 @@ fun DayDetailsGrid(
                 label = stringResource(R.string.feels_like)
             )
             DetailItem(
-                value = "${weather.humidity}%",
+                value = "${weather.humidity}%".localizeDigits(),
                 unit = "",
                 label = stringResource(R.string.humidity)
             )
@@ -68,7 +69,7 @@ fun DayDetailsGrid(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             DetailItem(
-                value = "${weather.visibility / 1000}",
+                value = (weather.visibility / 1000).toString().localizeDigits(),
                 unit = "KM",
                 unitSize = 10.sp,
                 label = stringResource(R.string.visibility)
@@ -121,4 +122,3 @@ fun DayDetailsGrid(
         }
     }
 }
-

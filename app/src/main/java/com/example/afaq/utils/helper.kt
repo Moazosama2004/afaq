@@ -14,28 +14,45 @@ import java.util.Locale
 fun getAppLocale(): Locale = Locale.getDefault()
 // ← automatically uses current app locale (set by LocaleHelper)
 
+fun String.localizeDigits(): String {
+    val locale = getAppLocale()
+    if (locale.language != "ar") return this
+    
+    val arabicDigits = charArrayOf('٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩')
+    return this.map { char ->
+        if (char in '0'..'9') {
+            arabicDigits[char - '0']
+        } else {
+            char
+        }
+    }.joinToString("")
+}
+
+fun Int.localizeDigits(): String = this.toString().localizeDigits()
+fun Double.localizeDigits(): String = String.format(Locale.ENGLISH, "%.1f", this).localizeDigits()
+
 fun formatDate(timestamp: Long): String {
     val sdf = SimpleDateFormat("EEE dd, M, yyyy", getAppLocale())
-    return sdf.format(Date(timestamp * 1000))
+    return sdf.format(Date(timestamp * 1000)).localizeDigits()
 }
 
 fun formatTime(timestamp: Long): String {
     val sdf = SimpleDateFormat("hh:mm a", getAppLocale())
-    return sdf.format(Date(timestamp * 1000))
+    return sdf.format(Date(timestamp * 1000)).localizeDigits()
 }
 
 fun formatForecastDate(timestamp: Long): String {
     val sdf = SimpleDateFormat("EEE dd.M", getAppLocale())
-    return sdf.format(Date(timestamp * 1000))
+    return sdf.format(Date(timestamp * 1000)).localizeDigits()
 }
 
 fun formatHour(timestamp: Long): String {
     val sdf = SimpleDateFormat("hh:mm a", getAppLocale())
-    return sdf.format(Date(timestamp * 1000))
+    return sdf.format(Date(timestamp * 1000)).localizeDigits()
 }
 
 fun isSameDay(timestamp: Long): Boolean {
-    val fmt = SimpleDateFormat("yyyy-MM-dd", getAppLocale())
+    val fmt = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
     val today = fmt.format(Date())
     val itemDay = fmt.format(Date(timestamp * 1000))
     return today == itemDay
@@ -48,7 +65,7 @@ fun getDayName(timestamp: Long): String {
 
 fun formatAlertTime(timestamp: Long): String {
     val sdf = SimpleDateFormat("hh:mm a", getAppLocale())
-    return sdf.format(Date(timestamp))
+    return sdf.format(Date(timestamp)).localizeDigits()
 }
 
 suspend fun fetchGpsLocation(
@@ -73,7 +90,7 @@ suspend fun fetchGpsLocation(
 
 fun getAddressFromLocation(context: Context, latitude: Double, longitude: Double): String {
     return try {
-        val geocoder = Geocoder(context, Locale.getDefault())
+        val geocoder = Geocoder(context, getAppLocale())
         val addresses = geocoder.getFromLocation(latitude, longitude, 1)
         addresses?.firstOrNull()?.getAddressLine(0) ?: "Unknown Location"
     } catch (e: Exception) {

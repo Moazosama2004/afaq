@@ -24,6 +24,7 @@ import com.example.afaq.data.model.ForecastItem
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.utils.formatForecastDate
+import com.example.afaq.utils.localizeDigits
 
 @Composable
 fun ForecastDayCard(item: ForecastItem) {
@@ -76,12 +77,12 @@ fun ForecastDayCard(item: ForecastItem) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "${item.temp.toInt()}",
+                    text = item.temp.toInt().toString().localizeDigits(),
                     style = AfaqTypography.bold20,
                     color = Color(0xFF31507F)
                 )
                 Text(
-                    text = "${item.tempMin.toInt()}",
+                    text = item.tempMin.toInt().toString().localizeDigits(),
                     style = AfaqTypography.regular12,
                     color = Color.Gray,
                     modifier = Modifier.padding(bottom = 2.dp)

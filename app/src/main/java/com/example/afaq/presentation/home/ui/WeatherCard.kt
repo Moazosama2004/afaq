@@ -33,6 +33,7 @@ import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.utils.TempConverter
 import com.example.afaq.utils.formatDate
+import com.example.afaq.utils.localizeDigits
 
 
 @Composable
@@ -157,7 +158,7 @@ fun WeatherCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "${stringResource(R.string.updated_at)} 12:11AM",
+                text = "${stringResource(R.string.updated_at)} 12:11AM".localizeDigits(),
                 style = AfaqTypography.regular12,
                 color = Color.Gray
             )

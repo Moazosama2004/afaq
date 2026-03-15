@@ -35,6 +35,7 @@ import coil.compose.AsyncImage
 import com.example.afaq.data.local.db.FavouriteEntity
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.utils.localizeDigits
 
 @Composable
 fun FavouriteCityCard(
@@ -150,7 +151,7 @@ fun FavouriteCityCard(
                     // Temperature
                     Row(verticalAlignment = Alignment.Top) {
                         Text(
-                            text = "${favourite.temperature.toInt()}",
+                            text = favourite.temperature.toInt().toString().localizeDigits(),
                             style = AfaqTypography.bold32,
                             color = AfaqThemeColors.textPrimary
                         )
@@ -174,7 +175,7 @@ fun FavouriteCityCard(
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
-                            text = "${favourite.tempMax.toInt()}",
+                            text = favourite.tempMax.toInt().toString().localizeDigits(),
                             style = AfaqTypography.regular12,
                             color = AfaqThemeColors.textPrimary
                         )
@@ -185,7 +186,7 @@ fun FavouriteCityCard(
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
-                            text = "${favourite.tempMin.toInt()}",
+                            text = favourite.tempMin.toInt().toString().localizeDigits(),
                             style = AfaqTypography.regular12,
                             color = AfaqThemeColors.textPrimary
                         )
@@ -221,12 +222,12 @@ fun FavouriteCityCard(
             ) {
                 WeatherBadge(
                     icon = Icons.Default.WaterDrop,
-                    value = "${favourite.humidity}%",
+                    value = "${favourite.humidity}%".localizeDigits(),
                     color = AfaqThemeColors.secondry
                 )
                 WeatherBadge(
                     icon = Icons.Default.Air,
-                    value = "${favourite.windSpeed.toInt()} m/s",
+                    value = "${favourite.windSpeed.toInt()} m/s".localizeDigits(),
                     color = AfaqThemeColors.primary
                 )
             }

@@ -27,7 +27,8 @@
 3. refactor service 
 4. fix location permission bugs ✅
 5. change icons to custom one
-6. make favourite card clickable to display 
+6. make favourite card clickable to display ✅
+7. make digits arabic  
 ```
 
 
