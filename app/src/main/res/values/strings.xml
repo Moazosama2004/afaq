@@ -23,6 +23,10 @@
     <string name="gps">GPS</string>
     <string name="map">Map</string>
 
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="system">System</string>
+
 
     <!-- Home Screen -->
     <string name="feels_like">Feels like</string>

@@ -23,6 +23,10 @@
     <string name="gps">GPS</string>
     <string name="map">خريطة</string>
 
+    <string name="light">فاتح</string>
+    <string name="dark">داكن</string>
+    <string name="system">النظام</string>
+
 
     <!-- Home Screen -->
     <string name="feels_like">يشعر وكأنه</string>

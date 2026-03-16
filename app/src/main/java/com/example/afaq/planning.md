@@ -88,3 +88,10 @@
 - Improve `NotificationServiceImpl` with better icons, styles, and full-screen intent support for alarms.
 - Update `planning.md` to reflect progress on localized digits and alert system improvements.
 - Refactor `AlarmsScreen` to use the updated `AlertViewModel` for handling alert deletions and permissions.
+  Implement custom weather icons, update alarm badge UI, and add testing dependencies
+
+- Replace OpenWeatherMap network icons with custom local drawables across all weather cards
+- Implement `getWeatherIcon` helper to map temperature and conditions to local resources
+- Update `AlarmCard` badge styling with dynamic colors for light and dark themes
+- Add JUnit, Robolectric, MockK, and Compose testing dependencies to `build.gradle.kts`
+- Update `planning.md` to reflect progress on icon and UI tasks

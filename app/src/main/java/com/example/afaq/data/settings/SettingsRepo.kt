@@ -21,6 +21,13 @@ class SettingsRepo(
     val location: Flow<String> = context.dataStore.data
         .map { it[SettingsKeys.LOCATION] ?: "GPS" }
 
+    val theme: Flow<String> = context.dataStore.data
+        .map { it[SettingsKeys.THEME] ?: "System" }
+
+    suspend fun setTheme(value: String) {
+        context.dataStore.edit { it[SettingsKeys.THEME] = value }
+    }
+
     suspend fun setLanguage(value: String) {
         context.dataStore.edit { it[SettingsKeys.LANGUAGE] = value }
     }

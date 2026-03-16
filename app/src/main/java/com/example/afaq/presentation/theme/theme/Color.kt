@@ -1,7 +1,7 @@
 package com.example.afaq.presentation.theme.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 object AfaqColors {
@@ -33,32 +33,31 @@ object AfaqColors {
     val warning = Color(0xFFFFB300)
 }
 
-// ─── Theme-aware colors ───────────────────────────────────
-// Use these in your screens instead of AfaqColors.xxx directly
-
+// CompositionLocal to provide theme state
+val LocalIsDarkTheme = staticCompositionLocalOf { false }
 
 object AfaqThemeColors {
     val primary: Color
-        @Composable get() = if (isSystemInDarkTheme()) AfaqColors.darkPrimary else AfaqColors.primary
+        @Composable get() = if (LocalIsDarkTheme.current) AfaqColors.darkPrimary else AfaqColors.primary
 
     val secondry: Color
-        @Composable get() = if (isSystemInDarkTheme()) AfaqColors.darkSecondary else AfaqColors.secondary
+        @Composable get() = if (LocalIsDarkTheme.current) AfaqColors.darkSecondary else AfaqColors.secondary
 
     val background: Color
-        @Composable get() = if (isSystemInDarkTheme()) AfaqColors.darkBackground else AfaqColors.background
+        @Composable get() = if (LocalIsDarkTheme.current) AfaqColors.darkBackground else AfaqColors.background
 
     val surface: Color
-        @Composable get() = if (isSystemInDarkTheme()) AfaqColors.darkSurface else AfaqColors.surface
+        @Composable get() = if (LocalIsDarkTheme.current) AfaqColors.darkSurface else AfaqColors.surface
 
     val textPrimary: Color
-        @Composable get() = if (isSystemInDarkTheme()) AfaqColors.darkTextPrimary else AfaqColors.textPrimary
+        @Composable get() = if (LocalIsDarkTheme.current) AfaqColors.darkTextPrimary else AfaqColors.textPrimary
 
     val textSecondary: Color
-        @Composable get() = if (isSystemInDarkTheme()) AfaqColors.darkTextSecondary else AfaqColors.textSecondary
+        @Composable get() = if (LocalIsDarkTheme.current) AfaqColors.darkTextSecondary else AfaqColors.textSecondary
 
     val dialog: Color
-        @Composable get() = if (isSystemInDarkTheme()) AfaqColors.darkDialog else AfaqColors.dialog
+        @Composable get() = if (LocalIsDarkTheme.current) AfaqColors.darkDialog else AfaqColors.dialog
 
     val textBlack: Color
-        @Composable get() = if (isSystemInDarkTheme()) AfaqColors.darkTextBlack else AfaqColors.textBlack
+        @Composable get() = if (LocalIsDarkTheme.current) AfaqColors.darkTextBlack else AfaqColors.textBlack
 }

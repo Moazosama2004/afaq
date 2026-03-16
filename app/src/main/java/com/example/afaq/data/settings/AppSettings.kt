@@ -16,4 +16,5 @@ object SettingsKeys {
     val LOCATION = stringPreferencesKey("location")       // "GPS" "Map"
     val USER_LAT = stringPreferencesKey("user_lat")
     val USER_LON = stringPreferencesKey("user_lon")
+    val THEME = stringPreferencesKey("theme")             // "Light" "Dark" "System"
 }

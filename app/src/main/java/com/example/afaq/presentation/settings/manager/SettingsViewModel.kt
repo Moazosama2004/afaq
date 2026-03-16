@@ -34,6 +34,12 @@ class SettingsViewModel(
         "GPS"
     )
 
+    val theme = repo.theme.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        "System"
+    )
+
     val userLat = repo.userLat.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), null
     )
@@ -45,6 +51,8 @@ class SettingsViewModel(
     fun setTempUnit(value: String) = viewModelScope.launch { repo.setTempUnit(value) }
     fun setWindUnit(value: String) = viewModelScope.launch { repo.setWindUnit(value) }
     fun setLocation(value: String) = viewModelScope.launch { repo.setLocation(value) }
+    fun setTheme(value: String) = viewModelScope.launch { repo.setTheme(value) }
+
     suspend fun saveUserLocation(lat: Double, lon: Double) {
         repo.saveUserLocation(lat, lon)
         Log.d("Settings", "✅ Location saved: $lat, $lon")

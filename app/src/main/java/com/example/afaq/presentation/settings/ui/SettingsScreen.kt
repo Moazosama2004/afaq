@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Air
+import androidx.compose.material.icons.filled.Brightness6
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Thermostat
@@ -45,6 +46,7 @@ fun SettingsScreen(
     val selectedTempUnit by settingsViewModel.tempUnit.collectAsState()
     val selectedLocation by settingsViewModel.location.collectAsState()
     val selectedWindUnit by settingsViewModel.windUnit.collectAsState()
+    val selectedTheme by settingsViewModel.theme.collectAsState()
 
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -68,6 +70,11 @@ fun SettingsScreen(
     val windOptions = mapOf(
         "meter/sec" to stringResource(R.string.meter_sec),
         "mile/hour" to stringResource(R.string.mile_hour)
+    )
+    val themeOptions = mapOf(
+        "Light"  to stringResource(R.string.light),
+        "Dark"   to stringResource(R.string.dark),
+        "System" to stringResource(R.string.system)
     )
 
     Column(
@@ -191,6 +198,24 @@ fun SettingsScreen(
                     }
                 )
             }
+
+            // Theme
+            FancySettingsCard(
+                icon = Icons.Default.Brightness6,
+                iconGradient = listOf(Color(0xFF9C27B0), Color(0xFF673AB7)),
+                title = stringResource(R.string.theme),
+                subtitle = themeOptions[selectedTheme] ?: selectedTheme
+            ) {
+                FancyRadioGroup(
+                    options = themeOptions.values.toList(),
+                    selected = themeOptions[selectedTheme] ?: selectedTheme,
+                    onSelect = { displayValue ->
+                        val key = themeOptions.entries
+                            .find { it.value == displayValue }?.key ?: displayValue
+                        settingsViewModel.setTheme(key)
+                    }
+                )
+            }
         }
     }
 
@@ -206,4 +231,3 @@ fun SettingsScreen(
         )
     }
 }
-
