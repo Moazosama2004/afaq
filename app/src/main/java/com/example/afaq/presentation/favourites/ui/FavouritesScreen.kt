@@ -19,12 +19,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.WifiOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -55,6 +58,7 @@ import com.example.afaq.presentation.favourites.manager.FavouriteViewModelFactor
 import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.utils.NetworkUtils
 import com.example.afaq.utils.getAppLocale
 import kotlinx.coroutines.launch
 
@@ -84,12 +88,42 @@ fun FavouritesScreen(
     var lat by remember { mutableDoubleStateOf(0.0) }
     var lon by remember { mutableDoubleStateOf(0.0) }
     var isLocationSelected by remember { mutableStateOf(false) }
+    var showOfflineDialog by remember { mutableStateOf(false) }
 
     val favouritesState by viewModel.favouritesState.collectAsState()
     val addState by viewModel.addState.collectAsState()
     val deleteState by viewModel.deleteState.collectAsState()
 
     val snackbarMessage = stringResource(R.string.please_select_location)
+
+    if (showOfflineDialog) {
+        AlertDialog(
+            onDismissRequest = { showOfflineDialog = false },
+            containerColor = AfaqThemeColors.secondry,
+            title = {
+                Text(
+                    text = stringResource(R.string.no_internet),
+                    style = AfaqTypography.bold16,
+                    color = AfaqThemeColors.textPrimary
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.offline_city_view_error),
+                    style = AfaqTypography.regular14,
+                    color = AfaqThemeColors.textSecondary
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { showOfflineDialog = false }) {
+                    Text(stringResource(R.string.ok), color = AfaqThemeColors.primary)
+                }
+            },
+            icon = {
+                Icon(Icons.Default.WifiOff, contentDescription = null, tint = AfaqColors.warning, modifier = Modifier.size(32.dp))
+            }
+        )
+    }
 
     Box(
         modifier = modifier
@@ -278,8 +312,12 @@ fun FavouritesScreen(
                         }
                     }
                 } else {
-                    showMap = true
-                    isLocationSelected = false
+                    if (!NetworkUtils.isOnline(context)) {
+                        showOfflineDialog = true
+                    } else {
+                        showMap = true
+                        isLocationSelected = false
+                    }
                 }
             },
             containerColor = if (showMap && !isLocationSelected) AfaqThemeColors.surface.copy(alpha = 0.6f) else AfaqThemeColors.surface,

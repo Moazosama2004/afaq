@@ -31,7 +31,7 @@
 7. make digits arabic  ✅
 8. change alarm and notification badge ✅
 9. test offline mode 
-10. add change theme 
+10. add change theme ✅
 11. add testing cases  
 ```
 
@@ -95,3 +95,10 @@
 - Update `AlarmCard` badge styling with dynamic colors for light and dark themes
 - Add JUnit, Robolectric, MockK, and Compose testing dependencies to `build.gradle.kts`
 - Update `planning.md` to reflect progress on icon and UI tasks
+  Implement theme selection support and dynamic app theming
+
+- Add theme preference (Light, Dark, System) to `SettingsRepo` and `SettingsViewModel`
+- Implement theme selection UI in `SettingsScreen` with localized strings
+- Update `MainActivity` to collect and apply the selected theme
+- Refactor `AfaqTheme` and `AfaqThemeColors` to use `CompositionLocalProvider` for theme-aware color management
+- Update `planning.md` with recent UI and testing progress

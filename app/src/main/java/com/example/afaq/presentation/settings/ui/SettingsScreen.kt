@@ -5,10 +5,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Air
@@ -16,7 +21,11 @@ import androidx.compose.material.icons.filled.Brightness6
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Thermostat
+import androidx.compose.material.icons.filled.WifiOff
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,6 +33,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -32,8 +42,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.afaq.R
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
+import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.utils.NetworkUtils
 import com.example.afaq.utils.fetchGpsLocation
 import kotlinx.coroutines.launch
 
@@ -51,6 +63,8 @@ fun SettingsScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     var showMapSheet by remember { mutableStateOf(false) }
+    var showOfflineDialog by remember { mutableStateOf(false) }
+    val isOnline = NetworkUtils.isOnline(context)
 
     // ─── Map keys to display strings ──────────────────────
     val languageOptions = mapOf(
@@ -76,6 +90,40 @@ fun SettingsScreen(
         "Dark"   to stringResource(R.string.dark),
         "System" to stringResource(R.string.system)
     )
+
+    if (showOfflineDialog) {
+        AlertDialog(
+            onDismissRequest = { showOfflineDialog = false },
+            containerColor = AfaqThemeColors.secondry,
+            title = {
+                Text(
+                    text = stringResource(R.string.you_are_offline),
+                    style = AfaqTypography.bold16,
+                    color = AfaqThemeColors.textPrimary
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.offline_map),
+                    style = AfaqTypography.regular14,
+                    color = AfaqThemeColors.textSecondary
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { showOfflineDialog = false }) {
+                    Text(stringResource(R.string.ok), color = AfaqThemeColors.primary)
+                }
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.WifiOff,
+                    contentDescription = null,
+                    tint = AfaqColors.warning,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+        )
+    }
 
     Column(
         modifier = modifier
@@ -113,6 +161,27 @@ fun SettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+
+            if (!isOnline) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = AfaqColors.warning.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Default.WifiOff, contentDescription = null, tint = AfaqColors.warning)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Note: Changes might not sync while offline",
+                        style = AfaqTypography.regular12,
+                        color = AfaqColors.warning
+                    )
+                }
+            }
 
             // Language
             FancySettingsCard(
@@ -169,10 +238,15 @@ fun SettingsScreen(
                     onSelect = { displayValue ->
                         val key = locationOptions.entries
                             .find { it.value == displayValue }?.key ?: displayValue
-                        settingsViewModel.setLocation(key)
                         if (key == "Map") {
-                            showMapSheet = true
+                            if (!isOnline) {
+                                showOfflineDialog = true
+                            } else {
+                                settingsViewModel.setLocation(key)
+                                showMapSheet = true
+                            }
                         } else if (key == "GPS") {
+                            settingsViewModel.setLocation(key)
                             scope.launch {
                                 fetchGpsLocation(context, settingsViewModel)
                             }

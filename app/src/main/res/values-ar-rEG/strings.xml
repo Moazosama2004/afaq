@@ -106,4 +106,9 @@
     <string name="location_required_message">يحتاج تطبيق آفاق إلى موقعك لعرض الطقس بدقة.</string>
     <string name="please_select_location">يرجى تحديد موقع على الخريطة أولاً</string>
     <string name="offline_city_view_error">تحقق من اتصالك بالإنترنت لعرض بيانات الطقس المباشرة لهذه المدينة.</string>
+
+    <string name="you_are_offline">أنت غير متصل بالإنترنت</string>
+    <string name="offline_cached">عرض البيانات المحفوظة</string>
+    <string name="offline_favourites">تحتاج إنترنت لإضافة المفضلة.</string>
+    <string name="offline_map">تحتاج إنترنت لتحميل الخريطة.</string>
 </resources>

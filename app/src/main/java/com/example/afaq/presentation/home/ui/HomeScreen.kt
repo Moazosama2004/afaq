@@ -3,15 +3,23 @@ package com.example.afaq.presentation.home.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,8 +48,10 @@ import com.example.afaq.presentation.home.manager.HomeViewModel
 import com.example.afaq.presentation.home.manager.HomeViewModelFactory
 import com.example.afaq.presentation.home.manager.WeatherUiState
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
+import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.utils.NetworkUtils
 import com.example.afaq.utils.getAppLocale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,6 +62,8 @@ fun HomeScreen(
     settingsViewModel: SettingsViewModel
 ) {
     val context = LocalContext.current.applicationContext
+    val isOnline = NetworkUtils.isOnline(context)
+    
     val viewModel = viewModel<HomeViewModel>(
         factory = remember(context) {
             HomeViewModelFactory(
@@ -128,6 +140,37 @@ fun HomeScreen(
                         contentPadding = PaddingValues(vertical = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
+                        if (!isOnline) {
+                            item {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp)
+                                        .background(
+                                            color = AfaqColors.warning.copy(alpha = 0.15f),
+                                            shape = RoundedCornerShape(12.dp)
+                                        )
+                                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(Icons.Default.WifiOff, contentDescription = null, tint = AfaqColors.warning)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Column {
+                                        Text(
+                                            text = stringResource(R.string.no_internet),
+                                            style = AfaqTypography.semiBold14,
+                                            color = AfaqColors.warning
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.showing_cached),
+                                            style = AfaqTypography.regular12,
+                                            color = AfaqThemeColors.textSecondary
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
                         item {
                             WeatherCard(
                                 weather = weather,
@@ -234,6 +277,3 @@ fun HomeScreen(
         }
     }
 }
-
-
-
