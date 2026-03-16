@@ -7,24 +7,34 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.afaq.presentation.network.NetworkViewModel
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.utils.NetworkStatus
 
 @Composable
-fun BottomNavBar(navController: NavHostController) {
+fun BottomNavBar(
+    navController: NavHostController,
+    networkViewModel: NetworkViewModel
+) {
 
     val navItems = rememberBottomNavItems()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val networkStatus by networkViewModel.networkStatus.collectAsState()
 
     NavigationBar(
-        containerColor = AfaqThemeColors.background,
+        containerColor = if (networkStatus == NetworkStatus.Offline)
+            AfaqThemeColors.background.copy(alpha = 0.7f)
+        else
+            AfaqThemeColors.background,
         tonalElevation = 0.dp
     ) {
         navItems.forEach { item ->

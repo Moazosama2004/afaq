@@ -20,6 +20,8 @@ import com.example.afaq.data.settings.SettingsRepo
 import com.example.afaq.data.settings.dataStore
 import com.example.afaq.presentation.BottomNavBar
 import com.example.afaq.presentation.navigation.AppNavigation
+import com.example.afaq.presentation.network.NetworkViewModel
+import com.example.afaq.presentation.network.NetworkViewModelFactory
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import com.example.afaq.presentation.settings.manager.SettingsViewModelFactory
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
@@ -33,6 +35,10 @@ class MainActivity : ComponentActivity() {
 
     private val settingsViewModel: SettingsViewModel by viewModels {
         SettingsViewModelFactory(SettingsRepo(this))
+    }
+
+    private val networkViewModel: NetworkViewModel by viewModels {
+        NetworkViewModelFactory(this)
     }
 
     override fun attachBaseContext(base: Context) {
@@ -68,7 +74,10 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     bottomBar = {
                         if (showBottomBar) {
-                            BottomNavBar(navController = navController)
+                            BottomNavBar(
+                                navController = navController,
+                                networkViewModel = networkViewModel
+                            )
                         }
                     },
                     containerColor = AfaqThemeColors.background,
@@ -77,6 +86,7 @@ class MainActivity : ComponentActivity() {
                     AppNavigation(
                         navController = navController,
                         settingsViewModel = settingsViewModel,
+                        networkViewModel = networkViewModel,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -84,5 +94,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-

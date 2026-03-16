@@ -41,17 +41,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.afaq.R
+import com.example.afaq.presentation.network.NetworkViewModel
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.utils.NetworkUtils
+import com.example.afaq.utils.NetworkStatus
 import com.example.afaq.utils.fetchGpsLocation
 import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel,
+    networkViewModel: NetworkViewModel,
     modifier: Modifier = Modifier
 ) {
     val selectedLanguage by settingsViewModel.language.collectAsState()
@@ -60,11 +62,13 @@ fun SettingsScreen(
     val selectedWindUnit by settingsViewModel.windUnit.collectAsState()
     val selectedTheme by settingsViewModel.theme.collectAsState()
 
+    val networkStatus by networkViewModel.networkStatus.collectAsState()
+    val isOnline = networkStatus == NetworkStatus.Online
+
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     var showMapSheet by remember { mutableStateOf(false) }
     var showOfflineDialog by remember { mutableStateOf(false) }
-    val isOnline = NetworkUtils.isOnline(context)
 
     // ─── Map keys to display strings ──────────────────────
     val languageOptions = mapOf(
@@ -176,7 +180,7 @@ fun SettingsScreen(
                     Icon(Icons.Default.WifiOff, contentDescription = null, tint = AfaqColors.warning)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Note: Changes might not sync while offline",
+                        text = stringResource(R.string.offline_cached),
                         style = AfaqTypography.regular12,
                         color = AfaqColors.warning
                     )

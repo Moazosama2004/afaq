@@ -102,3 +102,10 @@
 - Update `MainActivity` to collect and apply the selected theme
 - Refactor `AfaqTheme` and `AfaqThemeColors` to use `CompositionLocalProvider` for theme-aware color management
 - Update `planning.md` with recent UI and testing progress
+  Implement offline mode indicators and connectivity handling
+
+- Add connectivity checks to `HomeScreen`, `SettingsScreen`, and `FavouritesScreen`
+- Display "No internet" warning and "Showing cached data" status when offline
+- Implement `AlertDialog` to restrict map access and adding favorites without a connection
+- Add localized strings for offline error messages and status indicators
+- Update `planning.md` to reflect theme and offline mode progress

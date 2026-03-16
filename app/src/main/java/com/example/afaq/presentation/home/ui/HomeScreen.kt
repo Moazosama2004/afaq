@@ -47,22 +47,24 @@ import com.example.afaq.presentation.home.manager.ForecastUiState
 import com.example.afaq.presentation.home.manager.HomeViewModel
 import com.example.afaq.presentation.home.manager.HomeViewModelFactory
 import com.example.afaq.presentation.home.manager.WeatherUiState
+import com.example.afaq.presentation.network.NetworkViewModel
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.utils.NetworkUtils
+import com.example.afaq.utils.NetworkStatus
 import com.example.afaq.utils.getAppLocale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-
-    modifier: Modifier = Modifier,
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    networkViewModel: NetworkViewModel,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current.applicationContext
-    val isOnline = NetworkUtils.isOnline(context)
+    val networkStatus by networkViewModel.networkStatus.collectAsState()
+    val isOnline = networkStatus == NetworkStatus.Online
     
     val viewModel = viewModel<HomeViewModel>(
         factory = remember(context) {
@@ -157,12 +159,12 @@ fun HomeScreen(
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Column {
                                         Text(
-                                            text = stringResource(R.string.no_internet),
+                                            text = stringResource(R.string.you_are_offline),
                                             style = AfaqTypography.semiBold14,
                                             color = AfaqColors.warning
                                         )
                                         Text(
-                                            text = stringResource(R.string.showing_cached),
+                                            text = stringResource(R.string.offline_cached),
                                             style = AfaqTypography.regular12,
                                             color = AfaqThemeColors.textSecondary
                                         )

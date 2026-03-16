@@ -10,6 +10,7 @@ import com.example.afaq.presentation.alerts.ui.AlertsScreen
 import com.example.afaq.presentation.favourites.ui.FavouriteDetailsScreen
 import com.example.afaq.presentation.favourites.ui.FavouritesScreen
 import com.example.afaq.presentation.home.ui.HomeScreen
+import com.example.afaq.presentation.network.NetworkViewModel
 import com.example.afaq.presentation.screens.splash.SplashScreen
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import com.example.afaq.presentation.settings.ui.SettingsScreen
@@ -17,6 +18,7 @@ import com.example.afaq.presentation.settings.ui.SettingsScreen
 @Composable
 fun AppNavigation(
     settingsViewModel: SettingsViewModel,
+    networkViewModel: NetworkViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -37,7 +39,8 @@ fun AppNavigation(
 
         composable<Routes.HomeRoute> {
             HomeScreen(
-                settingsViewModel = settingsViewModel
+                settingsViewModel = settingsViewModel,
+                networkViewModel = networkViewModel
             )
         }
 
@@ -55,7 +58,8 @@ fun AppNavigation(
 
         composable<Routes.SettingsRoute> {
             SettingsScreen(
-                settingsViewModel = settingsViewModel
+                settingsViewModel = settingsViewModel,
+                networkViewModel = networkViewModel
             )
         }
 
