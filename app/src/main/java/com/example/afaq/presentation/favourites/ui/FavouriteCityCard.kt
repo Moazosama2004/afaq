@@ -1,5 +1,6 @@
 package com.example.afaq.presentation.favourites.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,11 +31,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.example.afaq.data.local.db.FavouriteEntity
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.utils.getWeatherIcon
 import com.example.afaq.utils.localizeDigits
 
 @Composable
@@ -104,8 +106,10 @@ fun FavouriteCityCard(
                             ),
                         contentAlignment = Alignment.Center
                     ) {
-                        AsyncImage(
-                            model = "https://openweathermap.org/img/wn/${favourite.icon}@2x.png",
+                        Image(
+                            painter = painterResource(
+                                id = getWeatherIcon(favourite.temperature, favourite.icon)
+                            ),
                             contentDescription = favourite.description,
                             modifier = Modifier.size(40.dp)
                         )

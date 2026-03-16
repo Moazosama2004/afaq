@@ -1,5 +1,6 @@
 package com.example.afaq.presentation.alarm.ui
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.example.afaq.R
 import com.example.afaq.data.alarm.model.AlertEntity
 import com.example.afaq.presentation.favourites.ui.DeleteFavouriteDialog
+import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.utils.formatAlertTime
@@ -40,7 +42,7 @@ fun AlertCard(
     onDeleteClick: () -> Unit
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
-
+    val isDark = isSystemInDarkTheme()
 
     if (showDeleteDialog) {
         DeleteFavouriteDialog(
@@ -74,19 +76,29 @@ fun AlertCard(
                     style = AfaqTypography.regular12,
                     color = AfaqThemeColors.textSecondary
                 )
+                
                 // Type badge
+                val badgeBgColor = if (alert.type == "ALARM") {
+                    if (isDark) AfaqColors.error.copy(alpha = 0.25f) else AfaqColors.error.copy(alpha = 0.15f)
+                } else {
+                    if (isDark) AfaqThemeColors.primary.copy(alpha = 0.25f) else AfaqThemeColors.primary.copy(alpha = 0.15f)
+                }
+                
+                val badgeTextColor = if (isDark) {
+                    Color.White
+                } else {
+                    if (alert.type == "ALARM") AfaqColors.error else AfaqThemeColors.primary
+                }
+
                 Surface(
-                    shape = RoundedCornerShape(20.dp),
-                    color = if (alert.type == "ALARM")
-                        AfaqThemeColors.primary.copy(alpha = 0.1f)
-                    else
-                        AfaqThemeColors.secondry.copy(alpha = 0.1f)
+                    shape = RoundedCornerShape(8.dp),
+                    color = badgeBgColor
                 ) {
                     Text(
                         text = alert.type,
-                        style = AfaqTypography.regular12,
-                        color = if (alert.type == "ALARM") AfaqThemeColors.primary else AfaqThemeColors.secondry,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        style = AfaqTypography.semiBold14,
+                        color = badgeTextColor,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
                     )
                 }
             }

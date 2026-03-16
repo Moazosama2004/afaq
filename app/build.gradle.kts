@@ -61,6 +61,42 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+//    // Architecture Components
+//    implementation "androidx.room:room-ktx:$roomVersion"
+//    implementation "androidx.lifecycle:lifecycle-common-java8:$archLifecycleVersion"
+//    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
+//    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$archLifecycleVersion"
+//    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
+//    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+
+
+
+
+
+    // Kotlin
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+//    implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
+
+    // Testing
+    testImplementation(libs.junit)
+    testImplementation("androidx.test:core-ktx:1.5.0")
+    testImplementation("org.robolectric:robolectric:4.11.1")
+    testImplementation("androidx.test.ext:junit-ktx:1.1.5")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("io.mockk:mockk:1.13.10")
+
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation("androidx.test:core-ktx:1.5.0")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
+
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
 
     // Icons
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
@@ -110,4 +146,8 @@ dependencies {
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+
+
+
 }

@@ -3,6 +3,7 @@ package com.example.afaq.utils
 import android.content.Context
 import android.location.Geocoder
 import android.util.Log
+import com.example.afaq.R
 import com.example.afaq.data.location.LocationRepository
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import kotlinx.coroutines.withTimeoutOrNull
@@ -95,5 +96,17 @@ fun getAddressFromLocation(context: Context, latitude: Double, longitude: Double
         addresses?.firstOrNull()?.getAddressLine(0) ?: "Unknown Location"
     } catch (e: Exception) {
         "Unknown Location"
+    }
+}
+
+fun getWeatherIcon(temperature: Double, iconCode: String = ""): Int {
+    if (iconCode.endsWith("n")) return R.drawable.ic_weather_night // 🌙 night
+
+    return when {
+        temperature >= 35 -> R.drawable.ic_weather_hot       // ☀️ very hot sunny
+        temperature >= 20 -> R.drawable.ic_weather_warm      // ⛅ warm
+        temperature >= 10 -> R.drawable.ic_weather_mild      // 🌦️ mild
+        temperature >= 0  -> R.drawable.ic_weather_cold      // 🌧️ cold
+        else              -> R.drawable.ic_weather_freezing  // ⛈️ freezing
     }
 }

@@ -26,10 +26,13 @@
 2. language changes from settings not listening at first one ✅
 3. refactor service 
 4. fix location permission bugs ✅
-5. change icons to custom one
+5. change icons to custom one ✅
 6. make favourite card clickable to display ✅
 7. make digits arabic  ✅
-8. change alarm and notification badge
+8. change alarm and notification badge ✅
+9. test offline mode 
+10. add change theme 
+11. add testing cases  
 ```
 
 

@@ -1,5 +1,6 @@
 package com.example.afaq.presentation.home.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,14 +17,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.example.afaq.data.model.ForecastItem
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.utils.formatForecastDate
+import com.example.afaq.utils.getWeatherIcon
 import com.example.afaq.utils.localizeDigits
 
 @Composable
@@ -65,10 +67,12 @@ fun ForecastDayCard(item: ForecastItem) {
             )
 
             // Weather Icon
-            AsyncImage(
-                model = "https://openweathermap.org/img/wn/${item.icon}@2x.png",
+            Image(
+                painter = painterResource(
+                    id = getWeatherIcon(item.temp, item.icon)
+                ),
                 contentDescription = item.description,
-                modifier = Modifier.size(60.dp)
+                modifier = Modifier.size(48.dp)
             )
 
             // Temperature Row
