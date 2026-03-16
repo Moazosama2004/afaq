@@ -28,7 +28,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,6 +56,7 @@ import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
 import com.example.afaq.utils.NetworkStatus
 import com.example.afaq.utils.getAppLocale
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -89,6 +92,15 @@ fun HomeScreen(
     // shared data settings
     val tempUnit by settingsViewModel.tempUnit.collectAsState()
     val windSpeedUnit by settingsViewModel.windUnit.collectAsState()
+
+    var currentTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(60_000L) // every 1 minute
+            currentTime = System.currentTimeMillis()
+        }
+    }
 
     LaunchedEffect(savedLat, savedLon) {
         val lat = savedLat ?: return@LaunchedEffect
@@ -176,7 +188,8 @@ fun HomeScreen(
                         item {
                             WeatherCard(
                                 weather = weather,
-                                tempUnit = tempUnit
+                                tempUnit = tempUnit,
+                                currentTime = currentTime
                             )
                         }
 

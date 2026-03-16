@@ -69,6 +69,27 @@ fun formatAlertTime(timestamp: Long): String {
     return sdf.format(Date(timestamp)).localizeDigits()
 }
 
+fun formatLastUpdated(context: Context, timestamp: Long): String {
+    val now = System.currentTimeMillis()
+    val diff = now - timestamp
+
+    return when {
+        diff < 60_000L -> context.getString(R.string.updated_just_now)
+        diff < 3_600_000L -> {
+            val minutes = diff / 60_000L
+            context.getString(R.string.updated_minutes_ago, minutes.toInt()).localizeDigits()
+        }
+        diff < 86_400_000L -> {
+            val hours = diff / 3_600_000L
+            context.getString(R.string.updated_hours_ago, hours.toInt()).localizeDigits()
+        }
+        else -> {
+            val sdf = SimpleDateFormat("hh:mm a", getAppLocale())
+            context.getString(R.string.updated_at, sdf.format(Date(timestamp))).localizeDigits()
+        }
+    }
+}
+
 suspend fun fetchGpsLocation(
     context: Context,
     settingsViewModel: SettingsViewModel

@@ -109,3 +109,10 @@
 - Implement `AlertDialog` to restrict map access and adding favorites without a connection
 - Add localized strings for offline error messages and status indicators
 - Update `planning.md` to reflect theme and offline mode progress
+  Implement offline mode handling and connectivity status observation
+
+- Add `NetworkObserver` and `NetworkViewModel` to monitor and provide real-time network status
+- Integrate `NetworkViewModel` into `MainActivity`, `AppNavigation`, and `BottomNavBar`
+- Update `BottomNavBar` to adjust transparency when offline
+- Implement offline indicators and localized status messages in `HomeScreen` and `SettingsScreen`
+- Update `planning.md` to reflect progress on connectivity handling and cached data display

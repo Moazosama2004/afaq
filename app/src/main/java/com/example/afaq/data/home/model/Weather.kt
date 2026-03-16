@@ -18,5 +18,6 @@ data class Weather(
     val sunset: Long,
     val date: Int,
     val lat: Double,
-    val lon: Double
+    val lon: Double,
+    val lastUpdated: Long = System.currentTimeMillis()
 )

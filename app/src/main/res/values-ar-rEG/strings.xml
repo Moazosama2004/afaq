@@ -69,7 +69,10 @@
     <string name="day_details">تفاصيل اليوم</string>
     <string name="_5_day_forecast">توقعات 5 أيام</string>
     <string name="feels">المحسوس</string>
-    <string name="updated_at">تم التحديث في</string>
+    <string name="updated_at">آخر تحديث %s</string>
+    <string name="updated_just_now">تم التحديث للتو</string>
+    <string name="updated_minutes_ago">تم التحديث منذ %d د</string>
+    <string name="updated_hours_ago">تم التحديث منذ %d س</string>
     <string name="wind_speed_unit">وحدة سرعة الرياح</string>
     <string name="start">البدايه</string>
     <string name="end">النهايه</string>

@@ -56,7 +56,10 @@
     <string name="day_details">Day details</string>
     <string name="_5_day_forecast">5 day forecast</string>
     <string name="feels">feels</string>
-    <string name="updated_at">updated_at</string>
+    <string name="updated_at">updated at %s</string>
+    <string name="updated_just_now">updated just now</string>
+    <string name="updated_minutes_ago">updated %dm ago</string>
+    <string name="updated_hours_ago">updated %dh ago</string>
     <string name="wind_speed_unit">Wind speed unit</string>
 
 

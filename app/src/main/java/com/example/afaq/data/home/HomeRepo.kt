@@ -28,11 +28,14 @@ class HomeRepo(
 
         return if (NetworkUtils.isOnline(context)) {
             val result = remoteDataSource.getCurrentWeather(lat, lon, apiKey, units, lang)
-            result.onSuccess { weather ->
-                Log.d("HomeRepo", "✅ API returned city: ${weather.cityName}")
-                localDataSource.saveWeather(lat, lon, weather)
+            result.map { weather ->
+                val weatherWithTime = weather.copy(
+                    lastUpdated = System.currentTimeMillis()
+                )
+                Log.d("HomeRepo", "✅ API returned city: ${weatherWithTime.cityName}")
+                localDataSource.saveWeather(lat, lon, weatherWithTime)
+                weatherWithTime
             }
-            result
         } else {
             Log.d("HomeRepo", "📦 Loading cache for: lat=$lat, lon=$lon")
             val cached = localDataSource.getCachedWeather(lat, lon)
