@@ -216,10 +216,19 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ---
 
 ## ✉️ Contact
-**Afaq Development Team**  
-GitHub: [@yourusername](https://github.com/yourusername)  
-Email: dev@example.com  
 
+<p align="center">
+  <img src="https://github.com/Moazosama2004.png" width="110" style="border-radius:50%" />
+</p>
+
+<p align="center">
+  <b>Afaq Development Team</b>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Moazosama2004">GitHub</a> •
+  <a href="mailto:moazosama204@gmail.com">Email</a>
+</p>
 ---
 
 <div align="center">
