@@ -1,6 +1,5 @@
 package com.example.afaq.presentation.settings.manager
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -55,7 +54,6 @@ class SettingsViewModel(
 
     suspend fun saveUserLocation(lat: Double, lon: Double) {
         repo.saveUserLocation(lat, lon)
-        Log.d("Settings", "✅ Location saved: $lat, $lon")
     }
 }
 

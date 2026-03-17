@@ -3,7 +3,6 @@ package com.example.afaq.presentation.favourites.manager
 import AddFavouriteState
 import DeleteFavouriteState
 import FavouritesUiState
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -52,7 +51,6 @@ class FavouriteViewModel(
     }
 
     private fun loadFavourites() {
-        Log.d("FavouriteViewModel : ", "loadFavourites")
         viewModelScope.launch {
             repo.getAllFavourites()
                 .catch { e ->
@@ -98,10 +96,8 @@ class FavouriteViewModel(
     }
 
     fun addFavourite(lat: Double, lon: Double, lang: String) {
-        Log.d("FavouriteViewModel : ", "addFavourite : $lat , $lon , $lang")
         _addState.value = AddFavouriteState.Loading
         viewModelScope.launch {
-            // 1 - fetch weather from API
             val result = repo.getCurrentWeather(
                 lat = lat,
                 lon = lon,
@@ -110,7 +106,6 @@ class FavouriteViewModel(
             )
 
             result.onSuccess { weather ->
-                // 2 - save to Room
                 repo.insertFavourite(weather.toFavouriteEntity())
                 _addState.value = AddFavouriteState.Success
                 setShowMap(false)
@@ -122,7 +117,6 @@ class FavouriteViewModel(
 
     fun deleteFavouriteById(id: Int) {
         _deleteState.value = DeleteFavouriteState.Loading
-        Log.d("FavouriteViewModel : ", "deleteFavourite")
         viewModelScope.launch {
             runCatching {
                 repo.deleteFavouriteById(id)

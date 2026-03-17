@@ -20,10 +20,11 @@ import org.junit.Test
 class HomeRepoTest {
 
     @MockK
-    private lateinit var remoteDataSource : HomeRemoteDataSource
+    private lateinit var remoteDataSource: HomeRemoteDataSource
+
     @MockK
     private lateinit var localDataSource: HomeLocalDataSource
-    private lateinit var  networkUtils: FakeNetworkUtils
+    private lateinit var networkUtils: FakeNetworkUtils
     private lateinit var repo: HomeRepo
 
 
@@ -40,74 +41,83 @@ class HomeRepoTest {
 
 
     @Test
-    fun getCurrentWeather_whenLocationIfUserIsOnline_returnsWeatherFromAPI() = runTest{
+    fun getCurrentWeather_whenLocationIfUserIsOnline_returnsWeatherFromAPI() = runTest {
         // Arrange
         val lat = 30.0444
         val lon = 31.2357
         val fakeWeather = createDummyWeather()
 
-        coEvery { remoteDataSource.getCurrentWeather(lat, lon, "metric", "en") } returns Result.success(fakeWeather)
-        coEvery {  localDataSource.saveWeather(lat, lon, any())} just runs
+        coEvery {
+            remoteDataSource.getCurrentWeather(
+                lat,
+                lon,
+                "metric",
+                "en"
+            )
+        } returns Result.success(fakeWeather)
+        coEvery { localDataSource.saveWeather(lat, lon, any()) } just runs
         //Act
-        val result = repo.getCurrentWeather(lat,lon,"metric" , "en")
+        val result = repo.getCurrentWeather(lat, lon, "metric", "en")
 
         //Assert
-        assertThat(result.isSuccess , `is`(true))
+        assertThat(result.isSuccess, `is`(true))
         assertThat(result.getOrNull()?.cityName, `is`("Cairo"))
     }
 
 
     @Test
-    fun getCurrentWeather_whenLocationIfUserIsOffline_getCachedData() = runTest{
+    fun getCurrentWeather_whenLocationIfUserIsOffline_getCachedData() = runTest {
         // Arrange
         networkUtils.setOffline()
         val lat = 30.0444
         val lon = 31.2357
         val fakeWeather = createDummyWeather()
 
-        coEvery {localDataSource.getCachedWeather(lat, lon)} returns fakeWeather
-        coEvery {  localDataSource.saveWeather(lat, lon, any())} just runs
+        coEvery { localDataSource.getCachedWeather(lat, lon) } returns fakeWeather
+        coEvery { localDataSource.saveWeather(lat, lon, any()) } just runs
         //Act
-        val result = repo.getCurrentWeather(lat,lon,"metric" , "en")
+        val result = repo.getCurrentWeather(lat, lon, "metric", "en")
 
         //Assert
-        assertThat(result.isSuccess , `is`(true))
+        assertThat(result.isSuccess, `is`(true))
         assertThat(result.getOrNull()?.cityName, `is`("Cairo"))
     }
 
     @Test
-    fun getForecast_whenLocationIfUserIsOnline_returnsForecastWeatherFromAPI() = runTest{
+    fun getForecast_whenLocationIfUserIsOnline_returnsForecastWeatherFromAPI() = runTest {
         // Arrange
         val lat = 30.0444
         val lon = 31.2357
         val forecast = createDummyForecast()
 
-        coEvery {remoteDataSource.getForecast(lat, lon,"metric", "en")} returns Result.success(forecast)
-        coEvery {  localDataSource.saveForecast(lat, lon, any())} just runs
+        coEvery { remoteDataSource.getForecast(lat, lon, "metric", "en") } returns Result.success(
+            forecast
+        )
+        coEvery { localDataSource.saveForecast(lat, lon, any()) } just runs
         //Act
-        val result = repo.getForecast(lat,lon,"metric" , "en")
+        val result = repo.getForecast(lat, lon, "metric", "en")
 
         //Assert
-        assertThat(result.isSuccess , `is`(true))
+        assertThat(result.isSuccess, `is`(true))
         assertThat(result.getOrNull()?.cityName, `is`("Cairo"))
         assertThat(result.getOrNull()?.items?.size ?: 0, `is`(2))
     }
 
     @Test
-    fun getForecast_whenLocationIfUserIsOffline_returnsForecastWeatherFromAPI() = runTest{
+    fun getForecast_whenLocationIfUserIsOffline_returnsForecastWeatherFromAPI() = runTest {
         // Arrange
         networkUtils.setOffline()
         val lat = 30.0444
         val lon = 31.2357
         val forecast = createDummyForecast()
 
-        coEvery {localDataSource.getCachedForecast(lat, lon)} returns forecast
+        coEvery { localDataSource.getCachedForecast(lat, lon) } returns forecast
 
         //Act
-        val result = repo.getForecast(lat,lon,"metric" , "en")
+        val result = repo.getForecast(lat, lon, "metric", "en")
 
         //Assert
-        assertThat(result.isSuccess , `is`(true))
+        assertThat(result.isSuccess, `is`(true))
         assertThat(result.getOrNull()?.cityName, `is`("Cairo"))
         assertThat(result.getOrNull()?.items?.size ?: 0, `is`(2))
     }

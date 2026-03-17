@@ -18,14 +18,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.afaq.data.settings.SettingsKeys
 import com.example.afaq.data.settings.SettingsRepo
 import com.example.afaq.data.settings.dataStore
-import com.example.afaq.presentation.navigation.BottomNavBar
-import com.example.afaq.presentation.navigation.AppNavigation
 import com.example.afaq.presentation.connectivity.NetworkViewModel
 import com.example.afaq.presentation.connectivity.NetworkViewModelFactory
+import com.example.afaq.presentation.navigation.AppNavigation
+import com.example.afaq.presentation.navigation.BottomNavBar
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import com.example.afaq.presentation.settings.manager.SettingsViewModelFactory
-import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTheme
+import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.utils.localization.LocaleHelper
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -56,19 +56,18 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val theme by settingsViewModel.theme.collectAsState()
-            
+
             AfaqTheme(
                 darkTheme = when (theme) {
-                    "Dark"  -> true
+                    "Dark" -> true
                     "Light" -> false
-                    else    -> isSystemInDarkTheme()
+                    else -> isSystemInDarkTheme()
                 }
             ) {
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
 
-                // hide bottom bar on splash screen
                 val showBottomBar = currentRoute?.contains("SplashRoute") == false
 
                 Scaffold(
@@ -82,7 +81,7 @@ class MainActivity : ComponentActivity() {
                     },
                     containerColor = AfaqThemeColors.background,
 
-                ) { innerPadding ->
+                    ) { innerPadding ->
                     AppNavigation(
                         navController = navController,
                         settingsViewModel = settingsViewModel,

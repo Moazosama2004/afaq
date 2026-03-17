@@ -51,7 +51,6 @@ fun HourlyCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            // Time
             Text(
                 text = formatHour(item.dt),
                 style = AfaqTypography.semiBold14,
@@ -59,7 +58,6 @@ fun HourlyCard(
                 textAlign = TextAlign.Center
             )
 
-            // Weather Icon
             Image(
                 painter = painterResource(
                     getWeatherIcon(item.temp, item.icon)
@@ -68,7 +66,6 @@ fun HourlyCard(
                 modifier = Modifier.size(48.dp)
             )
 
-            // Temperature
             Text(
                 text = TempConverter.convert(item.temp, tempUnit),
                 style = AfaqTypography.bold16,
@@ -76,13 +73,11 @@ fun HourlyCard(
                 textAlign = TextAlign.Center
             )
 
-            // Divider
             HorizontalDivider(
                 color = Color(0xFFF0F0F0),
                 thickness = 1.dp
             )
 
-            // Feels like
             Text(
                 text = stringResource(R.string.feels),
                 style = AfaqTypography.regular12,

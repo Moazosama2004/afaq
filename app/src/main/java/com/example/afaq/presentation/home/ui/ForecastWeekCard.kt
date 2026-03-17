@@ -26,7 +26,6 @@ import com.example.afaq.utils.formatForecastDate
 import com.example.afaq.utils.getDayName
 import com.example.afaq.utils.getWeatherIcon
 
-
 @Composable
 fun ForecastWeekCard(
     item: ForecastItem,
@@ -47,7 +46,6 @@ fun ForecastWeekCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Left - Day + Date
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -64,7 +62,6 @@ fun ForecastWeekCard(
                 )
             }
 
-            // Middle - Weather Icon
             Image(
                 painter = painterResource(
                     id = getWeatherIcon(item.temp, item.icon)
@@ -73,13 +70,11 @@ fun ForecastWeekCard(
                 modifier = Modifier.size(50.dp)
             )
 
-            // Right - Temp + Feels like
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                // Main temp
                 Row(verticalAlignment = Alignment.Top) {
                     Text(
                         text = TempConverter.convert(item.temp, tempUnit),
@@ -88,7 +83,6 @@ fun ForecastWeekCard(
                     )
                 }
 
-                // Feels like
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)

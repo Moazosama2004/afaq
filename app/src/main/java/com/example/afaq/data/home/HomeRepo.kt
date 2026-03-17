@@ -41,7 +41,7 @@ class HomeRepo(
         lang: String
     ): Result<Forecast> {
         return if (networkUtils.isOnline()) {
-            val result = remoteDataSource.getForecast(lat, lon,  units, lang)
+            val result = remoteDataSource.getForecast(lat, lon, units, lang)
             result.onSuccess { forecast ->
                 localDataSource.saveForecast(lat, lon, forecast)
             }

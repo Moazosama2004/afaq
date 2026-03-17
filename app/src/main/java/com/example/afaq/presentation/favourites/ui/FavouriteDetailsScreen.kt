@@ -39,6 +39,7 @@ import com.example.afaq.data.home.HomeRepo
 import com.example.afaq.data.home.datasource.local.HomeLocalDataSource
 import com.example.afaq.data.home.datasource.local.WeatherDataStore
 import com.example.afaq.data.home.datasource.remote.HomeRemoteDataSource
+import com.example.afaq.data.network.NetworkUtils
 import com.example.afaq.data.network.RetroFitClient
 import com.example.afaq.presentation.home.manager.ForecastUiState
 import com.example.afaq.presentation.home.manager.HomeViewModel
@@ -52,7 +53,6 @@ import com.example.afaq.presentation.home.ui.WeatherCard
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.data.network.NetworkUtils
 import com.example.afaq.utils.getAppLocale
 import kotlinx.coroutines.delay
 
@@ -140,6 +140,7 @@ fun FavouriteDetailsScreen(
                         color = AfaqThemeColors.primary
                     )
                 }
+
                 is WeatherUiState.Success -> {
                     val weather = (state as WeatherUiState.Success).weather
                     LazyColumn(
@@ -175,10 +176,13 @@ fun FavouriteDetailsScreen(
                                         color = AfaqThemeColors.primary
                                     )
                                 }
+
                                 is ForecastUiState.Success -> {
-                                    val forecast = (forecastState as ForecastUiState.Success).forecast
+                                    val forecast =
+                                        (forecastState as ForecastUiState.Success).forecast
                                     HourlyForecastRow(forecast = forecast, tempUnit = tempUnit)
                                 }
+
                                 is ForecastUiState.Error -> {
                                     Text(
                                         text = (forecastState as ForecastUiState.Error).message,
@@ -195,16 +199,21 @@ fun FavouriteDetailsScreen(
                             when (forecastState) {
                                 is ForecastUiState.Loading -> {
                                     Box(
-                                        modifier = Modifier.fillMaxWidth().height(150.dp),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(150.dp),
                                         contentAlignment = Alignment.Center
                                     ) {
                                         CircularProgressIndicator(color = AfaqThemeColors.primary)
                                     }
                                 }
+
                                 is ForecastUiState.Success -> {
-                                    val forecast = (forecastState as ForecastUiState.Success).forecast
+                                    val forecast =
+                                        (forecastState as ForecastUiState.Success).forecast
                                     ForecastWeekList(forecast = forecast, tempUnit = tempUnit)
                                 }
+
                                 is ForecastUiState.Error -> {
                                     Text(
                                         text = (forecastState as ForecastUiState.Error).message,
@@ -215,6 +224,7 @@ fun FavouriteDetailsScreen(
                         }
                     }
                 }
+
                 is WeatherUiState.Error -> {
                     Text(
                         text = (state as WeatherUiState.Error).message,

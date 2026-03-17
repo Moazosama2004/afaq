@@ -1,6 +1,5 @@
 package com.example.afaq.presentation.home.manager
 
-import androidx.lifecycle.viewModelScope
 import com.example.afaq.data.home.HomeRepo
 import com.example.afaq.data.home.model.Weather
 import com.example.afaq.data.model.Forecast
@@ -8,12 +7,9 @@ import com.example.afaq.data.model.ForecastItem
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -24,13 +20,12 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.any
 
 
 class HomeViewModelTest {
 
     @MockK
-    private lateinit var repo : HomeRepo
+    private lateinit var repo: HomeRepo
     private lateinit var viewModel: HomeViewModel
     private val testDispatcher = StandardTestDispatcher()
 
@@ -52,7 +47,9 @@ class HomeViewModelTest {
         val lat = 30.0444
         val lon = 31.2357
         val fakeWeather = createDummyWeather()
-        coEvery { repo.getCurrentWeather(lat , lon,"metric" , "en") } returns Result.success(fakeWeather)
+        coEvery { repo.getCurrentWeather(lat, lon, "metric", "en") } returns Result.success(
+            fakeWeather
+        )
 
         // Act
         viewModel.getCurrentWeather(lat, lon, "metric", "en")
@@ -61,7 +58,7 @@ class HomeViewModelTest {
 
         // Assert
 
-        assertThat(viewModel.weatherState.value , `is`(WeatherUiState.Success(fakeWeather)))
+        assertThat(viewModel.weatherState.value, `is`(WeatherUiState.Success(fakeWeather)))
 
     }
 
@@ -70,8 +67,10 @@ class HomeViewModelTest {
         // Arrange
         val lat = 30.0444
         val lon = 31.2357
-        val fakeWeather = createDummyWeather()
-        coEvery { repo.getCurrentWeather(lat , lon,"metric" , "en") }  returns Result.failure(Exception("UnKnown error"))
+        createDummyWeather()
+        coEvery { repo.getCurrentWeather(lat, lon, "metric", "en") } returns Result.failure(
+            Exception("UnKnown error")
+        )
 
         // Act
         viewModel.getCurrentWeather(lat, lon, "metric", "en")
@@ -80,7 +79,7 @@ class HomeViewModelTest {
 
         // Assert
 
-        assertThat(viewModel.weatherState.value , `is`(WeatherUiState.Error("UnKnown error")))
+        assertThat(viewModel.weatherState.value, `is`(WeatherUiState.Error("UnKnown error")))
 
     }
 

@@ -41,12 +41,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.afaq.R
+import com.example.afaq.data.network.NetworkStatus
 import com.example.afaq.presentation.connectivity.NetworkViewModel
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.data.network.NetworkStatus
 import com.example.afaq.utils.fetchGpsLocation
 import kotlinx.coroutines.launch
 
@@ -70,7 +70,6 @@ fun SettingsScreen(
     var showMapSheet by remember { mutableStateOf(false) }
     var showOfflineDialog by remember { mutableStateOf(false) }
 
-    // ─── Map keys to display strings ──────────────────────
     val languageOptions = mapOf(
         "Arabic" to stringResource(R.string.arabic),
         "English" to stringResource(R.string.english),
@@ -90,8 +89,8 @@ fun SettingsScreen(
         "mile/hour" to stringResource(R.string.mile_hour)
     )
     val themeOptions = mapOf(
-        "Light"  to stringResource(R.string.light),
-        "Dark"   to stringResource(R.string.dark),
+        "Light" to stringResource(R.string.light),
+        "Dark" to stringResource(R.string.dark),
         "System" to stringResource(R.string.system)
     )
 
@@ -177,7 +176,11 @@ fun SettingsScreen(
                         .padding(horizontal = 16.dp, vertical = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(Icons.Default.WifiOff, contentDescription = null, tint = AfaqColors.warning)
+                    Icon(
+                        Icons.Default.WifiOff,
+                        contentDescription = null,
+                        tint = AfaqColors.warning
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = stringResource(R.string.offline_cached),
@@ -187,22 +190,20 @@ fun SettingsScreen(
                 }
             }
 
-            // Language
             FancySettingsCard(
                 icon = Icons.Default.Language,
                 iconGradient = listOf(Color(0xFF4CC9F0), Color(0xFF0096C7)),
                 title = stringResource(R.string.language),
-                subtitle = languageOptions[selectedLanguage] ?: selectedLanguage // ← translated ✅
+                subtitle = languageOptions[selectedLanguage] ?: selectedLanguage
             ) {
                 FancyRadioGroup(
-                    options = languageOptions.values.toList(), // ← translated options ✅
+                    options = languageOptions.values.toList(),
                     selected = languageOptions[selectedLanguage] ?: selectedLanguage,
                     onSelect = { displayValue ->
-                        // convert display back to key
                         val key = languageOptions.entries
                             .find { it.value == displayValue }?.key ?: displayValue
                         scope.launch {
-                            settingsViewModel.setLanguage(key) // ← save key ✅
+                            settingsViewModel.setLanguage(key)
                             val intent = (context as Activity).intent
                             (context as Activity).finish()
                             context.startActivity(intent)
@@ -211,33 +212,31 @@ fun SettingsScreen(
                 )
             }
 
-            // Temp Unit
             FancySettingsCard(
                 icon = Icons.Default.Thermostat,
                 iconGradient = listOf(Color(0xFFFF6B35), Color(0xFFFF9A3C)),
                 title = stringResource(R.string.temp_unit),
-                subtitle = tempOptions[selectedTempUnit] ?: selectedTempUnit // ← translated ✅
+                subtitle = tempOptions[selectedTempUnit] ?: selectedTempUnit
             ) {
                 FancyRadioGroup(
-                    options = tempOptions.values.toList(), // ← translated ✅
+                    options = tempOptions.values.toList(),
                     selected = tempOptions[selectedTempUnit] ?: selectedTempUnit,
                     onSelect = { displayValue ->
                         val key = tempOptions.entries
                             .find { it.value == displayValue }?.key ?: displayValue
-                        settingsViewModel.setTempUnit(key) // ← save key ✅
+                        settingsViewModel.setTempUnit(key)
                     }
                 )
             }
 
-            // Location
             FancySettingsCard(
                 icon = Icons.Default.LocationOn,
                 iconGradient = listOf(Color(0xFF4CAF50), Color(0xFF2E7D32)),
                 title = stringResource(R.string.location),
-                subtitle = locationOptions[selectedLocation] ?: selectedLocation // ← translated ✅
+                subtitle = locationOptions[selectedLocation] ?: selectedLocation
             ) {
                 FancyRadioGroup(
-                    options = locationOptions.values.toList(), // ← translated ✅
+                    options = locationOptions.values.toList(),
                     selected = locationOptions[selectedLocation] ?: selectedLocation,
                     onSelect = { displayValue ->
                         val key = locationOptions.entries
@@ -259,25 +258,23 @@ fun SettingsScreen(
                 )
             }
 
-            // Wind Speed
             FancySettingsCard(
                 icon = Icons.Default.Air,
                 iconGradient = listOf(Color(0xFFFFD60A), Color(0xFFFFB300)),
                 title = stringResource(R.string.wind_speed_unit),
-                subtitle = windOptions[selectedWindUnit] ?: selectedWindUnit // ← translated ✅
+                subtitle = windOptions[selectedWindUnit] ?: selectedWindUnit
             ) {
                 FancyRadioGroup(
-                    options = windOptions.values.toList(), // ← translated ✅
+                    options = windOptions.values.toList(),
                     selected = windOptions[selectedWindUnit] ?: selectedWindUnit,
                     onSelect = { displayValue ->
                         val key = windOptions.entries
                             .find { it.value == displayValue }?.key ?: displayValue
-                        settingsViewModel.setWindUnit(key) // ← save key ✅
+                        settingsViewModel.setWindUnit(key)
                     }
                 )
             }
 
-            // Theme
             FancySettingsCard(
                 icon = Icons.Default.Brightness6,
                 iconGradient = listOf(Color(0xFF9C27B0), Color(0xFF673AB7)),

@@ -1,21 +1,13 @@
 package com.example.afaq.data.favourite.datasource.local
 
 import android.app.Application
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.internal.runner.junit4.AndroidJUnit4Builder
 import com.example.afaq.data.db.AppDatabase
 import com.example.afaq.data.db.FavouriteDao
 import com.example.afaq.data.local.db.FavouriteEntity
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
@@ -26,11 +18,11 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class FavouriteDaoTest {
-    private lateinit var database : AppDatabase
-    private lateinit var favouriteDao : FavouriteDao
+    private lateinit var database: AppDatabase
+    private lateinit var favouriteDao: FavouriteDao
 
     @Before
-    fun setup(){
+    fun setup() {
         val application = ApplicationProvider.getApplicationContext<Application>()
         database = Room.inMemoryDatabaseBuilder(
             application,
@@ -40,12 +32,12 @@ class FavouriteDaoTest {
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         database.close()
     }
 
     @Test
-     fun insertFavourite_takesFavouriteItem() = runTest{
+    fun insertFavourite_takesFavouriteItem() = runTest {
         // Arrange
         val favItem = createFavouriteEntity(1)
 
@@ -57,10 +49,10 @@ class FavouriteDaoTest {
         assertThat(result.size, `is`(1))
         assertThat(result[0].cityName, `is`("Cairo"))
         assertThat(result[0].lat, `is`(30.0444))
-     }
+    }
 
     @Test
-    fun deleteFavourite_takesFavouriteItem() = runTest{
+    fun deleteFavourite_takesFavouriteItem() = runTest {
         // Arrange
         val favItem = createFavouriteEntity(1)
 
@@ -75,7 +67,7 @@ class FavouriteDaoTest {
 
 
     @Test
-    fun getAllFavourites_returnsFlowOfListFavourites() = runTest{
+    fun getAllFavourites_returnsFlowOfListFavourites() = runTest {
         // Arrange
         val favItem1 = createFavouriteEntity(1)
         val favItem2 = createFavouriteEntity(2)
@@ -94,7 +86,7 @@ class FavouriteDaoTest {
         assertThat(result[2].cityName, `is`("Cairo"))
     }
 
-    private fun createFavouriteEntity(id : Int) : FavouriteEntity {
+    private fun createFavouriteEntity(id: Int): FavouriteEntity {
         return FavouriteEntity(
             id = id,
             lat = 30.0444,

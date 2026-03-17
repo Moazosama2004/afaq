@@ -4,7 +4,6 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.example.afaq.data.home.datasource.remote.HomeRemoteDataSource
 import com.example.afaq.data.network.RetroFitClient
 import com.example.afaq.data.settings.SettingsRepo
@@ -18,7 +17,6 @@ import kotlinx.coroutines.launch
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
-        // handle dismiss action
         if (intent.action == "DISMISS_ALARM") {
             val alertId = intent.getIntExtra("AlertId", 0)
             val manager = context.getSystemService(
@@ -41,7 +39,9 @@ class AlarmReceiver : BroadcastReceiver() {
                     val lat = settingsRepo.userLat.first() ?: Constants.DEFAULT_LAT
                     val lon = settingsRepo.userLon.first() ?: Constants.DEFAULT_LON
                     val lang = settingsRepo.language.first().take(2).lowercase()
-                    val units = if (settingsRepo.tempUnit.first().contains("Celsius")) "metric" else "imperial"
+                    val units = if (settingsRepo.tempUnit.first()
+                            .contains("Celsius")
+                    ) "metric" else "imperial"
 
                     val remoteDataSource = HomeRemoteDataSource(RetroFitClient.webApiService)
                     val result = remoteDataSource.getCurrentWeather(lat, lon, units, lang)
@@ -58,15 +58,17 @@ class AlarmReceiver : BroadcastReceiver() {
 
                     val notificationService = NotificationServiceImpl(context)
                     if (type == "ALARM") {
-                        notificationService.showAlarm(message,alertId)
+                        notificationService.showAlarm(message, alertId)
                     } else {
                         notificationService.showNotification(message)
                     }
                 } catch (e: Exception) {
-                    Log.e("AlarmReciever", "Error fetching weather", e)
                     val notificationService = NotificationServiceImpl(context)
                     if (type == "ALARM") {
-                        notificationService.showAlarm("Weather Alert! Check the weather now 🌤️" ,alertId)
+                        notificationService.showAlarm(
+                            "Weather Alert! Check the weather now 🌤️",
+                            alertId
+                        )
                     } else {
                         notificationService.showNotification("Weather Alert! Check the weather now 🌤️")
                     }

@@ -18,7 +18,6 @@ class NotificationServiceImpl(
         Context.NOTIFICATION_SERVICE
     ) as NotificationManager
 
-    // ─── Show Notification ────────────────────────────────
     override fun showNotification(message: String) {
         val soundUri = Uri.parse(
             "android.resource://${context.packageName}/raw/alert_sound"
@@ -44,15 +43,14 @@ class NotificationServiceImpl(
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setGroup(NOTIFICATION_GROUP)
-            .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN) // ← each child alerts ✅
-            .setOnlyAlertOnce(false)                                         // ← sound every time ✅
+            .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
+            .setOnlyAlertOnce(false)
             .build()
 
         manager.notify(uniqueId, notification)
-        showGroupSummary(CHANNEL_ID) // ← pass correct channel ✅
+        showGroupSummary(CHANNEL_ID)
     }
 
-    // ─── Show Alarm ───────────────────────────────────────
     override fun showAlarm(message: String, alertId: Int) {
         val soundUri = Uri.parse(
             "android.resource://${context.packageName}/raw/alert_sound"
@@ -77,7 +75,7 @@ class NotificationServiceImpl(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val notification = NotificationCompat.Builder(context, ALARM_CHANNEL_ID) // ← alarm channel ✅
+        val notification = NotificationCompat.Builder(context, ALARM_CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("Afaq Weather Alarm 🚨")
             .setContentText(message)
@@ -88,7 +86,7 @@ class NotificationServiceImpl(
             .setFullScreenIntent(fullScreenPendingIntent, true)
             .setOngoing(true)
             .setAutoCancel(false)
-            .setGroup(ALARM_GROUP)                                               // ← separate group ✅
+            .setGroup(ALARM_GROUP)
             .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
             .setOnlyAlertOnce(false)
             .addAction(
@@ -99,21 +97,20 @@ class NotificationServiceImpl(
             .build()
 
         manager.notify(alertId, notification)
-        showGroupSummary(ALARM_CHANNEL_ID) // ← alarm channel for summary ✅
+        showGroupSummary(ALARM_CHANNEL_ID)
     }
 
-    // ─── Group Summary ────────────────────────────────────
     private fun showGroupSummary(channelId: String) {
         val isAlarm = channelId == ALARM_CHANNEL_ID
         val group = if (isAlarm) ALARM_GROUP else NOTIFICATION_GROUP
 
-        val summary = NotificationCompat.Builder(context, channelId) // ← correct channel ✅
+        val summary = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("Afaq - آفاق")
             .setGroup(group)
             .setGroupSummary(true)
             .setAutoCancel(true)
-            .setOnlyAlertOnce(true) // ← summary itself silent ✅
+            .setOnlyAlertOnce(true)
             .build()
 
         manager.notify(

@@ -46,13 +46,13 @@ import com.example.afaq.data.db.AppDatabase
 import com.example.afaq.data.favourite.FavouriteRepo
 import com.example.afaq.data.favourite.datasource.local.FavouriteLocalDataSource
 import com.example.afaq.data.favourite.datasource.remote.FavouriteRemoteDataSource
+import com.example.afaq.data.network.NetworkUtils
 import com.example.afaq.data.network.RetroFitClient
 import com.example.afaq.presentation.favourites.manager.FavouriteViewModel
 import com.example.afaq.presentation.favourites.manager.FavouriteViewModelFactory
 import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.data.network.NetworkUtils
 import com.example.afaq.utils.getAppLocale
 import kotlinx.coroutines.launch
 
@@ -85,7 +85,6 @@ fun FavouritesScreen(
     val favouritesState by viewModel.favouritesState.collectAsState()
     val addState by viewModel.addState.collectAsState()
     val deleteState by viewModel.deleteState.collectAsState()
-    val entityToDelete by viewModel.entityToDelete.collectAsState()
     val showOfflineDialog by viewModel.showOfflineDialog.collectAsState()
 
     val snackbarMessage = stringResource(R.string.please_select_location)
@@ -94,7 +93,7 @@ fun FavouritesScreen(
         OfflineDialog(
             onDismiss = {
                 viewModel.hideOfflineDialog()
-            }, 
+            },
             onConfirm = {
                 viewModel.hideOfflineDialog()
             }
@@ -113,7 +112,7 @@ fun FavouritesScreen(
                 onLocationSelected = { latitude, longitude ->
                     viewModel.setLocation(latitude, longitude)
                 },
-                onBack = { 
+                onBack = {
                     viewModel.setShowMap(false)
                 }
             )
@@ -269,7 +268,9 @@ fun FavouritesScreen(
 
         SnackbarHost(
             hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 90.dp)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 90.dp)
         )
 
         FloatingActionButton(

@@ -111,12 +111,14 @@ fun MapScreen(
             },
             update = { view ->
                 if (isDarkTheme) {
-                    val matrix = ColorMatrix(floatArrayOf(
-                        -1.0f, 0.0f, 0.0f, 0.0f, 255f,
-                        0.0f, -1.0f, 0.0f, 0.0f, 255f,
-                        0.0f, 0.0f, -1.0f, 0.0f, 255f,
-                        0.0f, 0.0f, 0.0f, 1.0f, 0.0f
-                    ))
+                    val matrix = ColorMatrix(
+                        floatArrayOf(
+                            -1.0f, 0.0f, 0.0f, 0.0f, 255f,
+                            0.0f, -1.0f, 0.0f, 0.0f, 255f,
+                            0.0f, 0.0f, -1.0f, 0.0f, 255f,
+                            0.0f, 0.0f, 0.0f, 1.0f, 0.0f
+                        )
+                    )
                     view.overlayManager.tilesOverlay.setColorFilter(ColorMatrixColorFilter(matrix))
                 } else {
                     view.overlayManager.tilesOverlay.setColorFilter(null)

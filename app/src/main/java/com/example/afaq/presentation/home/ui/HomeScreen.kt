@@ -43,18 +43,18 @@ import com.example.afaq.data.home.HomeRepo
 import com.example.afaq.data.home.datasource.local.HomeLocalDataSource
 import com.example.afaq.data.home.datasource.local.WeatherDataStore
 import com.example.afaq.data.home.datasource.remote.HomeRemoteDataSource
+import com.example.afaq.data.network.NetworkStatus
+import com.example.afaq.data.network.NetworkUtils
 import com.example.afaq.data.network.RetroFitClient
+import com.example.afaq.presentation.connectivity.NetworkViewModel
 import com.example.afaq.presentation.home.manager.ForecastUiState
 import com.example.afaq.presentation.home.manager.HomeViewModel
 import com.example.afaq.presentation.home.manager.HomeViewModelFactory
 import com.example.afaq.presentation.home.manager.WeatherUiState
-import com.example.afaq.presentation.connectivity.NetworkViewModel
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.data.network.NetworkStatus
-import com.example.afaq.data.network.NetworkUtils
 import com.example.afaq.utils.getAppLocale
 import kotlinx.coroutines.delay
 
@@ -68,7 +68,7 @@ fun HomeScreen(
     val context = LocalContext.current.applicationContext
     val networkStatus by networkViewModel.networkStatus.collectAsState()
     val isOnline = networkStatus == NetworkStatus.Online
-    
+
     val viewModel = viewModel<HomeViewModel>(
         factory = remember(context) {
             HomeViewModelFactory(
@@ -81,14 +81,12 @@ fun HomeScreen(
         }
     )
 
-    // states
     val state by viewModel.weatherState.collectAsState()
     val forecastState by viewModel.forecastState.collectAsState()
 
     val savedLat by settingsViewModel.userLat.collectAsState()
     val savedLon by settingsViewModel.userLon.collectAsState()
 
-    // shared data settings
     val tempUnit by settingsViewModel.tempUnit.collectAsState()
     val windSpeedUnit by settingsViewModel.windUnit.collectAsState()
 
@@ -96,7 +94,7 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         while (true) {
-            delay(60_000L) // every 1 minute
+            delay(60_000L)
             currentTime = System.currentTimeMillis()
         }
     }
@@ -113,7 +111,7 @@ fun HomeScreen(
     }
 
     Scaffold(
-        modifier = modifier, // Use the passed modifier which contains innerPadding from MainActivity
+        modifier = modifier,
         containerColor = AfaqThemeColors.background,
         topBar = {
             CenterAlignedTopAppBar(
@@ -135,7 +133,7 @@ fun HomeScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding) // This innerPadding is from Home's internal Scaffold
+                .padding(innerPadding)
                 .background(AfaqThemeColors.background)
         ) {
             when (state) {
@@ -167,7 +165,11 @@ fun HomeScreen(
                                         .padding(horizontal = 16.dp, vertical = 10.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Icon(Icons.Default.WifiOff, contentDescription = null, tint = AfaqColors.warning)
+                                    Icon(
+                                        Icons.Default.WifiOff,
+                                        contentDescription = null,
+                                        tint = AfaqColors.warning
+                                    )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Column {
                                         Text(

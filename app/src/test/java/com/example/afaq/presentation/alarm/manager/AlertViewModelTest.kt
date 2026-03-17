@@ -1,9 +1,7 @@
 package com.example.afaq.presentation.alarm.manager
 
-import androidx.lifecycle.viewModelScope
 import com.example.afaq.data.alarm.AlertRepo
 import com.example.afaq.data.alarm.model.AlertEntity
-import com.example.afaq.data.home.HomeRepo
 import com.example.afaq.services.alarms.AndroidAlarmManager
 import com.example.afaq.services.workmanager.WorkManagerScheduler
 import io.mockk.MockKAnnotations
@@ -17,14 +15,11 @@ import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import okhttp3.Dispatcher
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
@@ -35,14 +30,16 @@ import org.junit.Test
 class AlertViewModelTest {
     @MockK
     private lateinit var repo: AlertRepo
+
     @MockK
     private lateinit var alarmManager: AndroidAlarmManager
+
     @MockK
     private lateinit var workManagerScheduler: WorkManagerScheduler
-    private lateinit var viewModel : AlertViewModel
+    private lateinit var viewModel: AlertViewModel
 
     private val testDispatcher = StandardTestDispatcher()
-            
+
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
@@ -62,13 +59,13 @@ class AlertViewModelTest {
 
 
     @Test
-    fun addAlert_typeAlarm_schedulesAlarm() = runTest{
+    fun addAlert_typeAlarm_schedulesAlarm() = runTest {
         // Arrange
         val dummy = createDummyAlertEntity() // type = "ALARM"
         val savedEntity = dummy.copy(id = 1)
 
-        coEvery{repo.insertAlert(any())} returns 1L
-        every {alarmManager.schedule(savedEntity)} just runs
+        coEvery { repo.insertAlert(any()) } returns 1L
+        every { alarmManager.schedule(savedEntity) } just runs
 
         // Act
         viewModel.addAlert(
@@ -85,12 +82,12 @@ class AlertViewModelTest {
     }
 
     @Test
-    fun addAlert_typeNotification_schedulesWorkManager() = runTest{
+    fun addAlert_typeNotification_schedulesWorkManager() = runTest {
         // Arrange
         val dummy = createDummyAlertEntity().copy(type = "NOTIFICATION")
         val savedEntity = dummy.copy(id = 1)
 
-        coEvery{repo.insertAlert(any())} returns 1L
+        coEvery { repo.insertAlert(any()) } returns 1L
         every { workManagerScheduler.schedule(savedEntity) } just runs
 
         // Act
@@ -154,7 +151,7 @@ class AlertViewModelTest {
     }
 
     @Test
-    fun deleteAlarm_whenAlarmEntityGiven_deleteFromDBAndCanel() = runTest{
+    fun deleteAlarm_whenAlarmEntityGiven_deleteFromDBAndCanel() = runTest {
         // Arrange
         val dummy = createDummyAlertEntity() // type = "ALARM"
         coEvery { repo.deleteAlertById(dummy.id) } just runs

@@ -18,12 +18,12 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class FavouriteLocalDataSourceTest {
-    private lateinit var database : AppDatabase
-    private lateinit var favouriteDao : FavouriteDao
-    private lateinit var favouriteLocalDataSource : FavouriteLocalDataSource
+    private lateinit var database: AppDatabase
+    private lateinit var favouriteDao: FavouriteDao
+    private lateinit var favouriteLocalDataSource: FavouriteLocalDataSource
 
     @Before
-    fun setup(){
+    fun setup() {
         val application = ApplicationProvider.getApplicationContext<Application>()
         database = Room.inMemoryDatabaseBuilder(
             application,
@@ -34,13 +34,13 @@ class FavouriteLocalDataSourceTest {
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         database.close()
     }
 
 
     @Test
-    fun insertFavourite_takesFavouriteItem() = runTest{
+    fun insertFavourite_takesFavouriteItem() = runTest {
         // Arrange
         val favItem = createFavouriteEntity(1)
 
@@ -55,7 +55,7 @@ class FavouriteLocalDataSourceTest {
     }
 
     @Test
-    fun deleteFavourite_takesFavouriteItem() = runTest{
+    fun deleteFavourite_takesFavouriteItem() = runTest {
         // Arrange
         val favItem = createFavouriteEntity(1)
 
@@ -70,7 +70,7 @@ class FavouriteLocalDataSourceTest {
 
 
     @Test
-    fun getAllFavourites_returnsFlowOfListFavourites() = runTest{
+    fun getAllFavourites_returnsFlowOfListFavourites() = runTest {
         // Arrange
         val favItem1 = createFavouriteEntity(1)
         val favItem2 = createFavouriteEntity(2)
@@ -89,7 +89,7 @@ class FavouriteLocalDataSourceTest {
         assertThat(result[2].cityName, `is`("Cairo"))
     }
 
-    private fun createFavouriteEntity(id : Int) : FavouriteEntity {
+    private fun createFavouriteEntity(id: Int): FavouriteEntity {
         return FavouriteEntity(
             id = id,
             lat = 30.0444,

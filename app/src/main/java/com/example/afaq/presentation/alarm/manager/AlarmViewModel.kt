@@ -1,7 +1,5 @@
 package com.example.afaq.presentation.alarm.manager
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -16,8 +14,8 @@ import kotlinx.coroutines.launch
 
 class AlertViewModel(
     private val alertRepo: AlertRepo,
-    private val alarmManager :  AndroidAlarmManager,
-    private val workManagerScheduler : WorkManagerScheduler
+    private val alarmManager: AndroidAlarmManager,
+    private val workManagerScheduler: WorkManagerScheduler
 
 ) : ViewModel() {
 
@@ -28,9 +26,27 @@ class AlertViewModel(
     private val _addState = MutableStateFlow<AddAlarmState>(AddAlarmState.Idle)
     val addState: StateFlow<AddAlarmState> = _addState
 
+    private val _showBottomSheet = MutableStateFlow<Boolean>(false)
+    val showBottomSheet: StateFlow<Boolean> = _showBottomSheet
+
+    private val _showRationale = MutableStateFlow<Boolean>(false)
+    val showRationale: StateFlow<Boolean> = _showRationale
+
     init {
         loadAlerts()
     }
+
+
+    fun showBottomSheet(show: Boolean) {
+        _showBottomSheet.value = show
+        if (!show) _showBottomSheet.value = false
+    }
+
+    fun showRationale(show: Boolean) {
+        _showRationale.value = show
+        if (!show) _showRationale.value = false
+    }
+
 
     private fun loadAlerts() {
         viewModelScope.launch {
@@ -59,8 +75,7 @@ class AlertViewModel(
                 )
                 val id = alertRepo.insertAlert(entity).toInt()
                 val savedEntity = entity.copy(id = id)
-                
-                // Trigger Actual Alarm/Notification
+
                 if (type == "ALARM") {
                     alarmManager.schedule(savedEntity)
                 } else {
@@ -94,13 +109,13 @@ class AlertViewModel(
 
 class AlertViewModelFactory(
     private val repo: AlertRepo,
-    private val alarmManager :  AndroidAlarmManager,
-    private val workManagerScheduler : WorkManagerScheduler
+    private val alarmManager: AndroidAlarmManager,
+    private val workManagerScheduler: WorkManagerScheduler
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AlertViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return AlertViewModel(repo,alarmManager,workManagerScheduler) as T
+            return AlertViewModel(repo, alarmManager, workManagerScheduler) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

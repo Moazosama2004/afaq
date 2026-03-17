@@ -2,7 +2,6 @@ package com.example.afaq.utils
 
 import android.content.Context
 import android.location.Geocoder
-import android.util.Log
 import com.example.afaq.R
 import com.example.afaq.data.location.LocationRepository
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
@@ -11,14 +10,12 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-// ─── Dynamic Locale ───────────────────────────────────────
 fun getAppLocale(): Locale = Locale.getDefault()
-// ← automatically uses current app locale (set by LocaleHelper)
 
 fun String.localizeDigits(): String {
     val locale = getAppLocale()
     if (locale.language != "ar") return this
-    
+
     val arabicDigits = charArrayOf('٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩')
     return this.map { char ->
         if (char in '0'..'9') {
@@ -79,10 +76,12 @@ fun formatLastUpdated(context: Context, timestamp: Long): String {
             val minutes = diff / 60_000L
             context.getString(R.string.updated_minutes_ago, minutes.toInt()).localizeDigits()
         }
+
         diff < 86_400_000L -> {
             val hours = diff / 3_600_000L
             context.getString(R.string.updated_hours_ago, hours.toInt()).localizeDigits()
         }
+
         else -> {
             val sdf = SimpleDateFormat("hh:mm a", getAppLocale())
             context.getString(R.string.updated_at, sdf.format(Date(timestamp))).localizeDigits()
@@ -98,15 +97,10 @@ suspend fun fetchGpsLocation(
         val locationRepository = LocationRepository(context)
         withTimeoutOrNull(10000L) {
             locationRepository.getUserLocation().collect { (lat, lon) ->
-                Log.d("Settings", "✅ GPS location: $lat, $lon")
                 settingsViewModel.saveUserLocation(lat, lon)
             }
-        } ?: run {
-            // timeout → keep current location
-            Log.d("Settings", "⚠️ GPS timeout - keeping current location")
         }
     } catch (e: Exception) {
-        Log.d("Settings", "❌ GPS error: ${e.message}")
     }
 }
 
@@ -121,13 +115,13 @@ fun getAddressFromLocation(context: Context, latitude: Double, longitude: Double
 }
 
 fun getWeatherIcon(temperature: Double, iconCode: String = ""): Int {
-    if (iconCode.endsWith("n")) return R.drawable.ic_weather_night // 🌙 night
+    if (iconCode.endsWith("n")) return R.drawable.ic_weather_night
 
     return when {
-        temperature >= 35 -> R.drawable.ic_weather_hot       // ☀️ very hot sunny
-        temperature >= 20 -> R.drawable.ic_weather_warm      // ⛅ warm
-        temperature >= 10 -> R.drawable.ic_weather_mild      // 🌦️ mild
-        temperature >= 0  -> R.drawable.ic_weather_cold      // 🌧️ cold
-        else              -> R.drawable.ic_weather_freezing  // ⛈️ freezing
+        temperature >= 35 -> R.drawable.ic_weather_hot
+        temperature >= 20 -> R.drawable.ic_weather_warm
+        temperature >= 10 -> R.drawable.ic_weather_mild
+        temperature >= 0 -> R.drawable.ic_weather_cold
+        else -> R.drawable.ic_weather_freezing
     }
 }

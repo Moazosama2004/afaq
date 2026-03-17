@@ -2,7 +2,6 @@ package com.example.afaq.presentation.settings.ui
 
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,7 +22,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -65,11 +63,10 @@ fun LocationMapBottomSheet(
     onLocationSelected: (lat: Double, lon: Double) -> Unit
 ) {
     val context = LocalContext.current
-    
-    // Disable swipe gestures to prevent accidental dismissal
+
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
-        confirmValueChange = { false } 
+        confirmValueChange = { false }
     )
     val isDarkTheme = LocalIsDarkTheme.current
 
@@ -78,7 +75,6 @@ fun LocationMapBottomSheet(
     var locationName by remember { mutableStateOf("") }
     var marker by remember { mutableStateOf<Marker?>(null) }
 
-    // Fetch address when location is selected
     LaunchedEffect(selectedLat, selectedLon) {
         if (selectedLat != null && selectedLon != null) {
             locationName = withContext(Dispatchers.IO) {
@@ -88,12 +84,12 @@ fun LocationMapBottomSheet(
     }
 
     ModalBottomSheet(
-        onDismissRequest = { /* Empty to prevent dismissal on scrim click */ },
+        onDismissRequest = { },
         sheetState = sheetState,
         containerColor = AfaqThemeColors.dialog,
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
         modifier = Modifier.fillMaxHeight(0.85f),
-        dragHandle = null // Optional: remove drag handle to further indicate non-swipeable
+        dragHandle = null
     ) {
         Column(
             modifier = Modifier
@@ -102,7 +98,6 @@ fun LocationMapBottomSheet(
                 .padding(bottom = 8.dp)
         ) {
 
-            // Title
             Text(
                 text = stringResource(R.string.selected_location),
                 style = AfaqTypography.bold20,
@@ -110,7 +105,6 @@ fun LocationMapBottomSheet(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            // Selected location info display
             if (selectedLat != null && selectedLon != null) {
                 Card(
                     colors = CardDefaults.cardColors(
@@ -153,7 +147,6 @@ fun LocationMapBottomSheet(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Map
             AndroidView(
                 factory = { ctx ->
                     Configuration.getInstance().userAgentValue = ctx.packageName
@@ -161,9 +154,8 @@ fun LocationMapBottomSheet(
                         setTileSource(TileSourceFactory.MAPNIK)
                         setMultiTouchControls(true)
                         controller.setZoom(6.0)
-                        controller.setCenter(GeoPoint(26.8206, 30.8025)) // Egypt
+                        controller.setCenter(GeoPoint(26.8206, 30.8025))
 
-                        // Add current location overlay
                         val locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(ctx), this)
                         locationOverlay.enableMyLocation()
                         locationOverlay.runOnFirstFix {
@@ -174,16 +166,13 @@ fun LocationMapBottomSheet(
                         }
                         overlays.add(locationOverlay)
 
-                        // tap listener
                         val eventsOverlay = MapEventsOverlay(object : MapEventsReceiver {
                             override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
                                 selectedLat = p.latitude
                                 selectedLon = p.longitude
 
-                                // remove old marker
                                 marker?.let { overlays.remove(it) }
 
-                                // add new marker
                                 val newMarker = Marker(this@apply).apply {
                                     position = p
                                     setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
@@ -203,13 +192,19 @@ fun LocationMapBottomSheet(
                 },
                 update = { view ->
                     if (isDarkTheme) {
-                        val matrix = ColorMatrix(floatArrayOf(
-                            -1.0f, 0.0f, 0.0f, 0.0f, 255f,
-                            0.0f, -1.0f, 0.0f, 0.0f, 255f,
-                            0.0f, 0.0f, -1.0f, 0.0f, 255f,
-                            0.0f, 0.0f, 0.0f, 1.0f, 0.0f
-                        ))
-                        view.overlayManager.tilesOverlay.setColorFilter(ColorMatrixColorFilter(matrix))
+                        val matrix = ColorMatrix(
+                            floatArrayOf(
+                                -1.0f, 0.0f, 0.0f, 0.0f, 255f,
+                                0.0f, -1.0f, 0.0f, 0.0f, 255f,
+                                0.0f, 0.0f, -1.0f, 0.0f, 255f,
+                                0.0f, 0.0f, 0.0f, 1.0f, 0.0f
+                            )
+                        )
+                        view.overlayManager.tilesOverlay.setColorFilter(
+                            ColorMatrixColorFilter(
+                                matrix
+                            )
+                        )
                     } else {
                         view.overlayManager.tilesOverlay.setColorFilter(null)
                     }
@@ -222,7 +217,6 @@ fun LocationMapBottomSheet(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)

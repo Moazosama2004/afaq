@@ -10,11 +10,11 @@ import androidx.datastore.preferences.preferencesDataStore
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "afaq_settings")
 
 object SettingsKeys {
-    val LANGUAGE = stringPreferencesKey("language")       // "en" or "ar"
-    val TEMP_UNIT = stringPreferencesKey("temp_unit")     // "Celsius" "Kelvin" "Fahrenheit"
-    val WIND_UNIT = stringPreferencesKey("wind_unit")     // "meter/sec" "mile/hour"
-    val LOCATION = stringPreferencesKey("location")       // "GPS" "Map"
+    val LANGUAGE = stringPreferencesKey("language")
+    val TEMP_UNIT = stringPreferencesKey("temp_unit")
+    val WIND_UNIT = stringPreferencesKey("wind_unit")
+    val LOCATION = stringPreferencesKey("location")
     val USER_LAT = stringPreferencesKey("user_lat")
     val USER_LON = stringPreferencesKey("user_lon")
-    val THEME = stringPreferencesKey("theme")             // "Light" "Dark" "System"
+    val THEME = stringPreferencesKey("theme")
 }

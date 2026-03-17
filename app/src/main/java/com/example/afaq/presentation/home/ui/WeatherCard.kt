@@ -61,7 +61,6 @@ fun WeatherCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Top Row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -125,7 +124,6 @@ fun WeatherCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Weather Icon
             Image(
                 painter = painterResource(
                     getWeatherIcon(weather.temperature, weather.icon)
@@ -136,7 +134,6 @@ fun WeatherCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Temperature Row
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center

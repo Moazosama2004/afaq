@@ -4,9 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.afaq.data.db.AlertDao
 import com.example.afaq.data.alarm.model.AlertEntity
-import com.example.afaq.data.db.FavouriteDao
 import com.example.afaq.data.local.db.FavouriteEntity
 
 @Database(
@@ -21,11 +19,11 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var INSTANCE : AppDatabase? = null
+        private var INSTANCE: AppDatabase? = null
 
-        fun getInstance (context: Context) : AppDatabase {
+        fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
-                val instance  = Room.databaseBuilder(
+                val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
                     "afaq_db"

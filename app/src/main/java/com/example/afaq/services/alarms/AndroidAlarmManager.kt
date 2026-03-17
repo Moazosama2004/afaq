@@ -11,7 +11,6 @@ class AndroidAlarmManager(
     private val context: Context
 ) : IAlarmService {
 
-    // 1. create instance from alarm manager
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     override fun schedule(item: AlertEntity) {
@@ -38,7 +37,7 @@ class AndroidAlarmManager(
     override fun cancel(item: AlertEntity) {
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            item.id, // ← same id as schedule
+            item.id,
             Intent(context, AlarmReceiver::class.java),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

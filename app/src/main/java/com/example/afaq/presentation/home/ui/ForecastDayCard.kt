@@ -47,8 +47,6 @@ fun ForecastDayCard(item: ForecastItem) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-
-            // Weather description
             Text(
                 text = item.description,
                 style = AfaqTypography.semiBold14,
@@ -58,7 +56,6 @@ fun ForecastDayCard(item: ForecastItem) {
                 overflow = TextOverflow.Ellipsis
             )
 
-            // Date
             Text(
                 text = formatForecastDate(item.dt),
                 style = AfaqTypography.regular12,
@@ -66,7 +63,6 @@ fun ForecastDayCard(item: ForecastItem) {
                 textAlign = TextAlign.Center
             )
 
-            // Weather Icon
             Image(
                 painter = painterResource(
                     id = getWeatherIcon(item.temp, item.icon)
@@ -75,7 +71,6 @@ fun ForecastDayCard(item: ForecastItem) {
                 modifier = Modifier.size(48.dp)
             )
 
-            // Temperature Row
             Row(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.Center

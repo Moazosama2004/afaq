@@ -76,14 +76,18 @@ fun AlertCard(
                     style = AfaqTypography.regular12,
                     color = AfaqThemeColors.textSecondary
                 )
-                
+
                 // Type badge
                 val badgeBgColor = if (alert.type == "ALARM") {
-                    if (isDark) AfaqColors.error.copy(alpha = 0.25f) else AfaqColors.error.copy(alpha = 0.15f)
+                    if (isDark) AfaqColors.error.copy(alpha = 0.25f) else AfaqColors.error.copy(
+                        alpha = 0.15f
+                    )
                 } else {
-                    if (isDark) AfaqThemeColors.primary.copy(alpha = 0.25f) else AfaqThemeColors.primary.copy(alpha = 0.15f)
+                    if (isDark) AfaqThemeColors.primary.copy(alpha = 0.25f) else AfaqThemeColors.primary.copy(
+                        alpha = 0.15f
+                    )
                 }
-                
+
                 val badgeTextColor = if (isDark) {
                     Color.White
                 } else {

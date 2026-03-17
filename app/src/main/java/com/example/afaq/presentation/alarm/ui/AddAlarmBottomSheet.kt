@@ -43,8 +43,6 @@ import com.example.afaq.services.workmanager.WorkManagerScheduler
 import com.example.afaq.utils.formatAlertTime
 import java.util.Calendar
 
-// ─── Add Alert Bottom Sheet ───────────────────────────────
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddAlertBottomSheet(
@@ -76,7 +74,6 @@ fun AddAlertBottomSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            // Start Time
             Text(
                 text = stringResource(R.string.start_duration),
                 style = AfaqTypography.semiBold14,
@@ -127,7 +124,6 @@ fun AddAlertBottomSheet(
                 )
             }
 
-            // End Time
             Text(
                 text = stringResource(R.string.end_duration),
                 style = AfaqTypography.semiBold14,
@@ -164,7 +160,6 @@ fun AddAlertBottomSheet(
                 }
             }
 
-            // Notify Type
             Text(
                 text = stringResource(R.string.notify_me_by),
                 style = AfaqTypography.semiBold14,
@@ -197,14 +192,12 @@ fun AddAlertBottomSheet(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Button(
                     onClick = {
-                        // validate
                         startError = startTimeMs < System.currentTimeMillis()
                         if (!startError && endTimeMs > startTimeMs) {
                             onSave(startTimeMs, endTimeMs, selectedType)
@@ -213,7 +206,6 @@ fun AddAlertBottomSheet(
                                 endTime = endTimeMs,
                                 type = selectedType
                             )
-                            // schedule alarm + add alarm
                             when (alertEntity.type) {
                                 "ALARM" -> {
                                     val alarmManager = AndroidAlarmManager(context)
@@ -261,7 +253,6 @@ fun AddAlertBottomSheet(
         }
     }
 
-    // Time Pickers
     if (showStartPicker) {
         TimePickerDialog(
             onDismiss = { showStartPicker = false },

@@ -2,14 +2,11 @@ package com.example.afaq.presentation.alerts.ui
 
 import android.Manifest
 import android.app.Activity
-import android.app.AlarmManager
-import android.app.Application
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -81,16 +78,13 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
                 alarmManager = AndroidAlarmManager(context),
                 workManagerScheduler = WorkManagerScheduler(context),
 
-            )
+                )
         }
     )
 
     val alertsState by viewModel.alertsState.collectAsState()
-
-    var showBottomSheet by remember { mutableStateOf(false) }
-    var showRationale by remember { mutableStateOf(false) }
-
-    // Notification permission (Android 13+)
+    val showBottomSheet by viewModel.showBottomSheet.collectAsState()
+    val statusRationale by viewModel.showRationale.collectAsState()
 
     var hasPermission by remember {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -111,11 +105,8 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (isGranted) {
-                // user allowed
                 hasPermission = true
-
             } else {
-                // user disallowed — check if permanently denied
                 val activity = context as? Activity ?: return@rememberLauncherForActivityResult
 
                 val permanentlyDenied = !ActivityCompat.shouldShowRequestPermissionRationale(
@@ -124,20 +115,16 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
                 )
 
                 if (permanentlyDenied) {
-                    // user clicked "Don't ask again" → send to Settings
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                         data = Uri.fromParts("package", context.packageName, null)
                     }
                     context.startActivity(intent)
                 } else {
-                    // user just clicked Disallow → show rationale
-                    showRationale = true
+                    viewModel.showRationale(true)
                 }
             }
         }
     )
-
-
 
     Box(
         modifier = modifier
@@ -201,14 +188,12 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
             }
         }
 
-        // FAB
         FloatingActionButton(
             onClick = {
-                // check permission first
                 if (!hasPermission) {
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 } else {
-                    showBottomSheet = true
+                    viewModel.showBottomSheet(true)
                 }
 
             },
@@ -223,32 +208,33 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
         }
     }
 
-    if (showRationale) {
+    if (statusRationale) {
         AlertDialog(
-            onDismissRequest = { showRationale = false },
+            onDismissRequest = {
+                viewModel.showRationale(false)
+            },
             title = { Text("Permission Needed") },
             text = { Text("Notifications are needed to alert you on time.") },
             confirmButton = {
                 Button(onClick = {
-                    showRationale = false
-                    // ask again
+                    viewModel.showRationale(false)
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }) { Text("Try Again") }
             },
             dismissButton = {
-                TextButton(onClick = { showRationale = false }) { Text("Cancel") }
+                TextButton(onClick = {
+                    viewModel.showRationale(false)
+                }) { Text("Cancel") }
             }
         )
     }
 
-    // Bottom Sheet
     if (showBottomSheet) {
         AddAlertBottomSheet(
-            onDismiss = { showBottomSheet = false },
+            onDismiss = { viewModel.showBottomSheet(false) },
             onSave = { startTime, endTime, type ->
-                Log.d("AddAlertBottomSheet", "$startTime, $endTime, $type")
                 viewModel.addAlert(startTime, endTime, type)
-                showBottomSheet = false
+                viewModel.showBottomSheet(false)
             }
         )
     }

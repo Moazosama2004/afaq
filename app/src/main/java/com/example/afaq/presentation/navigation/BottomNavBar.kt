@@ -14,10 +14,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.afaq.data.network.NetworkStatus
 import com.example.afaq.presentation.connectivity.NetworkViewModel
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.data.network.NetworkStatus
 
 @Composable
 fun BottomNavBar(
