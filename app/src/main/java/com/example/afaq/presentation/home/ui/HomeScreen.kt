@@ -20,7 +20,6 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -86,7 +85,6 @@ fun HomeScreen(
     val state by viewModel.weatherState.collectAsState()
     val forecastState by viewModel.forecastState.collectAsState()
 
-
     val savedLat by settingsViewModel.userLat.collectAsState()
     val savedLon by settingsViewModel.userLon.collectAsState()
 
@@ -115,7 +113,8 @@ fun HomeScreen(
     }
 
     Scaffold(
-        contentColor = MaterialTheme.colorScheme.background,
+        modifier = modifier, // Use the passed modifier which contains innerPadding from MainActivity
+        containerColor = AfaqThemeColors.background,
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -134,9 +133,9 @@ fun HomeScreen(
     ) { innerPadding ->
 
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(top = innerPadding.calculateTopPadding())
+                .padding(innerPadding) // This innerPadding is from Home's internal Scaffold
                 .background(AfaqThemeColors.background)
         ) {
             when (state) {
@@ -152,7 +151,7 @@ fun HomeScreen(
                     val weather = (state as WeatherUiState.Success).weather
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = 16.dp),
+                        contentPadding = PaddingValues(bottom = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         if (!isOnline) {
