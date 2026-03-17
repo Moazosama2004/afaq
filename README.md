@@ -12,7 +12,8 @@
 *A beautiful, feature-rich Android weather app with native Arabic support, offline caching, and smart alerts.*
 
 ---
-![Afaq Banner](<img width="4800" height="3600" alt="shot 38 (1)" src="https://github.com/user-attachments/assets/32506855-cbbb-4dfe-b891-440037b0a9aa" />)
+<img width="4800" height="3600" alt="shot 38 (1)" src="https://github.com/user-attachments/assets/ad87fea3-bfab-4164-b344-4fe86670d1b9" />
+
 
 ☀️ 🌤️ 🌧️ ⛈️ 🌙 🌍
 
