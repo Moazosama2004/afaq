@@ -5,17 +5,17 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.example.afaq.data.alarm.model.AlertEntity
-import com.example.afaq.services.recievers.AlarmReciever
+import com.example.afaq.services.recievers.AlarmReceiver
 
 class AndroidAlarmManager(
     private val context: Context
-) : AlarmService {
+) : IAlarmService {
 
     // 1. create instance from alarm manager
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     override fun schedule(item: AlertEntity) {
-        val intent = Intent(context, AlarmReciever::class.java).apply {
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("Message", "Weather Alert! Check the weather now 🌤️")
             putExtra("AlertId", item.id)
             putExtra("EndTime", item.endTime)
@@ -39,7 +39,7 @@ class AndroidAlarmManager(
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             item.id, // ← same id as schedule
-            Intent(context, AlarmReciever::class.java),
+            Intent(context, AlarmReceiver::class.java),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.cancel(pendingIntent)

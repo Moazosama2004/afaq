@@ -1,6 +1,7 @@
 package com.example.afaq.data.alarm.datasource.local
 
 import com.example.afaq.data.alarm.model.AlertEntity
+import com.example.afaq.data.db.AlertDao
 import kotlinx.coroutines.flow.Flow
 
 class AlertLocalDataSource(

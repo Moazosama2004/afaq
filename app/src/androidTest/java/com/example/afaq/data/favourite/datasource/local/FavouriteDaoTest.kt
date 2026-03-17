@@ -10,7 +10,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.internal.runner.junit4.AndroidJUnit4Builder
 import com.example.afaq.data.db.AppDatabase
-import com.example.afaq.data.local.db.FavouriteDao
+import com.example.afaq.data.db.FavouriteDao
 import com.example.afaq.data.local.db.FavouriteEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect

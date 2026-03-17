@@ -8,3 +8,10 @@ sealed class AlarmsUiState {
     data class Success(val alerts: List<AlertEntity>) : AlarmsUiState()
     data class Error(val message: String) : AlarmsUiState()
 }
+
+sealed class AddAlarmState {
+    object Idle : AddAlarmState()
+    object Loading : AddAlarmState()
+    object Success : AddAlarmState()
+    data class Error(val message: String) : AddAlarmState()
+}

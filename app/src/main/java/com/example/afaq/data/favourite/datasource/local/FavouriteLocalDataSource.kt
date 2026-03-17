@@ -1,6 +1,6 @@
 package com.example.afaq.data.favourite.datasource.local
 
-import com.example.afaq.data.local.db.FavouriteDao
+import com.example.afaq.data.db.FavouriteDao
 import com.example.afaq.data.local.db.FavouriteEntity
 import kotlinx.coroutines.flow.Flow
 

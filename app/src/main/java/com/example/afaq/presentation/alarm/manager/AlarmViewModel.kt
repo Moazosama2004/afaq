@@ -21,8 +21,6 @@ class AlertViewModel(
 
 ) : ViewModel() {
 
-//    private val alarmManager = AndroidAlarmManager(application)
-//    private val workManagerScheduler = WorkManagerScheduler(application)
 
     private val _alertsState = MutableStateFlow<AlarmsUiState>(AlarmsUiState.Loading)
     val alertsState: StateFlow<AlarmsUiState> = _alertsState

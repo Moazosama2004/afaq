@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.example.afaq.data.home.model.Weather
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.utils.TempConverter
+import com.example.afaq.utils.converters.TempConverter
 import com.example.afaq.utils.formatDate
 import com.example.afaq.utils.formatLastUpdated
 import com.example.afaq.utils.getWeatherIcon

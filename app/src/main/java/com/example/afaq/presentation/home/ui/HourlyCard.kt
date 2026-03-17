@@ -25,7 +25,7 @@ import com.example.afaq.R
 import com.example.afaq.data.model.ForecastItem
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.utils.TempConverter
+import com.example.afaq.utils.converters.TempConverter
 import com.example.afaq.utils.formatHour
 import com.example.afaq.utils.getWeatherIcon
 

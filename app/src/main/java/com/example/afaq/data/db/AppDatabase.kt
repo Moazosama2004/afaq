@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.afaq.data.alarm.datasource.local.AlertDao
+import com.example.afaq.data.db.AlertDao
 import com.example.afaq.data.alarm.model.AlertEntity
-import com.example.afaq.data.local.db.FavouriteDao
+import com.example.afaq.data.db.FavouriteDao
 import com.example.afaq.data.local.db.FavouriteEntity
 
 @Database(

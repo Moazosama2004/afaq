@@ -1,4 +1,4 @@
-package com.example.afaq.data.alarm.datasource.local
+package com.example.afaq.data.db
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AlertDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertAlert(alert: AlertEntity): Long
 
     @Query("SELECT * FROM alerts ORDER BY startTime ASC")

@@ -144,3 +144,12 @@ notification - notification
 * Improve `NotificationService` and `AlarmReciever` with notification grouping, summary support, and dynamic alarm IDs.
 * Remove `apiKey` parameters from repository and data source method signatures, centralizing handling in the `OkHttpClient`.
 * Update `build.gradle.kts` to support `BuildConfig` and inject the API key from properties.
+
+Refactor package structure and consolidate UI state management
+
+* Reorganize project structure by moving network, navigation, and localization utilities to dedicated packages.
+* Move `AlertDao` and `FavouriteDao` to the central database package.
+* Consolidate separate state files (`AddAlarmState`, `AddFavouriteState`, `ForecastUiState`, etc.) into unified state files within their respective feature managers.
+* Relocate converters (`TempConverter`, `WindConverter`) to a sub-package under utils.
+* Rename `AlarmReciever` to `AlarmReceiver` and `AlarmService` to `IAlarmService` for consistency.
+* Update imports and references across the codebase to reflect the new directory structure.

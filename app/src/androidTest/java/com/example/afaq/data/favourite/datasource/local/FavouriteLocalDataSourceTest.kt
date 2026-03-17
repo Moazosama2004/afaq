@@ -5,7 +5,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.afaq.data.db.AppDatabase
-import com.example.afaq.data.local.db.FavouriteDao
+import com.example.afaq.data.db.FavouriteDao
 import com.example.afaq.data.local.db.FavouriteEntity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest

@@ -1,4 +1,6 @@
-package com.example.afaq.utils
+package com.example.afaq.utils.converters
+
+import com.example.afaq.utils.localizeDigits
 
 object TempConverter {
 

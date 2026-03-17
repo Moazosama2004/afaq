@@ -1,29 +1,20 @@
 package com.example.afaq.data.home
 
-import android.app.Application
-import android.content.Context
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.afaq.data.home.datasource.local.HomeLocalDataSource
 import com.example.afaq.data.home.datasource.remote.HomeRemoteDataSource
 import com.example.afaq.data.home.model.Weather
 import com.example.afaq.data.model.Forecast
 import com.example.afaq.data.model.ForecastItem
-import com.example.afaq.utils.INetworkUtils
-import com.example.afaq.utils.NetworkUtils
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.runs
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
-import org.jetbrains.annotations.TestOnly
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 
 
 class HomeRepoTest {

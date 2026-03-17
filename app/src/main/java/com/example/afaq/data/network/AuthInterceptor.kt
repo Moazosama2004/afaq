@@ -1,4 +1,4 @@
-package com.example.afaq.utils
+package com.example.afaq.data.network
 
 import com.example.afaq.BuildConfig
 import okhttp3.HttpUrl

@@ -1,4 +1,4 @@
-package com.example.afaq.presentation
+package com.example.afaq.presentation.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import com.example.afaq.R
-import com.example.afaq.presentation.navigation.Routes
 
 data class BottomNavItem(
     val label: String,

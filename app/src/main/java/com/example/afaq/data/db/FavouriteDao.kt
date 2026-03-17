@@ -1,16 +1,17 @@
-package com.example.afaq.data.local.db
+package com.example.afaq.data.db
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.afaq.data.local.db.FavouriteEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavouriteDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertFavourite(favourite: FavouriteEntity)
 
     @Delete

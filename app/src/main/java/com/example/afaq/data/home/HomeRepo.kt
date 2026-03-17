@@ -1,13 +1,10 @@
 package com.example.afaq.data.home
 
-import android.content.Context
-import android.util.Log
 import com.example.afaq.data.home.datasource.local.HomeLocalDataSource
 import com.example.afaq.data.home.datasource.remote.HomeRemoteDataSource
 import com.example.afaq.data.home.model.Weather
 import com.example.afaq.data.model.Forecast
-import com.example.afaq.utils.INetworkUtils
-import com.example.afaq.utils.NetworkUtils
+import com.example.afaq.data.network.INetworkUtils
 
 class HomeRepo(
     private val remoteDataSource: HomeRemoteDataSource,

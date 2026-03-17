@@ -1,6 +1,6 @@
 package com.example.afaq.data.home
 
-import com.example.afaq.utils.INetworkUtils
+import com.example.afaq.data.network.INetworkUtils
 
 class FakeNetworkUtils(
     private var online : Boolean = true

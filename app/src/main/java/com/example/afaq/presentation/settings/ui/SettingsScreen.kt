@@ -41,12 +41,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.afaq.R
-import com.example.afaq.presentation.network.NetworkViewModel
+import com.example.afaq.presentation.connectivity.NetworkViewModel
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.utils.NetworkStatus
+import com.example.afaq.data.network.NetworkStatus
 import com.example.afaq.utils.fetchGpsLocation
 import kotlinx.coroutines.launch
 

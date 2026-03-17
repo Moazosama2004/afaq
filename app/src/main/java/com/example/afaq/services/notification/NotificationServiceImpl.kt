@@ -8,7 +8,7 @@ import android.net.Uri
 import androidx.core.app.NotificationCompat
 import com.example.afaq.MainActivity
 import com.example.afaq.R
-import com.example.afaq.services.recievers.AlarmReciever
+import com.example.afaq.services.recievers.AlarmReceiver
 
 class NotificationServiceImpl(
     private val context: Context
@@ -61,7 +61,7 @@ class NotificationServiceImpl(
         val dismissPendingIntent = PendingIntent.getBroadcast(
             context,
             alertId,
-            Intent(context, AlarmReciever::class.java).apply {
+            Intent(context, AlarmReceiver::class.java).apply {
                 action = "DISMISS_ALARM"
                 putExtra("AlertId", alertId)
             },

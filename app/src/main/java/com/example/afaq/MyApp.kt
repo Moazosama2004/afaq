@@ -9,7 +9,7 @@ import android.net.Uri
 import android.os.Build
 import com.example.afaq.data.settings.SettingsKeys
 import com.example.afaq.data.settings.dataStore
-import com.example.afaq.utils.LocaleHelper
+import com.example.afaq.utils.localization.LocaleHelper
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking

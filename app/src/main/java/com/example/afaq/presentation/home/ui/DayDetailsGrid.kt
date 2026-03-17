@@ -26,8 +26,8 @@ import com.example.afaq.R
 import com.example.afaq.data.home.model.Weather
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.utils.TempConverter
-import com.example.afaq.utils.WindConverter
+import com.example.afaq.utils.converters.TempConverter
+import com.example.afaq.utils.converters.WindConverter
 import com.example.afaq.utils.localizeDigits
 
 @Composable

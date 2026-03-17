@@ -51,14 +51,12 @@ import com.example.afaq.data.favourite.FavouriteRepo
 import com.example.afaq.data.favourite.datasource.local.FavouriteLocalDataSource
 import com.example.afaq.data.favourite.datasource.remote.FavouriteRemoteDataSource
 import com.example.afaq.data.network.RetroFitClient
-import com.example.afaq.presentation.favourites.manager.AddFavouriteState
-import com.example.afaq.presentation.favourites.manager.DeleteFavouriteState
 import com.example.afaq.presentation.favourites.manager.FavouriteViewModel
 import com.example.afaq.presentation.favourites.manager.FavouriteViewModelFactory
 import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
-import com.example.afaq.utils.NetworkUtils
+import com.example.afaq.data.network.NetworkUtils
 import com.example.afaq.utils.getAppLocale
 import kotlinx.coroutines.launch
 

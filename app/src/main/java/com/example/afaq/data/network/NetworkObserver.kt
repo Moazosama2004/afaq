@@ -1,4 +1,4 @@
-package com.example.afaq.utils
+package com.example.afaq.data.network
 
 import android.content.Context
 import android.net.ConnectivityManager

@@ -1,11 +1,11 @@
-package com.example.afaq.presentation.network
+package com.example.afaq.presentation.connectivity
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.afaq.utils.NetworkObserver
-import com.example.afaq.utils.NetworkStatus
+import com.example.afaq.data.network.NetworkObserver
+import com.example.afaq.data.network.NetworkStatus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn

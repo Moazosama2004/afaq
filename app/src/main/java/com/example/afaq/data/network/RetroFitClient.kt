@@ -1,7 +1,7 @@
 package com.example.afaq.data.network
 
 import com.example.afaq.data.home.datasource.remote.WeatherApiService
-import com.example.afaq.utils.AuthInterceptor
+import com.example.afaq.data.network.AuthInterceptor
 import com.example.afaq.utils.Constants
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

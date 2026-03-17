@@ -1,4 +1,4 @@
-package com.example.afaq.utils
+package com.example.afaq.utils.localization
 
 import android.content.Context
 import android.content.res.Configuration
