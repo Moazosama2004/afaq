@@ -1,3 +1,114 @@
 <resources>
-    <string name="app_name">afaq</string>
+    <!-- App -->
+    <string name="app_name">Afaq</string>
+
+    <!-- Bottom Nav -->
+    <string name="home">Home</string>
+    <string name="favourites">Favourites</string>
+    <string name="alerts">Alerts</string>
+    <string name="settings">Settings</string>
+
+    <!-- Settings Screen -->
+    <string name="customize_your_experience">Customize your experience</string>
+    <string name="language">Language</string>
+    <string name="temp_unit">Temperature Unit</string>
+    <string name="wind_unit">Wind Speed Unit</string>
+    <string name="location">Location</string>
+    <string name="theme">Theme</string>
+
+    <!-- Settings Options -->
+    <string name="english">English</string>
+    <string name="arabic">Arabic</string>
+
+    <string name="gps">GPS</string>
+    <string name="map">Map</string>
+
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="system">System</string>
+
+
+    <!-- Home Screen -->
+    <string name="feels_like">Feels like</string>
+    <string name="humidity">Humidity</string>
+    <string name="wind">Wind</string>
+    <string name="pressure">Pressure</string>
+    <string name="visibility">Visibility</string>
+    <string name="today_hourly">Today\'s Hourly</string>
+    <string name="forecast">7 Day Forecast</string>
+
+    <!-- Favourites Screen -->
+    <string name="no_favourites">No Favourites Yet</string>
+    <string name="tap_to_add">Tap + to add a city</string>
+
+    <!-- Alerts Screen -->
+    <string name="no_alerts">No Alerts Yet</string>
+    <string name="add_alert">Add Alert</string>
+    <string name="start_duration">Start duration</string>
+    <string name="end_duration">End duration</string>
+    <string name="notify_me_by">Notify me by</string>
+    <string name="alarm">Alarm</string>
+    <string name="notification">Notification</string>
+    <string name="save">SAVE</string>
+    <string name="cancel">CANCEL</string>
+    <string name="start_time_future">Start time must be in the future</string>
+    <string name="dew_point">Dew point</string>
+    <string name="day_details">Day details</string>
+    <string name="_5_day_forecast">5 day forecast</string>
+    <string name="feels">feels</string>
+    <string name="updated_at">updated at %s</string>
+    <string name="updated_just_now">updated just now</string>
+    <string name="updated_minutes_ago">updated %dm ago</string>
+    <string name="updated_hours_ago">updated %dh ago</string>
+    <string name="wind_speed_unit">Wind speed unit</string>
+
+
+    <!-- Dialogs -->
+    <string name="gps_off">GPS is Off</string>
+    <string name="enable_gps_msg">Please enable GPS for accurate weather data.</string>
+    <string name="enable_gps">Enable GPS</string>
+    <string name="use_default">Use Default</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="permission_denied_msg">Location permission was denied. Please enable it from Settings.</string>
+    <string name="go_to_settings">Go to Settings</string>
+    <string name="location_required">Location Required</string>
+    <string name="location_rationale">Afaq needs your location to show accurate weather.</string>
+    <string name="allow">Allow</string>
+    <string name="skip">Skip</string>
+
+    <!-- Offline Strings -->
+    <string name="you_are_offline">You are offline</string>
+    <string name="offline_cached">Showing cached data</string>
+    <string name="offline_favourites">You need internet to add favourite locations.</string>
+    <string name="offline_map">You need internet to load the map.</string>
+    <string name="ok">OK</string>
+
+    <!-- Errors -->
+    <string name="no_internet">No internet connection</string>
+    <string name="showing_cached">Showing cached data</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="no_favourites_yet">No Favourites Yet</string>
+    <string name="tap_to_add_a_city">Tap + to add a city</string>
+    <string name="selected_location">Selected Location</string>
+    <string name="you_haven_t_any_alarms">You haven\'t any alarms</string>
+    <string name="select_start_time">Select start time</string>
+    <string name="start_time_must_be_in_the_future">Start time must be in the future</string>
+    <string name="select_time">Select Time</string>
+    <string name="meter_sec">meter/sec</string>
+    <string name="mile_hour">mile/hour</string>
+    <string name="fahrenheit_f">Fahrenheit °F</string>
+    <string name="kelvin_k">Kelvin °K</string>
+    <string name="celsius_c">Celsius °C</string>
+    <string name="lang_default">Default</string>
+    <string name="gps_off_title">GPS is Off</string>
+    <string name="gps_off_message">Please enable GPS for accurate weather data.</string>
+
+    <string name="permission_required_title">Permission Required</string>
+    <string name="permission_required_message">Location permission was denied. Please enable it from Settings.</string>
+
+    <string name="location_required_title">Location Required</string>
+    <string name="location_required_message">Afaq needs your location to show accurate weather.</string>
+    <string name="please_select_location">Please select a location on the map first</string>
+    <string name="offline_city_view_error">Please check your internet connection to view live weather for this city.</string>
 </resources>
