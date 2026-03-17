@@ -1,5 +1,7 @@
 package com.example.afaq.presentation.favourites.ui
 
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -32,6 +34,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.example.afaq.R
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.presentation.theme.theme.LocalIsDarkTheme
 import com.example.afaq.utils.getAddressFromLocation
 import com.example.afaq.utils.getAppLocale
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +46,8 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 @Composable
 fun MapScreen(
@@ -53,6 +58,7 @@ fun MapScreen(
     val context = LocalContext.current
     var selectedPoint by remember { mutableStateOf<GeoPoint?>(null) }
     var mapView by remember { mutableStateOf<MapView?>(null) }
+    val isDarkTheme = LocalIsDarkTheme.current
 
     // init OSMDroid config
     LaunchedEffect(Unit) {
@@ -67,8 +73,19 @@ fun MapScreen(
                 MapView(ctx).apply {
                     setTileSource(TileSourceFactory.MAPNIK)
                     setMultiTouchControls(true)
-                    controller.setZoom(6.0)
+                    controller.setZoom(7.0)
                     controller.setCenter(GeoPoint(26.8206, 30.8025)) // Egypt center
+
+                    // Add current location overlay
+                    val locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(ctx), this)
+                    locationOverlay.enableMyLocation()
+                    locationOverlay.runOnFirstFix {
+                        post {
+                            controller.animateTo(locationOverlay.myLocation)
+                            controller.setZoom(15.0)
+                        }
+                    }
+                    overlays.add(locationOverlay)
 
                     val eventsOverlay = MapEventsOverlay(object : MapEventsReceiver {
                         override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
@@ -92,6 +109,19 @@ fun MapScreen(
                     mapView = this
                 }
             },
+            update = { view ->
+                if (isDarkTheme) {
+                    val matrix = ColorMatrix(floatArrayOf(
+                        -1.0f, 0.0f, 0.0f, 0.0f, 255f,
+                        0.0f, -1.0f, 0.0f, 0.0f, 255f,
+                        0.0f, 0.0f, -1.0f, 0.0f, 255f,
+                        0.0f, 0.0f, 0.0f, 1.0f, 0.0f
+                    ))
+                    view.overlayManager.tilesOverlay.setColorFilter(ColorMatrixColorFilter(matrix))
+                } else {
+                    view.overlayManager.tilesOverlay.setColorFilter(null)
+                }
+            },
             modifier = Modifier.fillMaxSize()
         )
 
@@ -106,7 +136,7 @@ fun MapScreen(
                     shape = CircleShape
                 )
                 .background(
-                    color = Color.White,
+                    color = if (isDarkTheme) AfaqThemeColors.background else Color.White,
                     shape = CircleShape
                 )
                 .clickable { onBack() },
@@ -115,7 +145,7 @@ fun MapScreen(
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Back",
-                tint = AfaqThemeColors.surface,
+                tint = if (isDarkTheme) Color.White else AfaqThemeColors.surface,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -162,4 +192,3 @@ fun MapScreen(
         }
     }
 }
-

@@ -1,37 +1,53 @@
 package com.example.afaq.presentation.settings.ui
 
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.afaq.R
 import com.example.afaq.presentation.theme.theme.AfaqColors
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.presentation.theme.theme.LocalIsDarkTheme
+import com.example.afaq.utils.getAddressFromLocation
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -39,6 +55,8 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,51 +64,83 @@ fun LocationMapBottomSheet(
     onDismiss: () -> Unit,
     onLocationSelected: (lat: Double, lon: Double) -> Unit
 ) {
-    LocalContext.current
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val context = LocalContext.current
+    
+    // Disable swipe gestures to prevent accidental dismissal
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+        confirmValueChange = { false } 
+    )
+    val isDarkTheme = LocalIsDarkTheme.current
 
     var selectedLat by remember { mutableStateOf<Double?>(null) }
     var selectedLon by remember { mutableStateOf<Double?>(null) }
+    var locationName by remember { mutableStateOf("") }
     var marker by remember { mutableStateOf<Marker?>(null) }
 
+    // Fetch address when location is selected
+    LaunchedEffect(selectedLat, selectedLon) {
+        if (selectedLat != null && selectedLon != null) {
+            locationName = withContext(Dispatchers.IO) {
+                getAddressFromLocation(context, selectedLat!!, selectedLon!!)
+            }
+        }
+    }
+
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { /* Empty to prevent dismissal on scrim click */ },
         sheetState = sheetState,
-        containerColor = Color.White,
-        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+        containerColor = AfaqThemeColors.dialog,
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+        modifier = Modifier.fillMaxHeight(0.85f),
+        dragHandle = null // Optional: remove drag handle to further indicate non-swipeable
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp)
+                .fillMaxSize()
+                .padding(16.dp)
+                .padding(bottom = 8.dp)
         ) {
 
             // Title
             Text(
-                text = "Select Location",
+                text = stringResource(R.string.selected_location),
                 style = AfaqTypography.bold20,
                 color = AfaqThemeColors.textPrimary,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            // Selected coords display
+            // Selected location info display
             if (selectedLat != null && selectedLon != null) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.padding(bottom = 8.dp)
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = AfaqThemeColors.secondry
+                    ),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.LocationOn,
-                        contentDescription = null,
-                        tint = AfaqColors.primary
-                    )
-                    Text(
-                        text = "${"%.4f".format(selectedLat)}, ${"%.4f".format(selectedLon)}",
-                        style = AfaqTypography.regular14,
-                        color = AfaqThemeColors.textSecondary
-                    )
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = null,
+                            tint = AfaqColors.primary
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Column {
+                            Text(
+                                text = locationName.ifEmpty { "..." },
+                                style = AfaqTypography.semiBold14,
+                                color = AfaqThemeColors.textPrimary
+                            )
+                            Text(
+                                text = "${"%.4f".format(selectedLat)}, ${"%.4f".format(selectedLon)}",
+                                style = AfaqTypography.regular12,
+                                color = AfaqThemeColors.textSecondary
+                            )
+                        }
+                    }
                 }
             } else {
                 Text(
@@ -101,6 +151,8 @@ fun LocationMapBottomSheet(
                 )
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             // Map
             AndroidView(
                 factory = { ctx ->
@@ -110,6 +162,17 @@ fun LocationMapBottomSheet(
                         setMultiTouchControls(true)
                         controller.setZoom(6.0)
                         controller.setCenter(GeoPoint(26.8206, 30.8025)) // Egypt
+
+                        // Add current location overlay
+                        val locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(ctx), this)
+                        locationOverlay.enableMyLocation()
+                        locationOverlay.runOnFirstFix {
+                            post {
+                                controller.animateTo(locationOverlay.myLocation)
+                                controller.setZoom(15.0)
+                            }
+                        }
+                        overlays.add(locationOverlay)
 
                         // tap listener
                         val eventsOverlay = MapEventsOverlay(object : MapEventsReceiver {
@@ -138,9 +201,23 @@ fun LocationMapBottomSheet(
                         overlays.add(eventsOverlay)
                     }
                 },
+                update = { view ->
+                    if (isDarkTheme) {
+                        val matrix = ColorMatrix(floatArrayOf(
+                            -1.0f, 0.0f, 0.0f, 0.0f, 255f,
+                            0.0f, -1.0f, 0.0f, 0.0f, 255f,
+                            0.0f, 0.0f, -1.0f, 0.0f, 255f,
+                            0.0f, 0.0f, 0.0f, 1.0f, 0.0f
+                        ))
+                        view.overlayManager.tilesOverlay.setColorFilter(ColorMatrixColorFilter(matrix))
+                    } else {
+                        view.overlayManager.tilesOverlay.setColorFilter(null)
+                    }
+                },
                 modifier = Modifier
+                    .weight(1f)
                     .fillMaxWidth()
-                    .height(400.dp)
+                    .clip(RoundedCornerShape(12.dp))
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -152,8 +229,6 @@ fun LocationMapBottomSheet(
             ) {
                 Button(
                     onClick = {
-                        Log.d("Map", "📍 Confirm clicked: $selectedLat, $selectedLon")
-
                         if (selectedLat != null && selectedLon != null) {
                             onLocationSelected(selectedLat!!, selectedLon!!)
                         }
@@ -172,7 +247,7 @@ fun LocationMapBottomSheet(
                         tint = Color.White
                     )
                     Text(
-                        text = "Confirm Location",
+                        text = "Confirm",
                         color = Color.White,
                         style = AfaqTypography.semiBold14,
                         modifier = Modifier.padding(start = 8.dp)

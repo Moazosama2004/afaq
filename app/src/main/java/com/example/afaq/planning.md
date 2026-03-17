@@ -153,3 +153,15 @@ Refactor package structure and consolidate UI state management
 * Relocate converters (`TempConverter`, `WindConverter`) to a sub-package under utils.
 * Rename `AlarmReciever` to `AlarmReceiver` and `AlarmService` to `IAlarmService` for consistency.
 * Update imports and references across the codebase to reflect the new directory structure.
+  Enhance Map components with dark mode support, current location tracking, and UI improvements
+
+- **Splash Screen**: Adjust Lottie animation timing and scale; update "Afaq" text color to white.
+- **Map Screens**:
+    - Implement a color matrix filter to support dark mode tiles on OpenStreetMap.
+    - Add `MyLocationNewOverlay` to enable current location tracking and auto-centering on the user's position.
+    - Improve UI styling for back buttons and location cards to respect theme changes.
+- **Location Bottom Sheet**:
+    - Disable swipe-to-dismiss and scrim-click dismissal to prevent accidental data loss.
+    - Integrate reverse geocoding to display the address of the selected point.
+    - Refactor layout to use weights for better responsiveness and add a card-based location info display.
+- **General**: Update IDE deployment target settings.

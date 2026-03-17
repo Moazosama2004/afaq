@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -54,7 +55,7 @@ fun SplashContent(onAnimationFinished: () -> Unit) {
 
     LaunchedEffect(composition) {
         if (composition != null) {
-            delay(1700L)
+            delay(1750L)
             mediaPlayer.start()
         }
     }
@@ -82,7 +83,7 @@ fun SplashContent(onAnimationFinished: () -> Unit) {
             composition = composition,
             progress = { progress },
             modifier = Modifier.fillMaxSize()
-                .scale(3f)
+                .scale(4f)
                 .aspectRatio(1f)
             ,
             contentScale = ContentScale.Fit,
@@ -99,7 +100,7 @@ fun SplashContent(onAnimationFinished: () -> Unit) {
             Text(
                 text = "Afaq",
                 style = AfaqTypography.bold32,
-                color = AfaqThemeColors.textPrimary
+                color = Color.White
             )
             Spacer(modifier = Modifier.height(48.dp))
         }
