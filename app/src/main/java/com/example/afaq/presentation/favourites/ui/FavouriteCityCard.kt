@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.afaq.data.local.db.FavouriteEntity
@@ -46,16 +47,6 @@ fun FavouriteCityCard(
     onDeleteClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    var showDeleteDialog by remember { mutableStateOf(false) }
-
-
-    if (showDeleteDialog) {
-        DeleteFavouriteDialog(
-            cityName = favourite.cityName,
-            onConfirm = onDeleteClick,
-            onDismiss = { showDeleteDialog = false }
-        )
-    }
 
     Card(
         modifier = modifier
@@ -91,7 +82,6 @@ fun FavouriteCityCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // Location Icon Box
                     Box(
                         modifier = Modifier
                             .size(50.dp)
@@ -115,9 +105,7 @@ fun FavouriteCityCard(
                         )
                     }
 
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text(
                             text = favourite.cityName,
                             style = AfaqTypography.semiBold16,
@@ -152,7 +140,6 @@ fun FavouriteCityCard(
                     horizontalAlignment = Alignment.End,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // Temperature
                     Row(verticalAlignment = Alignment.Top) {
                         Text(
                             text = favourite.temperature.toInt().toString().localizeDigits(),
@@ -160,14 +147,13 @@ fun FavouriteCityCard(
                             color = AfaqThemeColors.textPrimary
                         )
                         Text(
-                            text = "C",
+                            text = "°C",
                             style = AfaqTypography.regular12,
                             color = AfaqThemeColors.textSecondary,
                             modifier = Modifier.padding(top = 6.dp)
                         )
                     }
 
-                    // Min / Max
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -196,21 +182,20 @@ fun FavouriteCityCard(
                         )
                     }
 
-                    // Delete button
                     Box(
                         modifier = Modifier
                             .size(28.dp)
                             .background(
-                                color = androidx.compose.ui.graphics.Color(0xFFFFEEEE),
+                                color = Color(0xFFFFEEEE),
                                 shape = CircleShape
                             )
-                            .clickable { showDeleteDialog = true },
+                            .clickable { onDeleteClick() },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = "Delete",
-                            tint = androidx.compose.ui.graphics.Color(0xFFE53935),
+                            tint = Color(0xFFE53935),
                             modifier = Modifier.size(16.dp)
                         )
                     }

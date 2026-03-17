@@ -1,5 +1,7 @@
 package com.example.afaq.presentation.favourites.ui
 
+import AddFavouriteState
+import DeleteFavouriteState
 import FavouritesUiState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,24 +21,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.WifiOff
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -82,43 +78,25 @@ fun FavouritesScreen(
         }
     )
 
-    var showMap by remember { mutableStateOf(false) }
-    var lat by remember { mutableDoubleStateOf(0.0) }
-    var lon by remember { mutableDoubleStateOf(0.0) }
-    var isLocationSelected by remember { mutableStateOf(false) }
-    var showOfflineDialog by remember { mutableStateOf(false) }
-
+    val showMap by viewModel.showMap.collectAsState()
+    val lat by viewModel.lat.collectAsState()
+    val lon by viewModel.lon.collectAsState()
+    val isLocationSelected by viewModel.isLocationSelected.collectAsState()
     val favouritesState by viewModel.favouritesState.collectAsState()
     val addState by viewModel.addState.collectAsState()
     val deleteState by viewModel.deleteState.collectAsState()
+    val entityToDelete by viewModel.entityToDelete.collectAsState()
+    val showOfflineDialog by viewModel.showOfflineDialog.collectAsState()
 
     val snackbarMessage = stringResource(R.string.please_select_location)
 
     if (showOfflineDialog) {
-        AlertDialog(
-            onDismissRequest = { showOfflineDialog = false },
-            containerColor = AfaqThemeColors.secondry,
-            title = {
-                Text(
-                    text = stringResource(R.string.no_internet),
-                    style = AfaqTypography.bold16,
-                    color = AfaqThemeColors.textPrimary
-                )
-            },
-            text = {
-                Text(
-                    text = stringResource(R.string.offline_city_view_error),
-                    style = AfaqTypography.regular14,
-                    color = AfaqThemeColors.textSecondary
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = { showOfflineDialog = false }) {
-                    Text(stringResource(R.string.ok), color = AfaqThemeColors.primary)
-                }
-            },
-            icon = {
-                Icon(Icons.Default.WifiOff, contentDescription = null, tint = AfaqColors.warning, modifier = Modifier.size(32.dp))
+        OfflineDialog(
+            onDismiss = {
+                viewModel.hideOfflineDialog()
+            }, 
+            onConfirm = {
+                viewModel.hideOfflineDialog()
             }
         )
     }
@@ -133,13 +111,10 @@ fun FavouritesScreen(
             MapScreen(
                 modifier = Modifier.fillMaxSize(),
                 onLocationSelected = { latitude, longitude ->
-                    lat = latitude
-                    lon = longitude
-                    isLocationSelected = true
+                    viewModel.setLocation(latitude, longitude)
                 },
                 onBack = { 
-                    showMap = false
-                    isLocationSelected = false
+                    viewModel.setShowMap(false)
                 }
             )
         } else {
@@ -192,7 +167,7 @@ fun FavouritesScreen(
                                     onCityClick(entity.lat, entity.lon)
                                 },
                                 onDeleteClick = {
-                                    viewModel.deleteFavouriteById(entity.id)
+                                    viewModel.showDialog(entity)
                                 }
                             )
                         }
@@ -248,8 +223,6 @@ fun FavouritesScreen(
 
             is AddFavouriteState.Success -> {
                 LaunchedEffect(addState) {
-                    showMap = false
-                    isLocationSelected = false
                     viewModel.resetAddState()
                 }
             }
@@ -311,10 +284,9 @@ fun FavouritesScreen(
                     }
                 } else {
                     if (!NetworkUtils(context).isOnline()) {
-                        showOfflineDialog = true
+                        viewModel.showOfflineDialog()
                     } else {
-                        showMap = true
-                        isLocationSelected = false
+                        viewModel.setShowMap(true)
                     }
                 }
             },
