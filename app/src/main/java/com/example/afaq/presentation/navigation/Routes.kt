@@ -9,4 +9,16 @@ sealed class Routes {
 
     @Serializable
     object HomeRoute : Routes()
+
+    @Serializable
+    object FavouritesRoute : Routes()
+
+    @Serializable
+    object AlertsRoute : Routes()
+
+    @Serializable
+    object SettingsRoute : Routes()
+
+    @Serializable
+    data class FavouriteDetailsRoute(val lat: Double, val lon: Double) : Routes()
 }
