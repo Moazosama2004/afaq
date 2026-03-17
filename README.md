@@ -1,5 +1,3 @@
-<div align="center">
-
 # ☀️ Afaq - آفاق
 ### Your Weather Horizon
 
@@ -47,15 +45,24 @@ It was built to showcase modern Android development practices, emphasizing:
 
 ---
 
+<img width="1280" height="2856" alt="Screenshot_20260317_042400" src="" />
+<img width="1280" height="2856" alt="Screenshot_20260317_042403" src="" />
+<img width="1280" height="2856" alt="Screenshot_20260317_042439" src="" />
+
+
 ## 📸 Screenshots
 
 <div align="center">
 
-| Splash Screen | Home Screen | Favourites | Settings |
+| Splash Screen | Splash Screen | Splash Screen | Splash Screen |
+|:---:|:---:|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/e300af21-02a8-4c39-bda4-87d8c13a7ed7" width="180"> | <img src="https://github.com/user-attachments/assets/110c203f-aa0e-4060-b17f-10fce346eaf9" width="180"> | <img src="https://github.com/user-attachments/assets/a236c5ec-1a4c-4aeb-82ca-7c1c461afad4" width="180"> | <img src="https://github.com/user-attachments/assets/c650eabb-3c16-43f7-a344-afe21217f663" width="180"> |
+
+| Home Screen | Favourites | Map Screen | Alerts |
 |:---:|:---:|:---:|:---:|
 | <img src="https://via.placeholder.com/200x400?text=Splash" width="180"> | <img src="https://via.placeholder.com/200x400?text=Home" width="180"> | <img src="https://via.placeholder.com/200x400?text=Favourites" width="180"> | <img src="https://via.placeholder.com/200x400?text=Settings" width="180"> |
 
-| Alerts | Map Selection | Dark Mode | Arabic RTL |
+| Notification | Map Selection | Dark Mode | Arabic RTL |
 |:---:|:---:|:---:|:---:|
 | <img src="https://via.placeholder.com/200x400?text=Alerts" width="180"> | <img src="https://via.placeholder.com/200x400?text=Map" width="180"> | <img src="https://via.placeholder.com/200x400?text=Dark+Mode" width="180"> | <img src="https://via.placeholder.com/200x400?text=RTL+Support" width="180"> |
 
