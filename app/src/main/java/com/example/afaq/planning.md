@@ -30,10 +30,22 @@
 6. make favourite card clickable to display ✅
 7. make digits arabic  ✅
 8. change alarm and notification badge ✅
-9. test offline mode 
+9. test offline mode ✅
 10. add change theme ✅
 11. add testing cases  
 ```
+
+
+Today : 
+1. refactor at all 
+2. add testing cases ✅
+3. change splashScreen ✅
+4. enhance content of notification
+alarm - notification ❌
+alarm - alarm
+notification - alarm 
+notification - notification
+
 
 
 
@@ -116,3 +128,19 @@
 - Update `BottomNavBar` to adjust transparency when offline
 - Implement offline indicators and localized status messages in `HomeScreen` and `SettingsScreen`
 - Update `planning.md` to reflect progress on connectivity handling and cached data display
+  Implement "Last Updated" timestamp and relative time formatting for weather data
+
+- Add `lastUpdated` field to `Weather` model and update it during API fetching in `HomeRepo`
+- Implement `formatLastUpdated` helper utility to provide relative time strings (e.g., "just now", "minutes ago")
+- Update `WeatherCard` to display the dynamic last updated timestamp using localized strings
+- Integrate a 1-minute ticker in `HomeScreen` and `FavouriteDetailsScreen` to refresh the displayed relative time
+- Add supporting localized string resources for different update intervals in English and Arabic
+  Refactor network layer with AuthInterceptor, update dependency injection, and add comprehensive unit tests
+
+* Refactor networking to use `AuthInterceptor` and `Constants` for centralized API key and URL management.
+* Update `HomeRepo`, `AlertViewModel`, and `NetworkUtils` to use dependency injection and interfaces for improved testability.
+* Add unit tests for `Favourite` local data source, `FavouriteDao`, `HomeViewModel`, and `AlertViewModel`.
+* Enhance `SplashContent` with `MediaPlayer` sound effects, animation completion callbacks, and layout refinements.
+* Improve `NotificationService` and `AlarmReciever` with notification grouping, summary support, and dynamic alarm IDs.
+* Remove `apiKey` parameters from repository and data source method signatures, centralizing handling in the `OkHttpClient`.
+* Update `build.gradle.kts` to support `BuildConfig` and inject the API key from properties.

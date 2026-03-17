@@ -38,7 +38,7 @@ class NetworkObserver(private val context: Context) {
 
     init {
         // emit initial state
-        val isOnline = NetworkUtils.isOnline(context)
+        val isOnline = NetworkUtils(context).isOnline()
         _networkStatus.tryEmit(
             if (isOnline) NetworkStatus.Online else NetworkStatus.Offline
         )

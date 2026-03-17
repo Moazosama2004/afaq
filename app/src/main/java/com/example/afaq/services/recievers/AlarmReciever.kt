@@ -20,15 +20,17 @@ class AlarmReciever : BroadcastReceiver() {
 
         // handle dismiss action
         if (intent.action == "DISMISS_ALARM") {
+            val alertId = intent.getIntExtra("AlertId", 0)
             val manager = context.getSystemService(
                 Context.NOTIFICATION_SERVICE
             ) as NotificationManager
-            manager.cancel(NotificationServiceImpl.ALARM_NOTIFICATION_ID)
+            manager.cancel(alertId)
             return
         }
 
         val endTime = intent.getLongExtra("EndTime", 0L)
         val type = intent.getStringExtra("Type") ?: "NOTIFICATION"
+        val alertId = intent.getIntExtra("AlertId", 0)
 
         if (System.currentTimeMillis() <= endTime) {
             val pendingResult = goAsync()
@@ -42,7 +44,7 @@ class AlarmReciever : BroadcastReceiver() {
                     val units = if (settingsRepo.tempUnit.first().contains("Celsius")) "metric" else "imperial"
 
                     val remoteDataSource = HomeRemoteDataSource(RetroFitClient.webApiService)
-                    val result = remoteDataSource.getCurrentWeather(lat, lon, Constants.API_KEY, units, lang)
+                    val result = remoteDataSource.getCurrentWeather(lat, lon, units, lang)
 
                     val message = if (result.isSuccess) {
                         val weather = result.getOrNull()
@@ -56,7 +58,7 @@ class AlarmReciever : BroadcastReceiver() {
 
                     val notificationService = NotificationServiceImpl(context)
                     if (type == "ALARM") {
-                        notificationService.showAlarm(message)
+                        notificationService.showAlarm(message,alertId)
                     } else {
                         notificationService.showNotification(message)
                     }
@@ -64,7 +66,7 @@ class AlarmReciever : BroadcastReceiver() {
                     Log.e("AlarmReciever", "Error fetching weather", e)
                     val notificationService = NotificationServiceImpl(context)
                     if (type == "ALARM") {
-                        notificationService.showAlarm("Weather Alert! Check the weather now 🌤️")
+                        notificationService.showAlarm("Weather Alert! Check the weather now 🌤️" ,alertId)
                     } else {
                         notificationService.showNotification("Weather Alert! Check the weather now 🌤️")
                     }

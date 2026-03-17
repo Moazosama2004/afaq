@@ -12,7 +12,6 @@ class HomeRemoteDataSource(
     suspend fun getCurrentWeather(
         lat: Double,
         lon: Double,
-        apiKey: String,
         units: String = "metric",
         lang: String = "en"
     ): Result<Weather> {
@@ -20,7 +19,6 @@ class HomeRemoteDataSource(
             val response = weatherApiService.getCurrentWeather(
                 lat,
                 lon,
-                apiKey = apiKey,
                 units,
                 lang
             )
@@ -44,7 +42,6 @@ class HomeRemoteDataSource(
     suspend fun getForecast(
         lat: Double,
         lon: Double,
-        apiKey: String,
         units: String = "metric",
         lang: String = "en"
     ): Result<Forecast> {
@@ -52,7 +49,6 @@ class HomeRemoteDataSource(
             val response = weatherApiService.getForecast(
                 lat = lat,
                 lon = lon,
-                apiKey = apiKey,
                 units = units,
                 lang = lang
             )

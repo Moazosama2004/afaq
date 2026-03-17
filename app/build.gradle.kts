@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -11,6 +13,12 @@ android {
         version = release(36)
     }
 
+    val properties = Properties()
+    val propertiesFile = project.rootProject.file("local.properties")
+    if (propertiesFile.exists()) {
+        properties.load(propertiesFile.inputStream())
+    }
+
     defaultConfig {
         applicationId = "com.example.afaq"
         minSdk = 26
@@ -19,6 +27,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "API_KEY", "\"${properties.getProperty("API_KEY") ?: ""}\"")
     }
 
     buildTypes {
@@ -36,6 +46,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -52,30 +63,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.remote.creation.core)
-
-    // Testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-//    // Architecture Components
-//    implementation "androidx.room:room-ktx:$roomVersion"
-//    implementation "androidx.lifecycle:lifecycle-common-java8:$archLifecycleVersion"
-//    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
-//    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$archLifecycleVersion"
-//    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
-//    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
-
-
-
-
-
-    // Kotlin
-//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-//    implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
 
     // Testing
     testImplementation(libs.junit)
@@ -96,7 +83,6 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
 
     // Icons
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
@@ -146,8 +132,4 @@ dependencies {
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-
-
-
-
 }

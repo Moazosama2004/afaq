@@ -29,7 +29,7 @@ class WeatherAlertWorker(
                 val units = if (settingsRepo.tempUnit.first().contains("Celsius")) "metric" else "imperial"
 
                 val remoteDataSource = HomeRemoteDataSource(RetroFitClient.webApiService)
-                val result = remoteDataSource.getCurrentWeather(lat, lon, Constants.API_KEY, units, lang)
+                val result = remoteDataSource.getCurrentWeather(lat, lon, units, lang)
 
                 val message = if (result.isSuccess) {
                     val weather = result.getOrNull()

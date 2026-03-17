@@ -54,6 +54,7 @@ import com.example.afaq.presentation.home.ui.WeatherCard
 import com.example.afaq.presentation.settings.manager.SettingsViewModel
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.utils.NetworkUtils
 import com.example.afaq.utils.getAppLocale
 import kotlinx.coroutines.delay
 
@@ -73,7 +74,7 @@ fun FavouriteDetailsScreen(
                 HomeRepo(
                     remoteDataSource = HomeRemoteDataSource(RetroFitClient.webApiService),
                     localDataSource = HomeLocalDataSource(WeatherDataStore(context)),
-                    context = context
+                    networkUtils = NetworkUtils(context)
                 )
             )
         }

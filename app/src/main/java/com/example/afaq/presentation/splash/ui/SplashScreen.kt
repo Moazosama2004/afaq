@@ -43,16 +43,19 @@ fun SplashScreen(onLocationReady: () -> Unit) {
     var showRationale by remember { mutableStateOf(false) }
     var showGpsDialog by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
-    
-    // Track if we've already tried to auto-request in this session to avoid loops
     var hasAutoRequested by remember { mutableStateOf(false) }
+
+    var animationFinished by remember { mutableStateOf(false) }
+    var locationFinished by remember { mutableStateOf(false) }
 
     val locationPermission = rememberPermissionState(
         permission = Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-    fun navigateToHome() {
-        onLocationReady()
+    LaunchedEffect(animationFinished, locationFinished) {
+        if (animationFinished && locationFinished) {
+            onLocationReady()
+        }
     }
 
     suspend fun saveIfGps(lat: Double, lon: Double) {
@@ -62,25 +65,26 @@ fun SplashScreen(onLocationReady: () -> Unit) {
         }
     }
 
-    // Effect to check GPS and Permissions when app returns to foreground or on start
+    fun locationDone() {
+        locationFinished = true
+    }
+
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 scope.launch {
-                    // Handled by LaunchedEffect if already granted
                     if (locationPermission.status.isGranted) return@launch
 
-                    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                    val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                    val locationManager =
+                        context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                    val isGpsEnabled =
+                        locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 
                     if (!isGpsEnabled) {
                         showGpsDialog = true
                     } else {
-                        // GPS is ON, check permissions logic
                         when {
-                            locationPermission.status.isGranted -> {
-                                // Handled by LaunchedEffect
-                            }
+                            locationPermission.status.isGranted -> {}
                             locationPermission.status.shouldShowRationale -> {
                                 showRationale = true
                             }
@@ -89,7 +93,6 @@ fun SplashScreen(onLocationReady: () -> Unit) {
                                 locationPermission.launchPermissionRequest()
                             }
                             else -> {
-                                // hasAutoRequested is true, but not granted and no rationale -> permanent denial
                                 showSettingsDialog = true
                             }
                         }
@@ -98,35 +101,29 @@ fun SplashScreen(onLocationReady: () -> Unit) {
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
-    // Handle navigation when permission is granted
     LaunchedEffect(locationPermission.status.isGranted) {
         if (locationPermission.status.isGranted) {
             val savedLat = settingsRepo.userLat.first()
-            
-            // Try to get fresh location, but don't block forever if we have a saved one
             withTimeoutOrNull(5000L) {
                 locationRepository.getUserLocation().collect { (lat, lon) ->
                     saveIfGps(lat, lon)
-                    navigateToHome()
+                    locationDone()
                 }
             } ?: run {
                 if (savedLat != null) {
-                    navigateToHome()
+                    locationDone()
                 } else {
-                    // Fallback to default if everything else fails but we have permission
                     settingsRepo.saveUserLocation(Constants.DEFAULT_LAT, Constants.DEFAULT_LON)
-                    navigateToHome()
+                    locationDone()
                 }
             }
         }
     }
 
-    // Mandatory GPS Dialog
+    // ─── Dialogs ──────────────────────────────────────────
     if (showGpsDialog) {
         AlertDialog(
             onDismissRequest = {},
@@ -153,11 +150,9 @@ fun SplashScreen(onLocationReady: () -> Unit) {
                     Text(stringResource(R.string.enable_gps), color = AfaqThemeColors.primary)
                 }
             }
-            // Mandatory: No dismiss button to ensure navigation doesn't happen without location
         )
     }
 
-    // Mandatory Settings Dialog (for permanent denial)
     if (showSettingsDialog) {
         AlertDialog(
             onDismissRequest = {},
@@ -179,18 +174,18 @@ fun SplashScreen(onLocationReady: () -> Unit) {
             confirmButton = {
                 TextButton(onClick = {
                     showSettingsDialog = false
-                    context.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        data = Uri.fromParts("package", context.packageName, null)
-                    })
+                    context.startActivity(
+                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.fromParts("package", context.packageName, null)
+                        }
+                    )
                 }) {
                     Text(stringResource(R.string.go_to_settings), color = AfaqThemeColors.primary)
                 }
             }
-            // Mandatory: Removed dismiss button
         )
     }
 
-    // Mandatory Rationale Dialog
     if (showRationale) {
         AlertDialog(
             onDismissRequest = {},
@@ -217,9 +212,12 @@ fun SplashScreen(onLocationReady: () -> Unit) {
                     Text(stringResource(R.string.allow), color = AfaqThemeColors.primary)
                 }
             }
-            // Mandatory: Removed dismiss button
         )
     }
 
-    SplashContent()
+    SplashContent(
+        onAnimationFinished = {
+            animationFinished = true
+        }
+    )
 }

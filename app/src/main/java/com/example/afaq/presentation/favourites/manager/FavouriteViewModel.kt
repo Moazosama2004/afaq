@@ -55,7 +55,6 @@ class FavouriteViewModel(
                 repo.getCurrentWeather(
                     lat = fav.lat,
                     lon = fav.lon,
-                    apiKey = Constants.API_KEY,
                     units = "metric",
                     lang = lang
                 ).onSuccess { weather ->
@@ -73,7 +72,6 @@ class FavouriteViewModel(
             val result = repo.getCurrentWeather(
                 lat = lat,
                 lon = lon,
-                apiKey = Constants.API_KEY,
                 units = "metric",
                 lang = lang
             )

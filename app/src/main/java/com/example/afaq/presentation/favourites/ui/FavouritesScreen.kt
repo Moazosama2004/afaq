@@ -312,7 +312,7 @@ fun FavouritesScreen(
                         }
                     }
                 } else {
-                    if (!NetworkUtils.isOnline(context)) {
+                    if (!NetworkUtils(context).isOnline()) {
                         showOfflineDialog = true
                     } else {
                         showMap = true

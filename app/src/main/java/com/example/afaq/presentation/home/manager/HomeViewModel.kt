@@ -25,10 +25,9 @@ class HomeViewModel(
         getForecast(lat = lat, lon = lon, lang = lang, units = units)
     }
 
-    private fun getCurrentWeather(
+    fun getCurrentWeather(
         lat: Double,
         lon: Double,
-        apiKey: String = Constants.API_KEY,
         units: String = "metric",
         lang: String = "en"
     ) {
@@ -37,7 +36,6 @@ class HomeViewModel(
             homeRepo.getCurrentWeather(
                 lat = lat,
                 lon = lon,
-                apiKey = apiKey,
                 units = units,
                 lang = lang
             ).onSuccess { weather ->
@@ -50,10 +48,9 @@ class HomeViewModel(
         }
     }
 
-    private fun getForecast(
+    fun getForecast(
         lat: Double,
         lon: Double,
-        apiKey: String = Constants.API_KEY,
         units: String = "metric",
         lang: String = "en"
     ) {
@@ -62,7 +59,6 @@ class HomeViewModel(
             homeRepo.getForecast(
                 lat = lat,
                 lon = lon,
-                apiKey = apiKey,
                 units = units,
                 lang = lang
             ).onSuccess { forecast ->

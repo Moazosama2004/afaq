@@ -15,12 +15,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class AlertViewModel(
-    application: Application,
-    private val alertRepo: AlertRepo
-) : AndroidViewModel(application) {
+    private val alertRepo: AlertRepo,
+    private val alarmManager :  AndroidAlarmManager,
+    private val workManagerScheduler : WorkManagerScheduler
 
-    private val alarmManager = AndroidAlarmManager(application)
-    private val workManagerScheduler = WorkManagerScheduler(application)
+) : ViewModel() {
+
+//    private val alarmManager = AndroidAlarmManager(application)
+//    private val workManagerScheduler = WorkManagerScheduler(application)
 
     private val _alertsState = MutableStateFlow<AlarmsUiState>(AlarmsUiState.Loading)
     val alertsState: StateFlow<AlarmsUiState> = _alertsState
@@ -93,13 +95,14 @@ class AlertViewModel(
 
 
 class AlertViewModelFactory(
-    private val application: Application,
-    private val repo: AlertRepo
+    private val repo: AlertRepo,
+    private val alarmManager :  AndroidAlarmManager,
+    private val workManagerScheduler : WorkManagerScheduler
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AlertViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return AlertViewModel(application, repo) as T
+            return AlertViewModel(repo,alarmManager,workManagerScheduler) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

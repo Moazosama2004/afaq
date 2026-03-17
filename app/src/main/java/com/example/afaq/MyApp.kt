@@ -18,9 +18,16 @@ class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        deleteOldChannels()
         createNotificationChannels()
     }
 
+
+    private fun deleteOldChannels() {
+        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        manager.deleteNotificationChannel("afaq_channel")
+        manager.deleteNotificationChannel("afaq_alarm_channel")
+    }
     private fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
@@ -36,6 +43,9 @@ class MyApp : Application() {
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 description = "Weather notifications"
+                setShowBadge(true)
+                enableLights(true)
+                enableVibration(true)
                 setSound(soundUri, AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION)
                     .build()
@@ -50,6 +60,9 @@ class MyApp : Application() {
             ).apply {
                 description = "Weather alarms"
                 setSound(soundUri, audioAttributes)
+                setBypassDnd(true)
+                setShowBadge(true)
+                enableLights(true)
                 enableVibration(true)
                 vibrationPattern = longArrayOf(0, 500, 200, 500)
             }

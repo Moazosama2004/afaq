@@ -31,14 +31,12 @@ class FavouriteRepo(
     suspend fun getCurrentWeather(
         lat: Double,
         lon: Double,
-        apiKey: String,
         units: String,
         lang: String
     ): Result<Weather> {
         return favouriteRemoteDataSource.getCurrentWeather(
             lat,
             lon,
-            apiKey,
             units,
             lang
         )
@@ -47,14 +45,12 @@ class FavouriteRepo(
     suspend fun getForecast(
         lat: Double,
         lon: Double,
-        apiKey: String,
         units: String,
         lang: String
     ): Result<Forecast> {
         return favouriteRemoteDataSource.getForecast(
             lat,
             lon,
-            apiKey,
             units,
             lang
         )

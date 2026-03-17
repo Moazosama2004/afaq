@@ -2,6 +2,7 @@ package com.example.afaq.presentation.alerts.ui
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.Application
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -62,6 +63,8 @@ import com.example.afaq.presentation.alarm.ui.AddAlertBottomSheet
 import com.example.afaq.presentation.alarm.ui.AlertCard
 import com.example.afaq.presentation.theme.theme.AfaqThemeColors
 import com.example.afaq.presentation.theme.theme.AfaqTypography
+import com.example.afaq.services.alarms.AndroidAlarmManager
+import com.example.afaq.services.workmanager.WorkManagerScheduler
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
@@ -72,10 +75,12 @@ fun AlertsScreen(modifier: Modifier = Modifier) {
     val viewModel = viewModel<AlertViewModel>(
         factory = remember {
             AlertViewModelFactory(
-                context as Application,
                 AlertRepo(
                     AlertLocalDataSource(AppDatabase.getInstance(context).alertDao())
-                )
+                ),
+                alarmManager = AndroidAlarmManager(context),
+                workManagerScheduler = WorkManagerScheduler(context),
+
             )
         }
     )
