@@ -45,9 +45,6 @@ It was built to showcase modern Android development practices, emphasizing:
 
 ---
 
-<img width="1280" height="2856" alt="Screenshot_20260317_042400" src="" />
-<img width="1280" height="2856" alt="Screenshot_20260317_042403" src="" />
-<img width="1280" height="2856" alt="Screenshot_20260317_042439" src="" />
 
 
 ## 📸 Screenshots
@@ -56,15 +53,34 @@ It was built to showcase modern Android development practices, emphasizing:
 
 | Splash Screen | Splash Screen | Splash Screen | Splash Screen |
 |:---:|:---:|:---:|:---:|
-| <img src="https://github.com/user-attachments/assets/e300af21-02a8-4c39-bda4-87d8c13a7ed7" width="180"> | <img src="https://github.com/user-attachments/assets/110c203f-aa0e-4060-b17f-10fce346eaf9" width="180"> | <img src="https://github.com/user-attachments/assets/a236c5ec-1a4c-4aeb-82ca-7c1c461afad4" width="180"> | <img src="https://github.com/user-attachments/assets/c650eabb-3c16-43f7-a344-afe21217f663" width="180"> |
+| <img src="https://github.com/user-attachments/assets/e300af21-02a8-4c39-bda4-87d8c13a7ed7" width="180"> | <img src="https://github.com/user-attachments/assets/cfeb4619-d389-47b6-ad1d-2bb73310fd47" width="180"> | <img src="https://github.com/user-attachments/assets/c650eabb-3c16-43f7-a344-afe21217f663" width="180"> | <img src="https://github.com/user-attachments/assets/7056dfdc-57e1-4f97-8d6a-390bbbd1ada3" width="180"> |
 
-| Home Screen | Favourites | Map Screen | Alerts |
-|:---:|:---:|:---:|:---:|
-| <img src="https://via.placeholder.com/200x400?text=Splash" width="180"> | <img src="https://via.placeholder.com/200x400?text=Home" width="180"> | <img src="https://via.placeholder.com/200x400?text=Favourites" width="180"> | <img src="https://via.placeholder.com/200x400?text=Settings" width="180"> |
+| Home Screen | Home Screen | Home Screen |
+|:---:|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/4f43ae43-6a05-481a-83dd-c1756c1f0f9f" width="180"> |<img src="https://github.com/user-attachments/assets/e4d05c15-9e31-406e-b6fe-8c655c15d996" width="180">| <img src="https://github.com/user-attachments/assets/aa26b54b-78ad-4d6f-8bde-45109b4c2d1a" width="180"> 
 
-| Notification | Map Selection | Dark Mode | Arabic RTL |
+|Favourites Screen | Map Selection | Map Selection | Map Selection |  
 |:---:|:---:|:---:|:---:|
-| <img src="https://via.placeholder.com/200x400?text=Alerts" width="180"> | <img src="https://via.placeholder.com/200x400?text=Map" width="180"> | <img src="https://via.placeholder.com/200x400?text=Dark+Mode" width="180"> | <img src="https://via.placeholder.com/200x400?text=RTL+Support" width="180"> |
+| <img src="https://github.com/user-attachments/assets/a5fedb8c-ac45-4aff-b873-4ea64e2b07a8" width="180"> | <img src="https://github.com/user-attachments/assets/e2690130-dda6-412a-ae95-abb1d4d97385" width="180"> |<img src="https://github.com/user-attachments/assets/1b24fb5b-1755-48da-9de7-66d36d4fa67f" width="180"> | <img src="https://github.com/user-attachments/assets/f371e01b-e0fa-44b8-84f7-5133e244e7dc" width="180"> | 
+
+|Favourites Screen | Favourites Screen | Favourites Screen | 
+|:---:|:---:|:---:|
+| <img src="" width="180"> | <img src="" width="180"> |<img src="" width="180"> | 
+
+|Alert Screen | Alert Screen | Alert Screen | Alert Screen |  
+|:---:|:---:|:---:|:---:|
+| <img src="" width="180"> | <img src="" width="180"> |<img src="" width="180"> | <img src="" width="180"> | 
+
+|Alert Screen | Alert Screen | Alert Screen | 
+|:---:|:---:|:---:|
+| <img src="" width="180"> | <img src="" width="180"> |<img src="" width="180"> | 
+
+|Settings Screen | Light Mode | Arabic RTL | Map Selection |  
+|:---:|:---:|:---:|:---:|
+| <img src="" width="180"> | <img src="" width="180"> |<img src="" width="180"> | <img src="" width="180"> | 
+
+\
+
 
 </div>
 
