@@ -1,7 +1,7 @@
-<p align="center">
-  <h1>☀️ Afaq - آفاق</h1>
-  <h3>Your Weather Horizon</h3>
-</p>
+<div align = "center">
+  
+# ☀️ Afaq - آفاق
+### Your Weather Horizon
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0.21-purple?logo=kotlin&logoColor=white)](https://kotlinlang.org)
 [![Android](https://img.shields.io/badge/Android-API_26+-green?logo=android&logoColor=white)](https://developer.android.com)
