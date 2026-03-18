@@ -85,6 +85,7 @@ fun FavouritesScreen(
     val favouritesState by viewModel.favouritesState.collectAsState()
     val addState by viewModel.addState.collectAsState()
     val deleteState by viewModel.deleteState.collectAsState()
+    val entityToDelete by viewModel.entityToDelete.collectAsState()
     val showOfflineDialog by viewModel.showOfflineDialog.collectAsState()
 
     val snackbarMessage = stringResource(R.string.please_select_location)
@@ -96,6 +97,18 @@ fun FavouritesScreen(
             },
             onConfirm = {
                 viewModel.hideOfflineDialog()
+            }
+        )
+    }
+
+    if (entityToDelete != null) {
+        DeleteFavouriteDialog(
+            cityName = entityToDelete!!.cityName,
+            onConfirm = {
+                viewModel.confirmDelete()
+            },
+            onDismiss = {
+                viewModel.hideDialog()
             }
         )
     }
