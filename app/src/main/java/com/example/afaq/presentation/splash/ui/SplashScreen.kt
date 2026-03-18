@@ -59,9 +59,45 @@ fun SplashScreen(onLocationReady: () -> Unit) {
         permission = Manifest.permission.ACCESS_FINE_LOCATION
     )
 
+    fun checkAndRequestPermission() {
+        if (locationPermission.status.isGranted) return
+
+        val locationManager =
+            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val isGpsEnabled =
+            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+        if (!isGpsEnabled) {
+            showGpsDialog = true
+        } else {
+            when {
+                locationPermission.status.shouldShowRationale -> {
+                    showRationale = true
+                }
+
+                !hasAutoRequested -> {
+                    hasAutoRequested = true
+                    locationPermission.launchPermissionRequest()
+                }
+
+                else -> {
+                    showSettingsDialog = true
+                }
+            }
+        }
+    }
+
     LaunchedEffect(animationFinished, locationFinished) {
         if (animationFinished && locationFinished) {
             onLocationReady()
+        }
+    }
+
+    LaunchedEffect(animationFinished) {
+        if (animationFinished) {
+            if (!locationPermission.status.isGranted) {
+                checkAndRequestPermission()
+            }
         }
     }
 
@@ -79,33 +115,8 @@ fun SplashScreen(onLocationReady: () -> Unit) {
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                scope.launch {
-                    if (locationPermission.status.isGranted) return@launch
-
-                    val locationManager =
-                        context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                    val isGpsEnabled =
-                        locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-
-                    if (!isGpsEnabled) {
-                        showGpsDialog = true
-                    } else {
-                        when {
-                            locationPermission.status.isGranted -> {}
-                            locationPermission.status.shouldShowRationale -> {
-                                showRationale = true
-                            }
-
-                            !hasAutoRequested -> {
-                                hasAutoRequested = true
-                                locationPermission.launchPermissionRequest()
-                            }
-
-                            else -> {
-                                showSettingsDialog = true
-                            }
-                        }
-                    }
+                if (animationFinished) {
+                    checkAndRequestPermission()
                 }
             }
         }
@@ -132,7 +143,6 @@ fun SplashScreen(onLocationReady: () -> Unit) {
         }
     }
 
-    // ─── Dialogs ──────────────────────────────────────────
     if (showGpsDialog) {
         AlertDialog(
             onDismissRequest = {},
